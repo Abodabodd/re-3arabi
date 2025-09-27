@@ -24,7 +24,6 @@ class Arabseed : MainAPI() {
         }
     }
 
-    // ================== البحث ==================
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/find/?word=${query.trim().replace(" ", "+")}"
         val document = app.get(url).document
@@ -35,7 +34,7 @@ class Arabseed : MainAPI() {
             val posterUrl = a.selectFirst("img")?.let { img ->
                 (img.attr("data-src").ifBlank { img.attr("src") }).toAbsolute()
             }
-            val isMovie = href.contains("/%d9%81%d9%8a%d9%84%d9%85-") // /فيلم-
+            val isMovie = href.contains("/%d9%81%d9%8a%d9%84%d9%85-")
             val tvType = if (isMovie) TvType.Movie else TvType.TvSeries
 
             newMovieSearchResponse(title, href, tvType) {
@@ -44,7 +43,6 @@ class Arabseed : MainAPI() {
         }.filterNotNull()
     }
 
-    // ================== الصفحة الرئيسية ==================
     override val mainPage = mainPageOf(
         "$mainUrl/main0/" to "الرئيسية",
         "$mainUrl/main0/" to "الرئيسية",
@@ -80,7 +78,6 @@ class Arabseed : MainAPI() {
         val hasmore: Boolean?
     )
 
-    // ================== تفاصيل ==================
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url).document
         val title = doc.selectFirst("h1.post__name")?.text()?.trim() ?: "غير معروف"
@@ -172,7 +169,6 @@ class Arabseed : MainAPI() {
     @Serializable
     data class ServerResponse(val server: String?)
 
-    // ================== روابط المشاهدة ==================
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
