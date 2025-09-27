@@ -80,7 +80,6 @@ class MyCima : MainAPI() {
 
         val episodes = mutableListOf<Episode>()
 
-        // ====== استخراج post_id ======
         var postId: String? = null
         doc.select("script").forEach { script ->
             if (script.data().contains("post_id:")) {
@@ -90,7 +89,6 @@ class MyCima : MainAPI() {
             }
         }
 
-        // لو فيلم
         val isMovie = doc.select("div.SeasonsList").isEmpty() && !url.contains("/series/")
         if (isMovie || postId.isNullOrBlank()) {
             return newMovieLoadResponse(title, url, TvType.Movie, url) {
@@ -100,7 +98,6 @@ class MyCima : MainAPI() {
             }
         }
 
-        // ====== مواسم المسلسل ======
         val seasonElements = doc.select("div.SeasonsList ul li a[data-season]")
         seasonElements.forEachIndexed { index, seasonLink ->
             val seasonId = seasonLink.attr("data-season")
