@@ -1,4 +1,3 @@
-// ملف: GameHubExtractor.kt
 package com.arabseed
 import android.util.Log
 import com.lagradost.cloudstream3.SubtitleFile
@@ -8,8 +7,6 @@ class GameHubExtractor : ExtractorApi() {
     override var name = "سيرفر عرب سيد"
     override var mainUrl = "https://m.reviewrate.net"
     override val requiresReferer = true
-// تم الإصلاح: إزالة هذا الجزء بالكامل
-// override val hostnames = setOf(...)
 
     override suspend fun getUrl(
         url: String,
@@ -28,7 +25,6 @@ class GameHubExtractor : ExtractorApi() {
             if (csrfToken.isNullOrBlank()) {
                 Log.w(name, "No csrf_token found — trying to extract media link directly from HTML")
 
-                // تم الإصلاح: استخدام callback مباشرةً
                 Regex("""https?://[^\s"']+\.(m3u8|mp4|mkv)""").findAll(html).forEach { m ->
                     val link = m.value
                     Log.d(name, "Found media link in page HTML: $link")
