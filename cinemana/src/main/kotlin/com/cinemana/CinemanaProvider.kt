@@ -8,7 +8,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 import android.util.Log
 
-// *** تعريف Score (داخل الإضافة) - تم الاحتفاظ به من الكود الثاني ***
 @Serializable
 data class Score(
     val float: Float,
@@ -23,21 +22,15 @@ data class Score(
 }
 
 class CinemanaProvider : MainAPI() {
-    override var name = "Shabakaty Cinemana slow (\uD83C\uDDEE\uD83C\uDDF6)" // احتفظت بالاسم من الكود الثاني
+    override var name = "Shabakaty Cinemana slow (\uD83C\uDDEE\uD83C\uDDF6)"
     override var mainUrl = "https://cinemana.shabakaty.com"
     override var lang = "ar"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
     override val hasMainPage = true
 
-    // تم إزالة تعريف override val mainPage = listOf(...)
-    // لأن دالة getMainPage من الكود الأول لا تستخدم هذا النمط.
-
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val items = mutableListOf<HomePageList>()
 
-        // -----------------------------------------------------
-        // 1. "أحدث الإضافات" (التي تستخدم API newlyVideosItems)
-        // تم استخدام منطق الكود الأول بالضبط
         val newlyVideosUrl = "$mainUrl/api/android/newlyVideosItems/level/0/offset/12/page/$page/"
         Log.d(name, "Fetching newly added videos for main page from: $newlyVideosUrl")
         val newlyVideosResponse = app.get(newlyVideosUrl).parsedSafe<List<Map<String, Any>>>()
@@ -53,9 +46,6 @@ class CinemanaProvider : MainAPI() {
             Log.e(name, "Failed to parse newly added videos response or it was empty from: $newlyVideosUrl")
         }
 
-        // -----------------------------------------------------
-        // 2. الفئات / المجموعات الديناميكية (مثل أفلام 4K, أفلام مميزة)
-        // تم استخدام منطق الكود الأول بالضبط
         val videoGroupsUrl = "$mainUrl/api/android/videoGroups/lang/ar/level/0"
         Log.d(name, "Fetching video groups from: $videoGroupsUrl")
         val videoGroupsResponse = app.get(videoGroupsUrl).parsedSafe<List<VideoGroup>>()
@@ -64,7 +54,6 @@ class CinemanaProvider : MainAPI() {
             val groupId = group.id ?: return@forEach
             val groupTitle = group.title ?: "مجموعة غير معروفة"
 
-            // ملاحظة: الكود الأول يستخدم 'page' مباشرة هنا. الكود الثاني استخدم 'pageNumber'. سألتزم بالكود الأول.
             val groupContentUrl = "$mainUrl/api/android/videoListPagination/groupID/$groupId/level/0/itemsPerPage/24/page/$page"
             Log.d(name, "Fetching content for group '$groupTitle' (ID: $groupId) from: $groupContentUrl")
             val groupContentResponse = app.get(groupContentUrl).parsedSafe<List<Map<String, Any>>>()
@@ -84,9 +73,6 @@ class CinemanaProvider : MainAPI() {
             Log.w(name, "No video groups found or failed to parse from: $videoGroupsUrl")
         }
 
-        // -----------------------------------------------------
-        // 3. القوائم المصنفة (حسب الإصدار، الأبجدية، المشاهدات، الفئة العمرية، IMDb)
-        // تم استخدام منطق الكود الأول بالضبط
         val contentTypes = listOf(
             TvType.Movie to "1",
             TvType.TvSeries to "2"
@@ -115,7 +101,6 @@ class CinemanaProvider : MainAPI() {
                     "${tvType.name.replace("Tv", "")} - $titleSuffix"
                 }
 
-                // ملاحظة: الكود الأول يستخدم 'page' مباشرة هنا. الكود الثاني استخدم 'pageNumber'. سألتزم بالكود الأول.
                 val sortedUrl = "$mainUrl/api/android/video/V/2/itemsPerPage/24/level/0/videoKind/$videoKind/sortParam/$sortKey/pageNumber/$page"
                 Log.d(name, "Fetching $listTitle from: $sortedUrl")
                 val sortedResponse = app.get(sortedUrl).parsedSafe<List<Map<String, Any>>>()
@@ -133,7 +118,6 @@ class CinemanaProvider : MainAPI() {
                 }
             }
         }
-        // -----------------------------------------------------
 
         if (items.isEmpty()) {
             Log.w(name, "getMainPage returned no content after all attempts. Check API responses and item parsing.")
@@ -142,7 +126,6 @@ class CinemanaProvider : MainAPI() {
         return newHomePageResponse(items, hasNext = true)
     }
 
-    // *** دالة البحث - تم الاحتفاظ بها من الكود الثاني كما هي ***
     override suspend fun search(query: String): List<SearchResponse> {
         val allResults = mutableListOf<SearchResponse>()
         val itemsPerPageSearch = 30
@@ -174,7 +157,6 @@ class CinemanaProvider : MainAPI() {
         return allResults
     }
 
-    // *** دالة Load - تم الاحتفاظ بها من الكود الثاني كما هي ***
     override suspend fun load(url: String): LoadResponse? {
         val extractedId = url.substringAfterLast("/")
 
@@ -199,7 +181,7 @@ class CinemanaProvider : MainAPI() {
         val ratingFloat = details.stars?.toFloatOrNull()
         val scoreObject = ratingFloat?.let { Score.from10(it) }
 
-        return if (details.kind == 2) { // kind = 2 للمسلسلات
+        return if (details.kind == 2) {
             Log.d(name, "Found a TvSeries with ID: $extractedId, Title: $title")
 
             val seasonsAndEpisodesUrl = "$mainUrl/api/android/videoSeason/id/$extractedId"
@@ -252,7 +234,7 @@ class CinemanaProvider : MainAPI() {
                 this.plot = plot
                 this.year = year
             }
-        } else { // kind = 1 للأفلام (أو أي قيمة أخرى غير 2)
+        } else {
             Log.d(name, "Returning MovieLoadResponse for: $title (ID: $extractedId)")
             newMovieLoadResponse(title, extractedId, TvType.Movie, extractedId) {
                 this.posterUrl = posterUrl
@@ -262,7 +244,6 @@ class CinemanaProvider : MainAPI() {
         }
     }
 
-    // *** دالة LoadLinks - تم الاحتفاظ بها من الكود الثاني كما هي ***
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -333,7 +314,6 @@ class CinemanaProvider : MainAPI() {
         return true
     }
 
-    // *** CinemanaItem - من الكود الثاني مع تحليل nb القوي ***
     @Serializable
     data class CinemanaItem(
         val nb: String? = null,
@@ -344,8 +324,8 @@ class CinemanaProvider : MainAPI() {
         val stars: String? = null,
         val kind: Int? = null,
         val fileFile: String? = null,
-        @SerialName("episodeNummer") val episodeNummer: String? = null, // تم الاحتفاظ به لدعم المسلسلات
-        val season: String? = null // تم الاحتفاظ به لدعم المسلسلات
+        @SerialName("episodeNummer") val episodeNummer: String? = null,
+        val season: String? = null
     )
 
     @Serializable
@@ -353,16 +333,13 @@ class CinemanaProvider : MainAPI() {
         val season: String? = null
     )
 
-    // *** VideoGroup - من الكود الثاني ***
     @Serializable
     data class VideoGroup(
         val id: String? = null,
         val title: String? = null,
     )
 
-    // *** toCinemanaItem - من الكود الثاني مع تحليل nb القوي ***
     private fun Map<String, Any>.toCinemanaItem(): CinemanaItem {
-        // تحليل أكثر قوة لـ 'nb' للتعامل مع Int أو Double أيضًا، وهو ما قد يحل مشكلة "الواجهة الرئيسية لا تفتح"
         val parsedNb = when (val nbValue = this["nb"]) {
             is String -> nbValue
             is Int -> nbValue.toString()
@@ -379,12 +356,11 @@ class CinemanaProvider : MainAPI() {
             stars = this["stars"] as? String,
             kind = (this["kind"] as? String)?.toIntOrNull() ?: (this["kind"] as? Int),
             fileFile = this["fileFile"] as? String,
-            episodeNummer = this["episodeNummer"] as? String, // تم الاحتفاظ به لدعم المسلسلات
-            season = this["season"] as? String // تم الاحتفاظ به لدعم المسلسلات
+            episodeNummer = this["episodeNummer"] as? String,
+            season = this["season"] as? String
         )
     }
 
-    // *** toSearchResponse - من الكود الثاني مع رسائل تسجيل محسنة ***
     private fun CinemanaItem.toSearchResponse(): SearchResponse {
         val validNb = nb ?: run {
             Log.e(name, "CinemanaItem.nb is null, cannot create SearchResponse for title: $enTitle")
