@@ -86,10 +86,8 @@ class FASELHD(private val context: Context) : MainAPI() {
         }
     }
 
-    // --==-- تم تحديث الصفحة الرئيسية لتشمل قائمة "الأكثر مشاهدة" الأفقية --==--
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val url = if (page > 1 && request.data != mainUrl) {
-            // --==-- إصلاح رابط "تحميل المزيد" --==--
             if (request.data.contains("all_movies"))
                 "${request.data.removeSuffix("/")}/page/$page"
             else
@@ -103,7 +101,6 @@ class FASELHD(private val context: Context) : MainAPI() {
         if (request.data == mainUrl) {
             val lists = mutableListOf<HomePageList>()
 
-            // 1. السلايدر الرئيسي
             val sliderItems = document.select("#homeSlide .swiper-slide").mapNotNull {
                 val slideHref = it.selectFirst("a")?.attr("href") ?: return@mapNotNull null
                 val slideTitle = it.selectFirst(".h1 a")?.text()?.trim() ?: return@mapNotNull null
@@ -116,7 +113,6 @@ class FASELHD(private val context: Context) : MainAPI() {
                 lists.add(HomePageList("أحدث الإضافات", sliderItems, isHorizontalImages = true))
             }
 
-            // 2. الأفلام الأكثر مشاهدة هذا الأسبوع (الشكل الجديد)
             document.select("div.slider")
                 .firstOrNull { it.selectFirst(".h4")?.text()?.contains("مشاهدة") == true }
                 ?.let { mostWatchedBlock ->
@@ -129,10 +125,8 @@ class FASELHD(private val context: Context) : MainAPI() {
                     }
                 }
 
-            // 3. بقية الأقسام (آخر الحلقات، إلخ)
             document.select("section#blockList").forEach { block ->
                 val title = block.selectFirst(".blockHead .h3")?.text() ?: return@forEach
-                // نتجاهل قسم "آخر الأفلام المضافة" القديم إذا كان موجودًا
                 if (!title.contains("آخر الأفلام المضافة")) {
                     val items = block.select(".blockMovie, .postDiv, .epDivHome")
                         .mapNotNull { it.toSearchResult() }
