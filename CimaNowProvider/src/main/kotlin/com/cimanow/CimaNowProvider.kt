@@ -111,7 +111,7 @@ class CimaNow : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val isHomePage = request.data == mainUrl
         val url = if (isHomePage) {
-            if (page > 1) return newHomePageResponse(emptyList()) // الصفحة الرئيسية لا تدعم التمرير
+            if (page > 1) return newHomePageResponse(emptyList())
             "$mainUrl/home"
         } else {
             "${request.data.trimEnd('/')}/page/$page/"
@@ -151,7 +151,6 @@ class CimaNow : MainAPI() {
         }
     }
 
-    // --==-- تم إصلاح هذه الدالة بشكل كامل --==--
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url).document
         val posterUrl = doc.select("meta[property=\"og:image\"]").attr("content")
@@ -186,7 +185,6 @@ class CimaNow : MainAPI() {
                 addTrailer(youtubeTrailer)
             }
         } else {
-            // --==-- الإصلاح: جلب الحلقات من جميع المواسم المتاحة --==--
             val seasons = doc.select("section[aria-label=\"seasons\"] ul li a").mapNotNull {
                 Pair(it.attr("abs:href"), it.text().getIntFromText())
             }
@@ -204,7 +202,6 @@ class CimaNow : MainAPI() {
                     }
                 }.flatten()
             } else {
-                // التعامل مع المسلسلات التي لها موسم واحد فقط
                 doc.select("ul#eps li a").mapNotNull { epEl ->
                     newEpisode(epEl.attr("abs:href")) {
                         this.name = epEl.select("img:nth-child(2)").attr("alt")
