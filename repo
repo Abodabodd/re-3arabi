@@ -1,6 +1,6 @@
 {
-  "name": "Arabic repo",
-  "description": "hmmmmmm.",
+  "name": "3rabi عربي",
+  "description": "مشاهدة الافلام والمسلسلات تجربة خالية من الاعلانات",
   "manifestVersion": 1,
-  "pluginLists": ["https://raw.githubusercontent.com/Abodabodd/Testmyrepo/refs/heads/main/plugins.json"]
+  "pluginLists": ["https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/plugins.json"]
 }
