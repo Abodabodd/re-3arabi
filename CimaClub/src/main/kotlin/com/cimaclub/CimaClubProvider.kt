@@ -33,13 +33,12 @@ class CimaClub : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        // تجاهل page إذا > 1
+       
         if (page > 1) return newHomePageResponse(emptyList())
 
         val document = app.get(mainUrl).document
         val homePageList = mutableListOf<HomePageList>()
 
-        // المميزة
         val featured = document.select("div.Slider--Outer li.Slides--Item div.Block--Item")
         if (featured.isNotEmpty()) {
             val featuredList = featured.mapNotNull {
@@ -59,7 +58,6 @@ class CimaClub : MainAPI() {
             homePageList.add(HomePageList("المميزة", featuredList))
         }
 
-        // المضاف حديثاً
         val recentlyAddedItems = document.select("div.holdposts div.BlocksHolder > div.Small--Box")
         val recentlyAddedList = recentlyAddedItems.mapNotNull { it.toSearchResponse() }
         if (recentlyAddedList.isNotEmpty()) {
@@ -79,7 +77,6 @@ class CimaClub : MainAPI() {
     override suspend fun load(url: String): LoadResponse {
         val document = app.get(url).document
 
-        // اعتبره مسلسل إذا وجد "/series/" أو "/مسلسل-" أو أكثر من حلقة
         val isTvSeries = url.contains("/series/") || url.contains("/مسلسل-") ||
                 document.select("section.allepcont .row a").size > 1
 
@@ -108,7 +105,7 @@ class CimaClub : MainAPI() {
                             this.name = ep.selectFirst(".ep-info h2")?.text()
                             this.episode = ep.selectFirst(".epnum")?.ownText()?.trim()?.toIntOrNull()
                             this.season = seasonNum
-                            this.posterUrl = poster // صورة المسلسل الرئيسية لكل حلقة
+                            this.posterUrl = poster 
                         }
                     }
                 }.flatten().toCollection(episodes)
