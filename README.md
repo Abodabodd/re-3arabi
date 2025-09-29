@@ -12,7 +12,6 @@
 <h2>⬇️ تحميل الإضافات</h2>
 <p align="left">
   <a href="cloudstreamrepo://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbrCPMjoDiORDnpcSxcPa6g-7bWW31r6-BLQ&s" />
   </a>
 </p>
 ---
@@ -54,4 +53,5 @@ We hereby issue this notice to clarify that these extensions function similarly 
 <p align="center">
 💖 **استمتع بالمشاهدة وشارك التجربة مع الأصدقاء!**
 </p>
+
 
