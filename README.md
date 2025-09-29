@@ -12,8 +12,8 @@
 <h2>⬇️  لتحميل الإضافات</h2>
 <p align="left">
   <a href="cloudstreamrepo://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo">
-(https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo)  </a>
-</p>
+  </a> https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
+</p>https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
 ---
 
 <h2>🌟 الهدف</h2>
@@ -53,6 +53,7 @@ We hereby issue this notice to clarify that these extensions function similarly 
 <p align="center">
 💖 **استمتع بالمشاهدة وشارك التجربة مع الأصدقاء!**
 </p>
+
 
 
 
