@@ -12,7 +12,7 @@
 <h2>⬇️  لتحميل الإضافات</h2>
 <p align="left">
   <a href="cloudstreamrepo://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo">
-  </a> href="cloudstreamrepo://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
+  </a> cloudstreamrepo://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
 </p>
 ---
 
@@ -53,6 +53,7 @@ We hereby issue this notice to clarify that these extensions function similarly 
 <p align="center">
 💖 **استمتع بالمشاهدة وشارك التجربة مع الأصدقاء!**
 </p>
+
 
 
 
