@@ -9,9 +9,14 @@
 🎬 تدعم جميع أنواع الأفلام والمسلسلات مع التركيز على تجربة مشاهدة ممتعة.
 </p>
 ---
-<h2>⬇️  لتحميل الإضافات</h2>
+<h2>⬇️  انسخ الرابط او اضغط على الصورة لتحميل الاضافة لتحميل الإضافات</h2>
 <p align="left">
   </a> https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
+</p>
+<p align="left">
+  <a href="cloudstreamrepo://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbrCPMjoDiORDnpcSxcPa6g-7bWW31r6-BLQ&s" />
+  </a>
 </p>
 ---
 
