@@ -18,8 +18,7 @@
   </a>
 </p> 
 <p align="left">
-  <a href="https://abodabodd.github.io/testpage/">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbrCPMjoDiORDnpcSxcPa6g-7bWW31r6-BLQ&s" />
+  <a href="https://abodabodd.github.io/testpage/"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbrCPMjoDiORDnpcSxcPa6g-7bWW31r6-BLQ&s" />
   </a>
 </p>
 ---
@@ -61,6 +60,7 @@ We hereby issue this notice to clarify that these extensions function similarly 
 <p align="center">
 💖 **استمتع بالمشاهدة وشارك التجربة مع الأصدقاء!**
 </p>
+
 
 
 
