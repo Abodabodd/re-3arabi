@@ -19,6 +19,25 @@
     "name": "Witanime"
   },  
   {
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Ig85ZYdRsjDw--peeI2RsBqOWmvnmvKKsT4UONdPMQ&s=10",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 17600,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Movie"
+    ],
+    "version": 1,
+    "internalName": "Shahid4u",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Shahid4u.cs3",
+    "name": "Shahid4u"
+  },  
+  {
     "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX1z-0NYyzyEiFs4q7X9c8SSBR6kJtVl7f7A&s",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
