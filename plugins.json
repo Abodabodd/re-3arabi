@@ -50,7 +50,6 @@
     "tvTypes": [
       "TvSeries",
       "Movie"
-      "Anime"
     ],
     "version": 1,
     "internalName": "Animerco",
