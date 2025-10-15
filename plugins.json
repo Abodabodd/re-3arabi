@@ -19,6 +19,25 @@
     "name": "3isk"
   },
   {
+    "iconUrl": "https://gesseh.net/wp-content/uploads/2024/10/keesatlogo.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 11400,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Movie"
+    ],
+    "version": 1,
+    "internalName": "Eshek",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/eseek.cs3",
+    "name": "Esehek"
+  },
+  {
     "iconUrl": "https://pbs.twimg.com/profile_images/1956680009101271040/yE0lMOSx_400x400.jpg",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
