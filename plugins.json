@@ -19,6 +19,25 @@
     "name": "3isk"
   },
   {
+    "iconUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAgVBMVEVHcExSPoBIbpROPH86sa+urcQ7qqxAj6FCh55LV4o8pqt/iqo7q61RO39GbpP///9TOX46ra5RQoJJZZA+oqlBmaU8qKtEf5tGOHxGdJY9SYMsnqUxhpvN3OLd5ert8fSSnrdVgp8xc5M3V4eUu8Vtcps6ZI67wdFplatbaZUbj51FUsA6AAAAD3RSTlMAe+/A7v5v/f7+xPqeDQkSpxAzAAABNklEQVQokXWSCZaDIAxAYx1Z7GLHYmsR0Lp37n/ACSDOtM/+55LwDaIEADlG8fmFODrBQnTeIPIu3nJY7eryD2Dt0UflSkjy3BeW5dAkgbwcJm10k5cRxDwvmzr746mXoImBc2myd2r3dAJc2mAapMWrhEvJp8zsQU6YDpJbvNy7ROIYPO1rhmd3QTrrtAstO0hwzq7Jkm5c5D44vgNczWNs7OK6y2jlY3F3rMTljE5mZvbyHnCyvTupH+27tNO2KOu5vXl5C+wAv6Rvezwxe5WMwYy5mpliiHKSrYDCeWulKOJlwaiDUQaU2pGeKqV6L1EU7qBQ0GL91z9OrqSQFkUVNslJ8U8SIUQlem2M7iuttRErBE7ufq0swl1WsMHI9QPEtt/he5ODb1yy5UhoeSDp1wupV79SsDXbtG4cnwAAAABJRU5ErkJggg==",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 52000,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Movie"
+    ],
+    "version": 1,
+    "internalName": "Animerco",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Animerco.cs3",
+    "name": "Animerco"
+  },
+  {
     "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7AH2oC7LwumXRpHM8_WLpIFvDIfmS67jkjlhsCKpPaZdqcneigzUQX4g&s=10",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
