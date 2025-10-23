@@ -1,5 +1,26 @@
 [
   {
+    "iconUrl": "https://mycima.page/wp-content/uploads/2025/10/cropped-cropped-mycima-192x192.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 31900,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Movie",
+    "TvSeries",
+    "Anime",
+    "AsianDrama"
+    ],
+    "version": 1,
+    "internalName": "Mycima",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/MyCimaProvider.cs3",
+    "name": "Mycima"
+  },
+  {
     "iconUrl": "https://ww1.animeiat.tv/logo.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
