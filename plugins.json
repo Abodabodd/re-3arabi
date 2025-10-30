@@ -1,5 +1,26 @@
 [
   {
+    "iconUrl": "https://a.egydead.space/wp-content/uploads/2019/01/cropped-yXYdE2f-192x192.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 37900,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Movie",
+    "TvSeries",
+    "Anime",
+    "AsianDrama"
+    ],
+    "version": 1,
+    "internalName": "Egydead",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Egydead.cs3",
+    "name": "Egydead"
+  },
+  {
     "iconUrl": "https://mycima.page/wp-content/uploads/2025/10/cropped-cropped-mycima-192x192.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
