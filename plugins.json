@@ -1,5 +1,23 @@
 [
   {
+    "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/anime_witcher_round_icon.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 26340,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Anime"
+    ],
+    "version": 1,
+    "internalName": "AnimeWitcher",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Animewitcher.cs3",
+    "name": "AnimeWitcher"
+  },
+  {
     "iconUrl": "https://a.egydead.space/wp-content/uploads/2019/01/cropped-yXYdE2f-192x192.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
