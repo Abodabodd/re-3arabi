@@ -191,6 +191,7 @@
     ],
     "version": 1,
     "internalName": "krmzy",
+    "description": "البحث لا يعمل حاليا مشكلة من الموقع",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Krmzy.cs3",
     "name": "krmzy"
   },
@@ -267,6 +268,7 @@
     ],
     "version": 1,
     "internalName": "CimaClub",
+    "description": "سيرفرات الموقع بها ضعف احيانا اذا لم يفتح  غالبا المشكلة من الموقع",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/CimaClub.cs3",
     "name": "CimaClub"
   },
@@ -305,7 +307,7 @@
     ],
     "version": 1,
     "internalName": "Cimanaw",
-    "description": "يستغرق تحميل الروابط قرابة 10 ثواني كن صبورا",
+    "description": "يستغرق تحميل الروابط بعض الوقت كن صبورا",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/CimaNowProvider.cs3",
     "name": "Cimanaw"
   },
@@ -344,6 +346,7 @@
     ],
     "version": 16,
     "internalName": "Shabakaty_Cinemana",
+    "description": "لا يعمل خارج العراق او اي شبكة غير ايرثلنك",
     "url": "https://github.com/Abodabodd/Testmyrepo/raw/refs/heads/main/cinemana.cs3",
     "name": "Shabakaty Cinemana (🇮🇶)"
   },
@@ -363,6 +366,7 @@
     ],
     "version": 16,
     "internalName": "Shabakaty_Cinemana_Slow",
+    "description": "لا يعمل خارج العراق او اي شبكة غير ايرثلنك",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/cinemana.cs3",
     "name": "Shabakaty Cinemana slow (🇮🇶)"
   }
@@ -385,7 +389,7 @@
     ],
     "version": 1,
     "internalName": "Cimanaw",
-    "description": "يستغرق تحميل الروابط قرابة 10 ثواني كن صبورا",
+    "description": "يستغرق تحميل الروابط وقتا كن صبورا",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/CimaNowProvider.cs3",
     "name": "Cimanaw"
   },
