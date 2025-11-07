@@ -1,5 +1,23 @@
 [
   {
+    "iconUrl": "https://amd.brstej.com/22.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 22500,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Anime"
+    ],
+    "version": 1,
+    "internalName": "Brstej",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Bristege.cs3",
+    "name": "Brstej"
+  },
+  {
     "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/anime_witcher_round_icon.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
