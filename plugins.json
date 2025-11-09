@@ -11,7 +11,8 @@
     ],
     "tvTypes": [
     "Movie",
-    "Others"
+    "Others",
+    "live"
     ],
     "version": 2,
     "internalName": "FullMatchShows",
