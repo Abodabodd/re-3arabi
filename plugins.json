@@ -1,5 +1,43 @@
 [
   {
+    "iconUrl": "https://wecima.ac/static/img/favicon.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 20000,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Movie",
+    "tvTypes"
+    ],
+    "version": 1,
+    "internalName": "WeCima",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Wecima.cs3",
+    "name": "WeCima"
+  },
+  {
+    "iconUrl": "https://web8.topcinema.cam/wp-content/uploads/2023/05/cropped-icon-32x32.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 18000,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Movie",
+    "tvTypes"
+    ],
+    "version": 1,
+    "internalName": "TopCinema",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Topcinema.cs3",
+    "name": "TopCinema"
+  },
+  {
     "iconUrl": "https://fullmatchshows.com/wp-content/uploads/2024/04/LOGOSASO.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
