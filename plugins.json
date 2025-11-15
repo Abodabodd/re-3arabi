@@ -88,7 +88,7 @@
     "tvTypes": [
     "Anime"
     ],
-    "version": 2,
+    "version": 3,
     "internalName": "AnimeWitcher",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Animewitcher.cs3",
     "name": "AnimeWitcher"
@@ -323,7 +323,7 @@
       "TvSeries",
       "Movie"
     ],
-    "version": 1,
+    "version": 2,
     "internalName": "Shahid4u",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Shahid4u.cs3",
     "name": "Shahid4u"
@@ -362,7 +362,7 @@
       "TvSeries",
       "Movie"
     ],
-    "version": 1,
+    "version": 3,
     "internalName": "Faselhd",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Faselhd.cs3",
     "name": "Faselhd"
@@ -381,7 +381,7 @@
       "TvSeries",
       "Movie"
     ],
-    "version": 1,
+    "version": 4,
     "internalName": "Cimanaw",
     "description": "يستغرق تحميل الروابط بعض الوقت كن صبورا",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/CimaNowProvider.cs3",
