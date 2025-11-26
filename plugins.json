@@ -1,5 +1,24 @@
 [
   {
+    "iconUrl": "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 23900,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+    "Movie",
+    "tvTypes"
+    ],
+    "version": 1,
+    "internalName": "LodyNet",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Lodynet.cs3",
+    "name": "LodyNet"
+  },
+  {
     "iconUrl": "https://wecima.ac/static/img/favicon.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
