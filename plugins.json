@@ -13,7 +13,7 @@
     "Movie",
     "tvTypes"
     ],
-    "version": 1,
+    "version": 2,
     "internalName": "LodyNet",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Lodynet.cs3",
     "name": "LodyNet"
@@ -304,7 +304,7 @@
       "TvSeries",
       "Movie"
     ],
-    "version": 1,
+    "version": 2,
     "internalName": "Animerco",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Animerco.cs3",
     "name": "Animerco"
@@ -439,30 +439,10 @@
       "TvSeries",
       "Movie"
     ],
-    "version": 16,
+    "version": 4,
     "internalName": "Shabakaty_Cinemana",
     "description": "لا يعمل خارج العراق او اي شبكة غير ايرثلنك",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/cinemana.cs3",
     "name": "Shabakaty Cinemana (🇮🇶)"
-  },
-  {
-    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZlAGH56cEnNEL93W3QqZWpUe8XR8i90olTA&s",
-    "apiVersion": 1,
-    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
-    "fileSize": 26624,
-    "status": 1,
-    "language": "ar",
-    "authors": [
-      "Abodabodd"
-    ],
-    "tvTypes": [
-      "TvSeries",
-      "Movie"
-    ],
-    "version": 16,
-    "internalName": "Shabakaty_Cinemana_Slow",
-    "description": "لا يعمل خارج العراق او اي شبكة غير ايرثلنك",
-    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/cinemana.cs3",
-    "name": "Shabakaty Cinemana slow (🇮🇶)"
   }
 ]
