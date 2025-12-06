@@ -1,5 +1,5 @@
 [
-{
+  {
     "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
@@ -20,7 +20,7 @@
     "internalName": "YouTube",
     "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Youtube.cs3",
     "name": "YouTube"
-  }
+  },
   {
     "iconUrl": "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp",
     "apiVersion": 1,
