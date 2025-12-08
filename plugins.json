@@ -1,5 +1,23 @@
 [
   {
+    "iconUrl": "https://images.anime3rb.com/favicon/apple-touch-icon.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 71200,
+    "status": 1,
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Anime"
+    ],
+    "version": 1,
+    "internalName": "Anime3rb",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Anim3rb.cs3",
+    "name": "Anime3rb"
+  },
+  {
     "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/IMG_%D9%A2%D9%A0%D9%A2%D9%A5%D9%A1%D9%A2%D9%A0%D9%A6_%D9%A1%D9%A7%D9%A2%D9%A6%D9%A1%D9%A6.jpg",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
