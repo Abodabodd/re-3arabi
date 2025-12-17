@@ -1,5 +1,25 @@
 [
   {
+    "iconUrl": "https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_uNuA2uBhA0R27HDZTFRFJUx1SNmFQNb6CWqw79IueiZywzxWOKoiv-LBtHfOcu9KEWvht53snjc4eiRZvsFvV1L-2tKPqJeobsC9TwIj9NwL1MpGmNzFd1CrFS0s-Q=w120",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 26700,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Movie",
+      "Drama"
+    ],
+    "version": 1,
+    "internalName": "cimatn",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Cimatn.cs3",
+    "name": "cimatn"
+  },
+  {
     "iconUrl": "https://images.anime3rb.com/favicon/apple-touch-icon.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
