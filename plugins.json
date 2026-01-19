@@ -1,5 +1,25 @@
 [
   {
+    "iconUrl": "https://www.viu.com/ott/hk/v1/images/Viu_logo.svg",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 32500,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Movie",
+      "Drama"
+    ],
+    "version": 1,
+    "internalName": "Viu",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Viu.cs3",
+    "name": "VIU"
+  },
+  {
     "iconUrl": "https://www.google.com/s2/favicons?domain=cimanow.cc&sz=%size%",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
