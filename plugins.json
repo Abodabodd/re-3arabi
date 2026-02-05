@@ -1,4 +1,23 @@
 [
+    {
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF607wnarFL8Ob8KLPahUPJzcLjbtg1pEH0A&s",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 13600,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Live"
+    ],
+    "version": 1,
+    "internalName": "Syrialive",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Syria-live.cs3",
+    "name": "Syrialive"
+  },
   {
     "iconUrl": "https://www.viu.com/ott/hk/v1/images/Viu_logo.svg",
     "apiVersion": 1,
