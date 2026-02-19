@@ -1,4 +1,23 @@
 [
+    {
+    "iconUrl": "https://www.dima-toon.com/wp-content/uploads/2025/10/DimaToonlogo11.png",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 11800,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Anime"
+    ],
+    "version": 1,
+    "internalName": "Dima toon",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/dima-toon.cs3",
+    "name": "Dima toon"
+  },
         {
     "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ10TEG3tTtkEF9_g3IslEP3xs0wx9EVhBs7b_H5M1gpg&s=10",
     "apiVersion": 1,
@@ -11,7 +30,7 @@
     ],
     "tvTypes": [
       "TvSeries",
-      "Live"
+      "Movie"
     ],
     "version": 1,
     "internalName": "Tuktukcima",
@@ -30,7 +49,7 @@
     ],
     "tvTypes": [
       "TvSeries",
-      "Live"
+      "Movie"
     ],
     "version": 1,
     "internalName": "Cimawbas",
