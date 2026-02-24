@@ -28,8 +28,13 @@ https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
 </p>
 
 <ul>
-```arb```
-
+```text
+arb
+```
+<h2>أو</h2>
+  ```text
+343
+```
 </ul>
 
 <p>فقط اكتب الرمز وسيتم تحميل الإضافات مباشرة بكل سهولة 💡</p>
@@ -72,4 +77,5 @@ We hereby issue this notice to clarify that these extensions function similarly 
 <p align="center">
 💖 <b>استمتع بالمشاهدة وشارك التجربة مع الأصدقاء!</b>
 </p>
+
 
