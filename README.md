@@ -16,6 +16,11 @@
 <p align="left">
 https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
 </p>
+<p align="left">
+<a href="https://abodabodd.github.io/testpage/">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbrCPMjoDiORDnpcSxcPa6g-7bWW31r6-BLQ&s" />
+</a>
+</p>
 
 <h2>📺 لمستخدمي التلفاز (Android TV)</h2>
 <p>
@@ -23,17 +28,12 @@ https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
 </p>
 
 <ul>
-<li>🔹 <b>arb</b></li>
-<li>🔹 <b>343</b></li>
+```arb```
+
 </ul>
 
 <p>فقط اكتب الرمز وسيتم تحميل الإضافات مباشرة بكل سهولة 💡</p>
 
-<p align="left">
-<a href="https://abodabodd.github.io/testpage/">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbrCPMjoDiORDnpcSxcPa6g-7bWW31r6-BLQ&s" />
-</a>
-</p>
 
 <h2>🌟 الهدف</h2>
 <ul>
@@ -72,3 +72,4 @@ We hereby issue this notice to clarify that these extensions function similarly 
 <p align="center">
 💖 <b>استمتع بالمشاهدة وشارك التجربة مع الأصدقاء!</b>
 </p>
+
