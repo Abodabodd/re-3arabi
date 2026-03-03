@@ -1,5 +1,24 @@
 [
     {
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNGolDYucryXGa3PI72DhhJHaL3y6NkWT7MjSFvPKG1A&s=10",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 19300,
+    "status": 1,
+    "language": "en",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "live"
+    ],
+    "version": 1,
+    "internalName": "Ohatv",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Ohatv.cs3",
+    "name": "Ohatv"
+  },
+    {
     "iconUrl": "https://www.dima-toon.com/wp-content/uploads/2025/10/DimaToonlogo11.png",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
