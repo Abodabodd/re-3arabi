@@ -1,4 +1,24 @@
 [
+  {
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkVDfHjqUpRyrWJjW8wUHH87BhSO6B9uxI-B80sAy_AQ&s=10",
+    "apiVersion": 1,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "fileSize": 22200,
+    "status": 1,
+    "language": "ar",
+    "authors": [
+      "Abodabodd"
+    ],
+    "tvTypes": [
+      "TvSeries",
+      "Movie",
+      "Anime"
+    ],
+    "version": 1,
+    "internalName": "Anime4up",
+    "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Anime4up.cs3",
+    "name": "Anime4up"
+  },
     {
     "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNGolDYucryXGa3PI72DhhJHaL3y6NkWT7MjSFvPKG1A&s=10",
     "apiVersion": 1,
