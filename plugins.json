@@ -1,5 +1,62 @@
 [
   {
+  "iconUrl": "https://aflaam.com/style/assets/images/logo.png",
+  "apiVersion": 1,
+  "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+  "fileSize": 14800,
+  "status": 1,
+  "language": "ar",
+  "authors": [
+    "Abodabodd"
+  ],
+  "tvTypes": [
+    "TvSeries",
+    "Movie"
+  ],
+  "version": 1,
+  "internalName": "Aflaam",
+  "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Aflaam.cs3",
+  "name": "Aflaam"
+},
+{
+  "iconUrl": "https://fitnur.com/uploads/avatars/c5ae8dadf88bcea9549657ec451a1563.jpg",
+  "apiVersion": 1,
+  "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+  "fileSize": 11500,
+  "status": 1,
+  "language": "ar",
+  "authors": [
+    "Abodabodd"
+  ],
+  "tvTypes": [
+    "TvSeries",
+    "Movie"
+  ],
+  "version": 1,
+  "internalName": "Alooytv",
+  "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Alooytv.cs3",
+  "name": "Alooytv"
+},
+{
+  "iconUrl": "https://cdn.wccftech.com/wp-content/uploads/2018/01/Youtube-music.png",
+  "apiVersion": 1,
+  "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+  "fileSize": 18100,
+  "status": 1,
+  "language": "ar",
+  "authors": [
+    "Abodabodd"
+  ],
+  "tvTypes": [
+    "TvSeries",
+    "Movie"
+  ],
+  "version": 1,
+  "internalName": "Shahidwbas",
+  "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Shahidwbas.cs3",
+  "name": "Shahidwbas"
+}
+  {
     "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9Lci-tXtOtWaHcEp9An7bqIkXs4yzH7EcfA&s",
     "apiVersion": 1,
     "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
