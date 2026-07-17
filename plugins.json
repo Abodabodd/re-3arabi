@@ -1,5 +1,25 @@
 [
   {
+  "iconUrl": "https://yt3.googleusercontent.com/ulm35tweg3do5istps0TgCjMmJSVczGUL2NIrXMwI1DDRi5ty29BIzQSUHVgqZN5CSo1PHhiA6M=s900-c-k-c0x00ffffff-no-rj",
+  "apiVersion": 1,
+  "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+  "fileSize": 14400,
+  "status": 1,
+  "language": "ar",
+  "authors": [
+    "Abodabodd"
+  ],
+  "tvTypes": [
+    "TvSeries",
+    "Live",
+    "Movie"
+  ],
+  "version": 1,
+  "internalName": "Yacintv",
+  "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Yacintv.cs3",
+  "name": "Yacintv"
+},
+  {
   "iconUrl": "https://aflaam.com/style/assets/images/logo.png",
   "apiVersion": 1,
   "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
