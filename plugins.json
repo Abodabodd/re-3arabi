@@ -1,4 +1,24 @@
 [
+    {
+  "iconUrl": "https://yt3.googleusercontent.com/mBIIR5cqQC4Y-o7HaxbkJfs305X6tbHLSNPk6MRMCDJsH8xP0SfGhK-CBDpSmH95wSff9z99sg=s900-c-k-c0x00ffffff-no-rj",
+  "apiVersion": 1,
+  "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+  "fileSize": 26500,
+  "status": 1,
+  "language": "ar",
+  "authors": [
+    "Abodabodd"
+  ],
+  "tvTypes": [
+    "TvSeries",
+    "Anime",
+    "Movie"
+  ],
+  "version": 1,
+  "internalName": "Anime-Phoenix",
+  "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Anime-Phoenix.cs3",
+  "name": "Anime-Phoenix"
+},
   {
   "iconUrl": "https://yt3.googleusercontent.com/ulm35tweg3do5istps0TgCjMmJSVczGUL2NIrXMwI1DDRi5ty29BIzQSUHVgqZN5CSo1PHhiA6M=s900-c-k-c0x00ffffff-no-rj",
   "apiVersion": 1,
