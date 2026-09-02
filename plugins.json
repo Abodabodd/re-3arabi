@@ -1,5 +1,25 @@
 [
-    {
+ {
+  "iconUrl": "http://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdezJ2Sjz8tIO-EaHMaOvIzfYODiNT3F-TP4GmSe5DWw&s=10",
+  "apiVersion": 1,
+  "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+  "fileSize": 30400,
+  "status": 1,
+  "language": "ar",
+  "authors": [
+    "Abodabodd"
+  ],
+  "tvTypes": [
+    "TvSeries",
+    "Anime",
+    "Movie"
+  ],
+  "version": 1,
+  "internalName": "Elif",
+  "url": "https://github.com/Abodabodd/re-3arabi/raw/refs/heads/main/build/Elif.cs3",
+  "name": "Elif"
+},
+ {
   "iconUrl": "https://yt3.googleusercontent.com/mBIIR5cqQC4Y-o7HaxbkJfs305X6tbHLSNPk6MRMCDJsH8xP0SfGhK-CBDpSmH95wSff9z99sg=s900-c-k-c0x00ffffff-no-rj",
   "apiVersion": 1,
   "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
