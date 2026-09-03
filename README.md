@@ -14,7 +14,7 @@
 <h2>⬇️ انسخ الرابط والصقه في التطبيق أو اضغط على الصورة لتحميل الإضافات</h2>
 
 <p align="left">
-https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo
+https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/repo.json
 </p>
 <p align="left">
 <a href="https://abodabodd.github.io/testpage/">
