@@ -1,0 +1,22 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Viu.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Viu",
+    "internalName": "Viu",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 37791,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Movie",
+        "Drama"
+    ],
+    "iconUrl": "https://img.utdstc.com/icon/a99/c9e/a99c9ee56e731144b335282e9981a54a7584be93fc9644ad7a03b45552307876:200",
+    "apiVersion": 1,
+    "fileHash": "sha256-b30c71f5c5a5df549ecc58ef04e2e91d5885de6eabb3a0326c39fce7b9e2f3d7"
+}

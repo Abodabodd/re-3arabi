@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Witanime.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Witanime",
+    "internalName": "Witanime",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 73510,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Movie"
+    ],
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7AH2oC7LwumXRpHM8_WLpIFvDIfmS67jkjlhsCKpPaZdqcneigzUQX4g&s=10",
+    "apiVersion": 1,
+    "fileHash": "sha256-a77cb246ec49a8b65ddf5255a20ee0e217cec07431ad9656cb64d650b9f0fafe"
+}

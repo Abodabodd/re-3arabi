@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animerco.cs3",
+    "status": 1,
+    "version": 3,
+    "name": "Animerco",
+    "internalName": "Animerco",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 90897,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Movie"
+    ],
+    "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/file_0000000042f861f49090744dc097ee2f.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-a01c81a96c2205ccd579bbfbc4f6322cbda8fef12ef30e3f0b863478330ac210"
+}

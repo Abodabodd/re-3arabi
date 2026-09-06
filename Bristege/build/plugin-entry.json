@@ -1,0 +1,20 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Bristege.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Bristege",
+    "internalName": "Bristege",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 25920,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "Anime"
+    ],
+    "iconUrl": "https://amd.brstej.com/22.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-b899a62862a5c2c7d76d4f66058bc1b73d89c7f9f4b32fb49bd3f400e2b337e5"
+}

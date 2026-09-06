@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Topcinema.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Topcinema",
+    "internalName": "Topcinema",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 28273,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "Movie",
+        "tvTypes"
+    ],
+    "iconUrl": "https://web8.topcinema.cam/wp-content/uploads/2023/05/cropped-icon-32x32.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-3a81df4fdedaca1aff2520f5b17b3959eaef2313ccfb8f59daca272ed307d077"
+}

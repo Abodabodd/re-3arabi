@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Shahidwbas.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Shahidwbas",
+    "internalName": "Shahidwbas",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 18389,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Movie"
+    ],
+    "iconUrl": "https://cdn.wccftech.com/wp-content/uploads/2018/01/Youtube-music.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-0fec1f15b97dd676657dd626b5d29b23286b316e49206d0d7a74604eaed838d0"
+}

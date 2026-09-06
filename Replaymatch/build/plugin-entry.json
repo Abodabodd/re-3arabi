@@ -1,0 +1,22 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Replaymatch.cs3",
+    "status": 1,
+    "version": 2,
+    "name": "Replaymatch",
+    "internalName": "Replaymatch",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 28946,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "en",
+    "tvTypes": [
+        "Movie",
+        "Others",
+        "live"
+    ],
+    "iconUrl": "https://fullmatchshows.com/wp-content/uploads/2024/04/LOGOSASO.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-f8c0c0df0c3e70f18b0e969e6f41e9f8bc4ed8a238aebdd8def6d2153b73fdf1"
+}

@@ -1,0 +1,23 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Egydead.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Egydead",
+    "internalName": "Egydead",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 53456,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "Movie",
+        "TvSeries",
+        "Anime",
+        "AsianDrama"
+    ],
+    "iconUrl": "https://yt3.googleusercontent.com/ytc/AIdro_kgVTM6DJtx3tcS4gkPOOPnwFXKNhsrFyMRigWOlWomuQ=s900-c-k-c0x00ffffff-no-rj",
+    "apiVersion": 1,
+    "fileHash": "sha256-0dbe920ee1aa4f2e9c473c84da1fe8e90272f5baae56d6a74ee8df1b31d06b23"
+}

@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/dima-toon.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "dima-toon",
+    "internalName": "dima-toon",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 19697,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Anime"
+    ],
+    "iconUrl": "https://www.dima-toon.com/wp-content/uploads/2025/10/DimaToonlogo11.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-99b1bb863757a3591d4504bbb127a43e4222ea4a7b04836c11c2e917cec3f64c"
+}

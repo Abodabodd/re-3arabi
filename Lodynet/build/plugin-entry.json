@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Lodynet.cs3",
+    "status": 1,
+    "version": 2,
+    "name": "Lodynet",
+    "internalName": "Lodynet",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 44186,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "Movie",
+        "tvTypes"
+    ],
+    "iconUrl": "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp",
+    "apiVersion": 1,
+    "fileHash": "sha256-aa28e1d6fb089760b54da18cef76f48092fce97b421a2af093629cdfb0fee781"
+}

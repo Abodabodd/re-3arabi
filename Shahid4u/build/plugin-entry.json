@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Shahid4u.cs3",
+    "status": 1,
+    "version": 2,
+    "name": "Shahid4u",
+    "internalName": "Shahid4u",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 34295,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Movie"
+    ],
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Ig85ZYdRsjDw--peeI2RsBqOWmvnmvKKsT4UONdPMQ&s=10",
+    "apiVersion": 1,
+    "fileHash": "sha256-7afe41f126619c81449cbe3893b0731c3f59116f167532e07d96ab607120e270"
+}

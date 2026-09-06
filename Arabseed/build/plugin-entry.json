@@ -1,0 +1,21 @@
+{
+    "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Arabseed.cs3",
+    "status": 1,
+    "version": 1,
+    "name": "Arabseed",
+    "internalName": "Arabseed",
+    "authors": [
+        "Abodabodd"
+    ],
+    "description": "",
+    "fileSize": 55287,
+    "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+    "language": "ar",
+    "tvTypes": [
+        "TvSeries",
+        "Movie"
+    ],
+    "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjXYRCgXdHTs-hdcOKs1ooTW5plsBI7CWbsA&s",
+    "apiVersion": 1,
+    "fileHash": "sha256-51f2a1281fe7d8c6d8320568dd738d4f6b9b2a35377872763b8041dc863c5cf4"
+}
