@@ -1,7 +1,7 @@
-version = 4
+version = 1
 
 cloudstream {
-    description = "يستغرق تحميل الروابط بعض الوقت كن صبورا"
+    description = ""
     authors = listOf("Abodabodd")
     language = "ar"
 
@@ -9,8 +9,9 @@ cloudstream {
 
     tvTypes = listOf(
         "TvSeries",
-        "Movie"
+        "Movie",
+        "Drama"
     )
 
-    iconUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcamMqAuvsinzX-pcOGRo1KkYEbfv2zVJawHsugiX3dDcr64h-CJiL8ShJ&s=10"
+    iconUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-7OxHmLaqTWIj7eJv55zxus1xKVp5ssQPAKYjydt7Lg&s"
 }
