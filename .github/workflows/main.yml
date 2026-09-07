@@ -141,19 +141,6 @@ jobs:
               print(f'Error merging names: {e}')
           "
 
-          python3 -c "
-          import json, os
-          repo_data = {
-              'name': '3rabi عربي',
-              'description': 'مشاهدة الافلام والمسلسلات تجربة خالية من الاعلانات',
-              'manifestVersion': 1,
-              'pluginLists': ['https://raw.githubusercontent.com/${{ github.repository }}/builds/plugins.json']
-          }
-          repo_path = os.path.join(os.environ.get('GITHUB_WORKSPACE', ''), 'builds', 'repo.json')
-          with open(repo_path, 'w', encoding='utf-8') as f:
-              json.dump(repo_data, f, indent=4, ensure_ascii=False)
-          "
-
           cp build/plugins.json $GITHUB_WORKSPACE/builds/plugins.json || echo "No plugins.json found in build"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
 
