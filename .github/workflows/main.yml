@@ -78,7 +78,7 @@ jobs:
           import urllib.parse
           import re
 
-          url = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/builds/plugins.json"
+          url = "https://raw.githubusercontent.com/${{ github.repository }}/builds/plugins.json"
 
           def get_cs3_filename(url_str):
               if not url_str:
@@ -182,7 +182,7 @@ jobs:
           import json, urllib.request, os, urllib.parse
           generated_path = 'build/plugins.json'
           existing_builds_path = os.path.join(os.environ.get('GITHUB_WORKSPACE', ''), 'builds', 'plugins.json')
-          url = 'https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/builds/plugins.json'
+          url = 'https://raw.githubusercontent.com/${{ github.repository }}/builds/plugins.json'
           
           def get_cs3_filename(url_str):
               if not url_str:
