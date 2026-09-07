@@ -68,6 +68,132 @@ jobs:
                       except Exception as e:
                           print(f"Error processing {file_path}: {e}")
 
+      - name: Update build.gradle.kts from plugins.json
+        working-directory: "src"
+        shell: python
+        run: |
+          import json
+          import os
+          import urllib.request
+          import difflib
+          import re
+
+          url = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/plugins.json"
+
+          try:
+              response = urllib.request.urlopen(url)
+              data = json.loads(response.read().decode('utf-8'))
+          except Exception as e:
+              exit(1)
+
+          dirs = [d for d in os.listdir('.') if os.path.isdir(d) and not d.startswith('.')]
+
+          def strict_clean(text):
+              return re.sub(r'[^a-z0-9]', '', text.lower())
+
+          dir_map = {strict_clean(d): d for d in dirs}
+
+          manual_map = {
+              "fullmatchshows": "replaymatch",
+              "shabakatycinemana": "cinemana",
+              "shabakatcinemana": "cinemana",
+              "cee": "Cee",
+              "cimanaw": "CimaNowProvider",
+              "cimanawprovider": "CimaNowProvider",
+              "eshek": "eseek",
+              "brstege": "bristege",
+          }
+
+          for item in data:
+              internal_name = item.get("internalName", "")
+              name = item.get("name", "")
+              
+              target_dir = None
+              cleaned_internal = strict_clean(internal_name)
+              cleaned_name = strict_clean(name)
+              
+              mapped_folder = manual_map.get(cleaned_internal) or manual_map.get(cleaned_name)
+              if mapped_folder:
+                  for d in dirs:
+                      if strict_clean(d) == strict_clean(mapped_folder):
+                          target_dir = d
+                          break
+              
+              if not target_dir:
+                  if cleaned_internal in dir_map:
+                      target_dir = dir_map[cleaned_internal]
+                  elif cleaned_name in dir_map:
+                      target_dir = dir_map[cleaned_name]
+              
+              if not target_dir:
+                  for clean_d, actual_d in dir_map.items():
+                      if clean_d in cleaned_internal or cleaned_internal in clean_d or clean_d in cleaned_name or cleaned_name in clean_d:
+                          target_dir = actual_d
+                          break
+
+              if not target_dir:
+                  matches = difflib.get_close_matches(internal_name, dirs, n=1, cutoff=0.5)
+                  if not matches:
+                      matches = difflib.get_close_matches(name, dirs, n=1, cutoff=0.5)
+                  if matches:
+                      target_dir = matches[0]
+
+              if target_dir:
+                  gradle_path = os.path.join(target_dir, "build.gradle.kts")
+                  
+                  version = item.get("version", 1)
+                  description = item.get("description", "")
+                  authors = item.get("authors", ["Abodabodd"])
+                  language = item.get("language", "ar")
+                  status = item.get("status", 1)
+                  tv_types = item.get("tvTypes", [])
+                  icon_url = item.get("iconUrl", "")
+                  
+                  authors_kotlin = ", ".join([f'"{a}"' for a in authors])
+                  tv_types_kotlin = ",\n        ".join([f'"{t}"' for t in tv_types])
+                  
+                  content = f"""version = {version}
+
+          cloudstream {{
+              name = "{name}"
+              description = "{description}"
+              authors = listOf({authors_kotlin})
+              language = "{language}"
+
+              status = {status}
+
+              tvTypes = listOf(
+                  {tv_types_kotlin}
+              )
+
+              iconUrl = "{icon_url}"
+          }}
+          """
+                  
+                  existing_content = ""
+                  if os.path.exists(gradle_path):
+                      with open(gradle_path, "r", encoding="utf-8") as f:
+                          existing_content = f.read()
+                          
+                  if existing_content.strip() != content.strip():
+                      print(f"Updating: {gradle_path} for {internal_name} to custom name '{name}'...")
+                      with open(gradle_path, "w", encoding="utf-8") as f:
+                          f.write(content)
+
+      - name: Push updated files back to source branch
+        working-directory: "src"
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add -u
+          git add plugins.json || echo "No plugins.json in source root"
+          if [[ -n $(git status -s) ]]; then
+            git commit -m "Sync names and config with plugins.json [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "No changes to push"
+          fi
+
       - name: Access Secrets & Create Properties
         working-directory: "src"
         env:
@@ -107,7 +233,7 @@ jobs:
           fi
           
           local_modules=$(git status --porcelain | grep -v '^\.' | awk '{print $2}' | cut -d'/' -f1 | sort -u) || local_modules=""
-          all_modules=$(echo -e "${git_modules}\n${local_modules}" | sort -u | grep -v 'build.gradle.kts' | grep -v '^$') || all_modules=""
+          all_modules=$(printf "%s\n%s" "$git_modules" "$local_modules" | sort -u | grep -v 'build.gradle.kts' | grep -v '^$') || all_modules=""
           
           build_commands=""
           for module in $all_modules; do
@@ -127,20 +253,6 @@ jobs:
           cp build/plugins.json ./plugins.json || echo "No plugins.json found"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
           find . -type f -name "plugins.json" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No plugins.json found"
-
-      - name: Push updated files back to source branch
-        working-directory: "src"
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add -u
-          git add plugins.json
-          if [[ -n $(git status -s) ]]; then
-            git commit -m "Strip comments and update plugins.json [skip ci]"
-            git push origin HEAD:${{ github.ref_name }}
-          else
-            echo "No changes to push"
-          fi
 
       - name: Push builds
         working-directory: "builds"
