@@ -48,18 +48,19 @@ jobs:
           import os
           import re
 
-          pattern = re.compile(r'^\s*//.*\r?\n?', re.MULTILINE)
+          pattern_comments = re.compile(r'^\s*//.*\r?\n?', re.MULTILINE)
+          pattern_package = re.compile(r'package="[^"]*"')
 
           for root, dirs, files in os.walk('.'):
               dirs[:] = [d for d in dirs if not d.startswith('.')]
               for file in files:
+                  file_path = os.path.join(root, file)
                   if file.endswith('.kt') or file.endswith('.kts'):
-                      file_path = os.path.join(root, file)
                       try:
                           with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                               content = f.read()
                           
-                          cleaned_content = pattern.sub('', content)
+                          cleaned_content = pattern_comments.sub('', content)
                           
                           if cleaned_content != content:
                               with open(file_path, 'w', encoding='utf-8') as f:
@@ -67,6 +68,20 @@ jobs:
                               print(f"Removed comments from: {file_path}")
                       except Exception as e:
                           print(f"Error processing {file_path}: {e}")
+                  elif file.endswith('.xml'):
+                      try:
+                          with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                              content = f.read()
+                          
+                          if '<manifest' in content and 'package=' in content:
+                              cleaned_content = pattern_package.sub('', content)
+                              
+                              if cleaned_content != content:
+                                  with open(file_path, 'w', encoding='utf-8') as f:
+                                      f.write(cleaned_content)
+                                  print(f"Removed package attribute from XML: {file_path}")
+                      except Exception as e:
+                          print(f"Error processing XML {file_path}: {e}")
 
       - name: Build Plugins
         working-directory: "src"
