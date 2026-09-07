@@ -141,7 +141,6 @@ jobs:
               print(f'Error merging names: {e}')
           "
 
-          cp build/plugins.json ./plugins.json || echo "No plugins.json found in build"
           cp build/plugins.json $GITHUB_WORKSPACE/builds/plugins.json || echo "No plugins.json found in build"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
 
@@ -151,9 +150,8 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add -u
-          git add plugins.json || echo "No plugins.json in source root"
           if [[ -n $(git status -s) ]]; then
-            git commit -m "Sync names and config with plugins.json [skip ci]"
+            git commit -m "Strip comments [skip ci]"
             git push origin HEAD:${{ github.ref_name }}
           else
             echo "No changes to push"
