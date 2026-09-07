@@ -75,10 +75,19 @@ jobs:
           import json
           import os
           import urllib.request
-          import difflib
+          import urllib.parse
           import re
 
           url = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/plugins.json"
+
+          def get_cs3_filename(url_str):
+              if not url_str:
+                  return ""
+              parts = url_str.split('/')
+              unquoted = urllib.parse.unquote(parts[-1])
+              if unquoted.endswith('.cs3'):
+                  return unquoted[:-4]
+              return unquoted
 
           try:
               response = urllib.request.urlopen(url)
@@ -86,60 +95,11 @@ jobs:
           except Exception as e:
               exit(1)
 
-          dirs = [d for d in os.listdir('.') if os.path.isdir(d) and not d.startswith('.')]
-
-          def strict_clean(text):
-              return re.sub(r'[^a-z0-9]', '', text.lower())
-
-          dir_map = {strict_clean(d): d for d in dirs}
-
-          manual_map = {
-              "fullmatchshows": "replaymatch",
-              "shabakatycinemana": "cinemana",
-              "shabakatcinemana": "cinemana",
-              "cee": "Cee",
-              "cimanaw": "CimaNowProvider",
-              "cimanawprovider": "CimaNowProvider",
-              "eshek": "eseek",
-              "brstege": "bristege",
-          }
-
           for item in data:
-              internal_name = item.get("internalName", "")
-              name = item.get("name", "")
+              folder_name = get_cs3_filename(item.get("url"))
               
-              target_dir = None
-              cleaned_internal = strict_clean(internal_name)
-              cleaned_name = strict_clean(name)
-              
-              mapped_folder = manual_map.get(cleaned_internal) or manual_map.get(cleaned_name)
-              if mapped_folder:
-                  for d in dirs:
-                      if strict_clean(d) == strict_clean(mapped_folder):
-                          target_dir = d
-                          break
-              
-              if not target_dir:
-                  if cleaned_internal in dir_map:
-                      target_dir = dir_map[cleaned_internal]
-                  elif cleaned_name in dir_map:
-                      target_dir = dir_map[cleaned_name]
-              
-              if not target_dir:
-                  for clean_d, actual_d in dir_map.items():
-                      if clean_d in cleaned_internal or cleaned_internal in clean_d or clean_d in cleaned_name or cleaned_name in clean_d:
-                          target_dir = actual_d
-                          break
-
-              if not target_dir:
-                  matches = difflib.get_close_matches(internal_name, dirs, n=1, cutoff=0.5)
-                  if not matches:
-                      matches = difflib.get_close_matches(name, dirs, n=1, cutoff=0.5)
-                  if matches:
-                      target_dir = matches[0]
-
-              if target_dir:
-                  gradle_path = os.path.join(target_dir, "build.gradle.kts")
+              if folder_name and os.path.isdir(folder_name):
+                  gradle_path = os.path.join(folder_name, "build.gradle.kts")
                   
                   existing_content = ""
                   if os.path.exists(gradle_path):
@@ -179,7 +139,7 @@ jobs:
           """
                   
                   if existing_content.strip() != content.strip():
-                      print(f"Updating: {gradle_path} for {internal_name}...")
+                      print(f"Updating: {gradle_path}...")
                       with open(gradle_path, "w", encoding="utf-8") as f:
                           f.write(content)
 
@@ -233,17 +193,29 @@ jobs:
           $GRADLE_CMD make makePluginsJson
 
           python3 -c "
-          import json, urllib.request, os
+          import json, urllib.request, os, urllib.parse
           generated_path = 'build/plugins.json'
           existing_builds_path = os.path.join(os.environ.get('GITHUB_WORKSPACE', ''), 'builds', 'plugins.json')
           url = 'https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/plugins.json'
           
+          def get_cs3_filename(url_str):
+              if not url_str:
+                  return ''
+              parts = url_str.split('/')
+              unquoted = urllib.parse.unquote(parts[-1])
+              if unquoted.endswith('.cs3'):
+                  return unquoted[:-4]
+              return unquoted
+              
           builds_name_map = {}
           try:
               if os.path.exists(existing_builds_path):
                   with open(existing_builds_path, 'r', encoding='utf-8') as f:
                       builds_data = json.loads(f.read())
-                  builds_name_map = {item.get('internalName'): item.get('name') for item in builds_data if 'internalName' in item}
+                  for item in builds_data:
+                      cs3_name = get_cs3_filename(item.get('url'))
+                      if cs3_name:
+                          builds_name_map[cs3_name] = item.get('name')
           except Exception as e:
               print(f'Error reading local builds: {e}')
               
@@ -251,7 +223,10 @@ jobs:
           try:
               response = urllib.request.urlopen(url)
               remote_data = json.loads(response.read().decode('utf-8'))
-              remote_name_map = {item.get('internalName'): item.get('name') for item in remote_data if 'internalName' in item}
+              for item in remote_data:
+                  cs3_name = get_cs3_filename(item.get('url'))
+                  if cs3_name:
+                      remote_name_map[cs3_name] = item.get('name')
           except Exception as e:
               print(f'Error reading remote: {e}')
               
@@ -260,13 +235,13 @@ jobs:
                   with open(generated_path, 'r', encoding='utf-8') as f:
                       gen_data = json.loads(f.read())
                   for item in gen_data:
-                      int_name = item.get('internalName')
-                      if int_name in builds_name_map:
-                          item['name'] = builds_name_map[int_name]
-                          print(f'Preserved existing builds name for {int_name} -> {builds_name_map[int_name]}')
-                      elif int_name in remote_name_map:
-                          item['name'] = remote_name_map[int_name]
-                          print(f'Set name for new plugin {int_name} from main branch -> {remote_name_map[int_name]}')
+                      cs3_name = get_cs3_filename(item.get('url'))
+                      if cs3_name in builds_name_map:
+                          item['name'] = builds_name_map[cs3_name]
+                          print(f'Preserved existing builds name for {cs3_name} -> {item[\"name\"]}')
+                      elif cs3_name in remote_name_map:
+                          item['name'] = remote_name_map[cs3_name]
+                          print(f'Set name for new plugin {cs3_name} from main branch -> {remote_name_map[cs3_name]}')
                   with open(generated_path, 'w', encoding='utf-8') as f:
                       json.dump(gen_data, f, indent=4, ensure_ascii=False)
           except Exception as e:
