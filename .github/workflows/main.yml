@@ -256,23 +256,27 @@ jobs:
           python3 -c "
           import json, urllib.request, os
           generated_path = 'build/plugins.json'
-          existing_builds_path = '../builds/plugins.json'
+          existing_builds_path = os.path.join(os.environ.get('GITHUB_WORKSPACE', ''), 'builds', 'plugins.json')
           url = 'https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/plugins.json'
+          
+          builds_name_map = {}
           try:
-              builds_data = []
               if os.path.exists(existing_builds_path):
                   with open(existing_builds_path, 'r', encoding='utf-8') as f:
                       builds_data = json.loads(f.read())
-              builds_name_map = {item.get('internalName'): item.get('name') for item in builds_data if 'internalName' in item}
+                  builds_name_map = {item.get('internalName'): item.get('name') for item in builds_data if 'internalName' in item}
+          except Exception as e:
+              print(f'Error reading local builds: {e}')
               
-              remote_data = []
-              try:
-                  response = urllib.request.urlopen(url)
-                  remote_data = json.loads(response.read().decode('utf-8'))
-              except Exception as e:
-                  print(f'Error reading remote plugins.json: {e}')
+          remote_name_map = {}
+          try:
+              response = urllib.request.urlopen(url)
+              remote_data = json.loads(response.read().decode('utf-8'))
               remote_name_map = {item.get('internalName'): item.get('name') for item in remote_data if 'internalName' in item}
+          except Exception as e:
+              print(f'Error reading remote: {e}')
               
+          try:
               if os.path.exists(generated_path):
                   with open(generated_path, 'r', encoding='utf-8') as f:
                       gen_data = json.loads(f.read())
@@ -290,19 +294,6 @@ jobs:
               print(f'Error merging names: {e}')
           "
 
-          cp build/plugins.json ./plugins.json || echo "No plugins.json found"
+          cp build/plugins.json ./plugins.json || echo "No plugins.json found in build"
+          cp build/plugins.json $GITHUB_WORKSPACE/builds/plugins.json || echo "No plugins.json found in build"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
-          find . -type f -name "plugins.json" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No plugins.json found"
-
-      - name: Push builds
-        working-directory: "builds"
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add .
-          if [[ -n $(git status -s) ]]; then
-            git commit --amend -m "Build $GITHUB_SHA" || git commit -m "Build $GITHUB_SHA"
-            git push --force origin HEAD:builds
-          else
-            echo "No changes to push"
-          fi
