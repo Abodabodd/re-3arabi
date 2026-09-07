@@ -141,7 +141,19 @@ jobs:
               print(f'Error merging names: {e}')
           "
 
-          cp build/plugins.json ./plugins.json || echo "No plugins.json found in build"
+          python3 -c "
+          import json, os
+          repo_data = {
+              'name': '3rabi عربي',
+              'description': 'مشاهدة الافلام والمسلسلات تجربة خالية من الاعلانات',
+              'manifestVersion': 1,
+              'pluginLists': ['https://raw.githubusercontent.com/${{ github.repository }}/builds/plugins.json']
+          }
+          repo_path = os.path.join(os.environ.get('GITHUB_WORKSPACE', ''), 'builds', 'repo.json')
+          with open(repo_path, 'w', encoding='utf-8') as f:
+              json.dump(repo_data, f, indent=4, ensure_ascii=False)
+          "
+
           cp build/plugins.json $GITHUB_WORKSPACE/builds/plugins.json || echo "No plugins.json found in build"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
 
@@ -151,9 +163,8 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add -u
-          git add plugins.json || echo "No plugins.json in source root"
-          if [[ -n $(git status -s) ]]; then
-            git commit -m "Sync names and config with plugins.json [skip ci]"
+          if ! git diff --cached --quiet; then
+            git commit -m "Strip comments [skip ci]"
             git push origin HEAD:${{ github.ref_name }}
           else
             echo "No changes to push"
@@ -165,7 +176,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add .
-          if [[ -n $(git status -s) ]]; then
+          if ! git diff --cached --quiet; then
             git commit --amend -m "Build $GITHUB_SHA" || git commit -m "Build $GITHUB_SHA"
             git push --force origin HEAD:builds
           else
