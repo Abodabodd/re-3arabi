@@ -9,7 +9,7 @@
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 31490,
+        "fileSize": 31493,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -18,7 +18,7 @@
         ],
         "iconUrl": "https://3esk.onl/wp-content/uploads/2021/01/3isk-logo.png",
         "apiVersion": 1,
-        "fileHash": "sha256-1748e8450ef4acfc92891845972ea8fb9a9eddf2bc0d0ba4e1d92f461d2c3191"
+        "fileHash": "sha256-e9d0fbf317d69e3508119fe3f198b2ed248613f71be0e3699086ceb943ccf355"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Aflaam.cs3",
@@ -109,7 +109,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anim3rb.cs3",
         "status": 1,
         "version": 1,
-        "name": "Anim3rb",
+        "name": "Anime3rb",
         "internalName": "Anim3rb",
         "authors": [
             "Abodabodd"
@@ -195,7 +195,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animewitcher.cs3",
         "status": 1,
         "version": 3,
-        "name": "Animewitcher",
+        "name": "AnimeWitcher",
         "internalName": "Animewitcher",
         "authors": [
             "Abodabodd"
@@ -236,7 +236,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Bristege.cs3",
         "status": 1,
         "version": 1,
-        "name": "Bristege",
+        "name": "Brstej",
         "internalName": "Bristege",
         "authors": [
             "Abodabodd"
@@ -256,7 +256,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cee.cs3",
         "status": 1,
         "version": 1,
-        "name": "Cee",
+        "name": "Cee (🇮🇶)",
         "internalName": "Cee",
         "authors": [
             "Abodabodd"
@@ -342,7 +342,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/cinemana.cs3",
         "status": 1,
         "version": 4,
-        "name": "cinemana",
+        "name": "Shabakaty Cinemana (🇮🇶)",
         "internalName": "cinemana",
         "authors": [
             "Abodabodd"
@@ -363,7 +363,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/dima-toon.cs3",
         "status": 1,
         "version": 1,
-        "name": "dima-toon",
+        "name": "Dima toon",
         "internalName": "dima-toon",
         "authors": [
             "Abodabodd"
@@ -429,7 +429,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/eseek.cs3",
         "status": 1,
         "version": 3,
-        "name": "eseek",
+        "name": "Eshek",
         "internalName": "eseek",
         "authors": [
             "Abodabodd"
@@ -492,7 +492,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Lodynet.cs3",
         "status": 1,
         "version": 2,
-        "name": "Lodynet",
+        "name": "LodyNet",
         "internalName": "Lodynet",
         "authors": [
             "Abodabodd"
@@ -513,7 +513,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/MyCimaProvider.cs3",
         "status": 1,
         "version": 1,
-        "name": "MyCimaProvider",
+        "name": "Mycima",
         "internalName": "MyCimaProvider",
         "authors": [
             "Abodabodd"
@@ -536,7 +536,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Replaymatch.cs3",
         "status": 1,
         "version": 2,
-        "name": "Replaymatch",
+        "name": "FullMatchShows",
         "internalName": "Replaymatch",
         "authors": [
             "Abodabodd"
@@ -600,7 +600,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Syria-live.cs3",
         "status": 1,
         "version": 1,
-        "name": "Syria-live",
+        "name": "Syrialive",
         "internalName": "Syria-live",
         "authors": [
             "Abodabodd"
@@ -621,7 +621,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Topcinema.cs3",
         "status": 1,
         "version": 1,
-        "name": "Topcinema",
+        "name": "TopCinema",
         "internalName": "Topcinema",
         "authors": [
             "Abodabodd"
@@ -642,7 +642,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TukTukcima.cs3",
         "status": 1,
         "version": 1,
-        "name": "TukTukcima",
+        "name": "Tuktukcima",
         "internalName": "TukTukcima",
         "authors": [
             "Abodabodd"
@@ -707,7 +707,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TVgarden.cs3",
         "status": 1,
         "version": 1,
-        "name": "TVgarden",
+        "name": "TVgarden(Famelack)",
         "internalName": "TVgarden",
         "authors": [
             "Abodabodd"
@@ -751,7 +751,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Wecima.cs3",
         "status": 1,
         "version": 1,
-        "name": "Wecima",
+        "name": "WeCima",
         "internalName": "Wecima",
         "authors": [
             "Abodabodd"
@@ -815,7 +815,7 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Youtube.cs3",
         "status": 1,
         "version": 2,
-        "name": "Youtube",
+        "name": "YouTube",
         "internalName": "Youtube",
         "authors": [
             "Abodabodd"
