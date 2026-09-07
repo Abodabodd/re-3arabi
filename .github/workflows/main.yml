@@ -155,7 +155,6 @@ jobs:
                   content = f"""version = {version}
 
           cloudstream {{
-              name = "{name}"
               description = "{description}"
               authors = listOf({authors_kotlin})
               language = "{language}"
@@ -176,7 +175,7 @@ jobs:
                           existing_content = f.read()
                           
                   if existing_content.strip() != content.strip():
-                      print(f"Updating: {gradle_path} for {internal_name} to custom name '{name}'...")
+                      print(f"Updating: {gradle_path} for {internal_name}...")
                       with open(gradle_path, "w", encoding="utf-8") as f:
                           f.write(content)
 
@@ -249,6 +248,29 @@ jobs:
             echo "No specific modified modules detected (or manual run). Building all modules..."
             $GRADLE_CMD make makePluginsJson
           fi
+
+          python3 -c "
+          import json, urllib.request, os
+          url = 'https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/plugins.json'
+          try:
+              response = urllib.request.urlopen(url)
+              custom_data = json.loads(response.read().decode('utf-8'))
+          except Exception as e:
+              print(f'Error reading remote plugins.json: {e}')
+              exit(0)
+          name_map = {item.get('internalName'): item.get('name') for item in custom_data if 'internalName' in item}
+          generated_path = 'build/plugins.json'
+          if os.path.exists(generated_path):
+              with open(generated_path, 'r', encoding='utf-8') as f:
+                  gen_data = json.loads(f.read())
+              for item in gen_data:
+                  int_name = item.get('internalName')
+                  if int_name in name_map:
+                      item['name'] = name_map[int_name]
+                      print(f'Restored custom name for {int_name} -> {name_map[int_name]}')
+              with open(generated_path, 'w', encoding='utf-8') as f:
+                  json.dump(gen_data, f, indent=4, ensure_ascii=False)
+          "
 
           cp build/plugins.json ./plugins.json || echo "No plugins.json found"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
