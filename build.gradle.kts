@@ -76,21 +76,22 @@ subprojects {
 
     dependencies {
         val implementation by configurations
+        val cloudstream by configurations
         cloudstream("com.lagradost:cloudstream3:pre-release")
-    implementation(kotlin("stdlib"))
-    implementation("com.github.Blatzar:NiceHttp:0.4.18")
-    implementation("org.jsoup:jsoup:1.22.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
-    implementation("org.mozilla:rhino:1.8.1")
-    implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.25.2")
-    implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.annotation:annotation:1.10.0")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("androidx.browser:browser:1.9.0")
-    implementation("androidx.room:room-ktx:2.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+        implementation(kotlin("stdlib"))
+        implementation("com.github.Blatzar:NiceHttp:0.4.18")
+        implementation("org.jsoup:jsoup:1.22.2")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+        implementation("com.squareup.okhttp3:okhttp:4.12.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+        implementation("org.mozilla:rhino:1.8.1")
+        implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.25.2")
+        implementation("androidx.preference:preference-ktx:1.2.1")
+        implementation("androidx.annotation:annotation:1.10.0")
+        implementation("com.google.android.material:material:1.13.0")
+        implementation("androidx.browser:browser:1.9.0")
+        implementation("androidx.room:room-ktx:2.8.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     }
 }
 
