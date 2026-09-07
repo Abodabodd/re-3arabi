@@ -1,6 +1,7 @@
 version = 1
 
 cloudstream {
+    name = "Syria-live"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

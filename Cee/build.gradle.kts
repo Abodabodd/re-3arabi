@@ -1,6 +1,7 @@
 version = 1
 
 cloudstream {
+    name = "Cee"
     description = "لا يعمل خارج العراق"
     authors = listOf("Abodabodd")
     language = "ar"

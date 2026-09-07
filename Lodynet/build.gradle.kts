@@ -1,6 +1,7 @@
 version = 2
 
 cloudstream {
+    name = "Lodynet"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

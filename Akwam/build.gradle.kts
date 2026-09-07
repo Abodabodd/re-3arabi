@@ -1,6 +1,7 @@
 version = 3
 
 cloudstream {
+    name = "Akwam"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

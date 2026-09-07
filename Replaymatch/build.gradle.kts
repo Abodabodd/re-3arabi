@@ -1,6 +1,7 @@
 version = 2
 
 cloudstream {
+    name = "Replaymatch"
     description = ""
     authors = listOf("Abodabodd")
     language = "en"

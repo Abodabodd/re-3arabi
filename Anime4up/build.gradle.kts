@@ -1,6 +1,7 @@
 version = 1
 
 cloudstream {
+    name = "Anime4up"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

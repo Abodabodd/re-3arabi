@@ -1,6 +1,7 @@
 version = 4
 
 cloudstream {
+    name = "cinemana"
     description = "لا يعمل خارج العراق او اي شبكة غير ايرثلنك"
     authors = listOf("Abodabodd")
     language = "ar"
