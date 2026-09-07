@@ -1,7 +1,6 @@
 version = 1
 
 cloudstream {
-    name = "Krmzy"
     description = "البحث لا يعمل حاليا مشكلة من الموقع"
     authors = listOf("Abodabodd")
     language = "ar"

@@ -1,7 +1,6 @@
 version = 1
 
 cloudstream {
-    name = "TuniflexBlog"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

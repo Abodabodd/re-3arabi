@@ -1,7 +1,6 @@
 version = 3
 
 cloudstream {
-    name = "Animerco"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

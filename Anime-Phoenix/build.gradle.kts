@@ -1,7 +1,6 @@
 version = 1
 
 cloudstream {
-    name = "Anime-Phoenix"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

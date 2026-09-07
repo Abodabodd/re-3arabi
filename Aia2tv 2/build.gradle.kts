@@ -1,7 +1,6 @@
 version = 3
 
 cloudstream {
-    name = "Aia2tv 2"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

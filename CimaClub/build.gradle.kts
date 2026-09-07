@@ -1,7 +1,6 @@
 version = 1
 
 cloudstream {
-    name = "CimaClub"
     description = "سيرفرات الموقع بها ضعف احيانا اذا لم يفتح  غالبا المشكلة من الموقع"
     authors = listOf("Abodabodd")
     language = "ar"

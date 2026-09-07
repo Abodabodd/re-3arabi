@@ -1,7 +1,6 @@
 version = 2
 
 cloudstream {
-    name = "Youtube"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"

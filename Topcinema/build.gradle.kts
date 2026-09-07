@@ -1,7 +1,6 @@
 version = 1
 
 cloudstream {
-    name = "Topcinema"
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"
