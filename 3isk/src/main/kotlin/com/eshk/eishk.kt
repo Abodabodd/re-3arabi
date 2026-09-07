@@ -14,6 +14,7 @@ import kotlin.io.encoding.Base64
 import android.service.controls.ControlsProviderService.TAG
 import com.lagradost.cloudstream3.syncproviders.providers.OpenSubtitlesApi.Companion.headers
 
+
 class eishk : MainAPI() {
     override var mainUrl = "https://3esk.onl"
     override var name = "قصة عشق"
