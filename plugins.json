@@ -9,7 +9,7 @@
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 31492,
+        "fileSize": 31493,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -18,7 +18,7 @@
         ],
         "iconUrl": "https://3esk.onl/wp-content/uploads/2021/01/3isk-logo.png",
         "apiVersion": 1,
-        "fileHash": "sha256-8f865ecfb892486ab21f0c71bb91b8b74a2b62d7b4b956043477e2b74fb8cd17"
+        "fileHash": "sha256-e9d0fbf317d69e3508119fe3f198b2ed248613f71be0e3699086ceb943ccf355"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Aflaam.cs3",
