@@ -1,0 +1,840 @@
+[
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/3isk.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "3isk",
+        "internalName": "3isk",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 31165,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://3esk.onl/wp-content/uploads/2021/01/3isk-logo.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-00ead28e610d86add9fc0e3fd937c1dfe863b66b0c5686e28bebf8039c7ab86a"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Aflaam.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Aflaam",
+        "internalName": "Aflaam",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 15484,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://aflaam.com/style/assets/images/logo.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-c8cbba4f4f36d76907d2b366baa480d9201b16079cef9c3bd85f20cc3049e183"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Aia2tv 2.cs3",
+        "status": 1,
+        "version": 3,
+        "name": "Asia2tv 2",
+        "internalName": "Aia2tv 2",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 14286,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "AsianDrama"
+        ],
+        "iconUrl": "https://media.licdn.com/dms/image/v2/C4D0BAQEhyYSi351HRw/company-logo_200_200/company-logo_200_200/0/1630489719119?e=2147483647&v=beta&t=Br69OJ2AwT5vdJHgl-DTvliEqOmp6VQLYwUWcFqG4u4",
+        "apiVersion": 1,
+        "fileHash": "sha256-1de87a498012cf7252b83f54eeb637a8b4cb482fe7114a1bd66b3adfbae1154e"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Akwam.cs3",
+        "status": 1,
+        "version": 3,
+        "name": "Akwam",
+        "internalName": "Akwam",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 27980,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2vuGLv4zY3XpoN2jza2unCQ95xFfypfe-h3k3xteMbGxl7taw-ziXyNg&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-cd29b55725e0db70296c1831ea6c6136889f14eb01e57eb6c32afc998e93ecb2"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Alooytv.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Alooytv",
+        "internalName": "Alooytv",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 14658,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://fitnur.com/uploads/avatars/c5ae8dadf88bcea9549657ec451a1563.jpg",
+        "apiVersion": 1,
+        "fileHash": "sha256-96607f1f5b4e32f5ce688a75b459ab77d8bad97d08b1a2a2bc5f5dcd54035197"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anim3rb.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Anime3rb",
+        "internalName": "Anim3rb",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 36516,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Anime"
+        ],
+        "iconUrl": "https://images.anime3rb.com/favicon/apple-touch-icon.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-99b3077c567fe62084729d04529f0a0ba831dae8376992b7b0be23f785880f71"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anime-Phoenix.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Anime-Phoenix",
+        "internalName": "Anime-Phoenix",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 27126,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Anime",
+            "Movie"
+        ],
+        "iconUrl": "https://yt3.googleusercontent.com/mBIIR5cqQC4Y-o7HaxbkJfs305X6tbHLSNPk6MRMCDJsH8xP0SfGhK-CBDpSmH95wSff9z99sg=s900-c-k-c0x00ffffff-no-rj",
+        "apiVersion": 1,
+        "fileHash": "sha256-758b3bb9eab01fee2704b281413960512014c45c3612184c20fe62e1ee984ed1"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anime4up.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Anime4up",
+        "internalName": "Anime4up",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 37890,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Anime"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkVDfHjqUpRyrWJjW8wUHH87BhSO6B9uxI-B80sAy_AQ&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-30ae4aaab6596ed950a55d5a41dfd44d42721c7d1e9af0fea2eabc61a40ece06"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animerco.cs3",
+        "status": 1,
+        "version": 3,
+        "name": "Animerco",
+        "internalName": "Animerco",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 91390,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/file_0000000042f861f49090744dc097ee2f.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-795b94f18654b53250a61513711ace519593a3583bfc48a6cf2e0d5af43bbf7f"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/AnimeRift.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "AnimeRift",
+        "internalName": "AnimeRift",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
+        "fileSize": 48574,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Anime",
+            "Movie"
+        ],
+        "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/AnimeRift/icon.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-9ba88208f3fcd51845046737380453ec02dc1d4b48bab326ca7f329d8136e27f"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animewitcher.cs3",
+        "status": 1,
+        "version": 3,
+        "name": "AnimeWitcher",
+        "internalName": "Animewitcher",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 34328,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Anime"
+        ],
+        "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/anime_witcher_round_icon.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-4c639f9392d46e45f4ee84e8799c810cc1d11fba2f13ff7e32865c71987c2fb4"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Bristege.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Brstej",
+        "internalName": "Bristege",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 26137,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Anime"
+        ],
+        "iconUrl": "https://amd.brstej.com/22.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-17c6074460176b5547d0d242c09727c427bedae8bfe2529693e60f0b0348cb31"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cee.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Cee (🇮🇶)",
+        "internalName": "Cee",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "لا يعمل خارج العراق",
+        "fileSize": 47031,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNEnHalnMz2EfG48BZUI6iC86seq09uafFngG8gz1OWQ&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-131f942fa11bc89677543280a02ae2a9e2e19bc5c4d73fa3636ae8c5444c4f46"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/CimaClub.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "CimaClub",
+        "internalName": "CimaClub",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "سيرفرات الموقع بها ضعف احيانا اذا لم يفتح  غالبا المشكلة من الموقع",
+        "fileSize": 17361,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX1z-0NYyzyEiFs4q7X9c8SSBR6kJtVl7f7A&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-2cfbf3abb5892b22f299ac8b5ca7711c073ed38a930c91748e696fbfdd885052"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cimalight.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Cimalight",
+        "internalName": "Cimalight",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 25913,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Anime"
+        ],
+        "iconUrl": "https://yt3.googleusercontent.com/n2PDvQiQVV00JjGsg66dvMZKmyoolvCeu59Xe40pmEvhiMNE1tHqKsoEY1IpfdNNXdlle4It=s900-c-k-c0x00ffffff-no-rj",
+        "apiVersion": 1,
+        "fileHash": "sha256-41def442115b7018006e81b3184a3ab99ba75552900a9e043ac257a1bd18651a"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cimatn.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Cimatn",
+        "internalName": "Cimatn",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 38289,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Drama"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-7OxHmLaqTWIj7eJv55zxus1xKVp5ssQPAKYjydt7Lg&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-1540f9de487a50bf0b67d2a79de14314439fda95c1b2df51ca385b6c15402a50"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/cinemana.cs3",
+        "status": 1,
+        "version": 4,
+        "name": "Shabakaty Cinemana (🇮🇶)",
+        "internalName": "cinemana",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "لا يعمل خارج العراق او اي شبكة غير ايرثلنك",
+        "fileSize": 54226,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZlAGH56cEnNEL93W3QqZWpUe8XR8i90olTA&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-5e1efeda9d8770f78eeefab77fc1c0454379496156cdfa8f939277124c1c2ece"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/dima-toon.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Dima toon",
+        "internalName": "dima-toon",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 19812,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Anime"
+        ],
+        "iconUrl": "https://www.dima-toon.com/wp-content/uploads/2025/10/DimaToonlogo11.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-048fc02cd74f7d43a2618a563a17c3727a2a801accb20f9e1cf13ef6e68619ef"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Egydead.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Egydead",
+        "internalName": "Egydead",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 53735,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama"
+        ],
+        "iconUrl": "https://yt3.googleusercontent.com/ytc/AIdro_kgVTM6DJtx3tcS4gkPOOPnwFXKNhsrFyMRigWOlWomuQ=s900-c-k-c0x00ffffff-no-rj",
+        "apiVersion": 1,
+        "fileHash": "sha256-8dcfb769e912cc41aede16da915039ab9a1af20955841957d8be4b08fcbc9e7d"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Elif.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Elif",
+        "internalName": "Elif",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 31069,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Anime",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq14Sk88U37tIhiRndbNczqn0ectswZly90f1oCa_zbg&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-139d4cf90e5346739b39f72e33d83194fdbcc9601ac64348f1161dcab636e163"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/eseek.cs3",
+        "status": 1,
+        "version": 3,
+        "name": "Eshek",
+        "internalName": "eseek",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 37973,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://gesseh.net/wp-content/uploads/2024/10/keesatlogo.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-70bf9c63b28da3e848ede393cf592fa51d10f42b5518fac3e6c063662c17b166"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Faselhd.cs3",
+        "status": 1,
+        "version": 3,
+        "name": "Faselhd",
+        "internalName": "Faselhd",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 55602,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ03aoQBNDy_Hkm5MUGGvluPvK7To7BdGiSnzQn7WJ3fQ&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-ffdcb7efc760f82032f2d2822a8c1e985e0bba8e763be3925b2884a9b6a81de9"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Krmzy.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Krmzy",
+        "internalName": "Krmzy",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "البحث لا يعمل حاليا مشكلة من الموقع",
+        "fileSize": 29631,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwTnAJOvyri3uHzHxjkEdlaBBKs8MAvIuJtFmCoo9u5qYiuFpHZjcl6tDi&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-785b7fc9326398763dd7343b90658e28b5aae1f7ce3fa1de72fc09a67e6b99e6"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Lodynet.cs3",
+        "status": 1,
+        "version": 2,
+        "name": "LodyNet",
+        "internalName": "Lodynet",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 44495,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "tvTypes"
+        ],
+        "iconUrl": "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp",
+        "apiVersion": 1,
+        "fileHash": "sha256-56a9ab9dc9f8e2c05ce66a0a572591581e47575711c378c1d1929c7244ca9f73"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/MyCimaProvider.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Mycima",
+        "internalName": "MyCimaProvider",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 45475,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxoF3lscri32oVf0iQlhbjFEoUn2xg3OmQIx4wYdDmqw&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-ff8e09bb07cb94fad7216e8c6a29bdff3d5758e6f7f1c4b68bacad18935bfe5a"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Replaymatch.cs3",
+        "status": 1,
+        "version": 2,
+        "name": "FullMatchShows",
+        "internalName": "Replaymatch",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 29210,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "en",
+        "tvTypes": [
+            "Movie",
+            "Others",
+            "live"
+        ],
+        "iconUrl": "https://fullmatchshows.com/wp-content/uploads/2024/04/LOGOSASO.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-9702287e1acdbc6556a5f43350aac49df0fc323c2bb50ecc55f0f9173851e147"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Shahid4u.cs3",
+        "status": 1,
+        "version": 2,
+        "name": "Shahid4u",
+        "internalName": "Shahid4u",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 34804,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Ig85ZYdRsjDw--peeI2RsBqOWmvnmvKKsT4UONdPMQ&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-a4d12b9c3b0560434781af67f5816f06fc96d8c11771b7e1187332f52e8091cf"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Shahidwbas.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Shahidwbas",
+        "internalName": "Shahidwbas",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 18361,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://cdn.wccftech.com/wp-content/uploads/2018/01/Youtube-music.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-f89172fe028aa79efa3ca5a4c48ddb5080548fb430528ee2f42a56f89280895d"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Syria-live.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Syrialive",
+        "internalName": "Syria-live",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 16742,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Live"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF607wnarFL8Ob8KLPahUPJzcLjbtg1pEH0A&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-48b9fa4a88c0372a6c2c756a5502bf21e8f01c7215ab2dc3daebfe259eb8e955"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Topcinema.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "TopCinema",
+        "internalName": "Topcinema",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 28702,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "tvTypes"
+        ],
+        "iconUrl": "https://web8.topcinema.cam/wp-content/uploads/2023/05/cropped-icon-32x32.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-04fe8195714a8ef8c38545ad8c135b219dfa2b1e2728ba70da82aa509964f69c"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TukTukcima.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Tuktukcima",
+        "internalName": "TukTukcima",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 42735,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ10TEG3tTtkEF9_g3IslEP3xs0wx9EVhBs7b_H5M1gpg&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-544bdb138d7644b6da28471fba9f56b50cc57fb877a310a0108f891ab0ab855e"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TuniflexBlog.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "TuniflexBlog",
+        "internalName": "TuniflexBlog",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 20750,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Anime",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo47ccjaIfUnxJjGujQd6qTKTZH70W6LFeaFXht5TE8w&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-fb5f3d6a382d5f161d8c0bcaad709a494c3b8acb0579bb491f6c2dcb28771224"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Tuniflix.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Tuniflix",
+        "internalName": "Tuniflix",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 26298,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Drama"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe95deIIAAbyR9ArSievPWdM2QwiVG9bbQ6Y1uDIbRBpathzSs45b8uQ4&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-14a4553a97f20063f294bf38ab70317e54e496d94a4923ebad830dc966e63f88"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TVgarden.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "TVgarden(Famelack)",
+        "internalName": "TVgarden",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 15565,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Live"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9Lci-tXtOtWaHcEp9An7bqIkXs4yzH7EcfA&s",
+        "apiVersion": 1,
+        "fileHash": "sha256-2e81fb135538fb427a6ea20d7a9a4472d240826136088c0deb09352a5c24ee5e"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Viu.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "VIU",
+        "internalName": "Viu",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 38046,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Drama"
+        ],
+        "iconUrl": "https://img.utdstc.com/icon/a99/c9e/a99c9ee56e731144b335282e9981a54a7584be93fc9644ad7a03b45552307876:200",
+        "apiVersion": 1,
+        "fileHash": "sha256-9ff5e88654aa3d58257d681042b74119e55e0f6417b4774532797e923ca63e40"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Wecima.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "WeCima",
+        "internalName": "Wecima",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 29438,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "tvTypes"
+        ],
+        "iconUrl": "https://wecima.ac/static/img/favicon.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-98b3b61a6e305f48c154cbca21d6bc162d6514dab8ab6d8253978a1422924fdb"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Witanime.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Witanime",
+        "internalName": "Witanime",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 73906,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7AH2oC7LwumXRpHM8_WLpIFvDIfmS67jkjlhsCKpPaZdqcneigzUQX4g&s=10",
+        "apiVersion": 1,
+        "fileHash": "sha256-82920869d407a954b22353155231f4f5aa345d39d5ad3a09ce0f73318d3e0f2d"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Yacintv.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Yacintv",
+        "internalName": "Yacintv",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 17864,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "TvSeries",
+            "Live",
+            "Movie"
+        ],
+        "iconUrl": "https://yt3.googleusercontent.com/ulm35tweg3do5istps0TgCjMmJSVczGUL2NIrXMwI1DDRi5ty29BIzQSUHVgqZN5CSo1PHhiA6M=s900-c-k-c0x00ffffff-no-rj",
+        "apiVersion": 1,
+        "fileHash": "sha256-15d89f570f9557faeabcc4a8f474675488ef43dc7f7574e4e9801391e10ad072"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Youtube.cs3",
+        "status": 1,
+        "version": 2,
+        "name": "YouTube",
+        "internalName": "Youtube",
+        "authors": [
+            "Abodabodd"
+        ],
+        "description": "",
+        "fileSize": 125967,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "Live",
+            "Anime",
+            "Music",
+            "Documentary"
+        ],
+        "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/IMG_%D9%A2%D9%A0%D9%A2%D9%A5%D9%A1%D9%A2%D9%A0%D9%A6_%D9%A1%D9%A7%D9%A2%D9%A6%D9%A1%D9%A6.jpg",
+        "apiVersion": 1,
+        "fileHash": "sha256-e817010bb388d68b4eae1fc991f2900e853d03579adbb24e5ba632d6db4767f8"
+    }
+]
