@@ -62,6 +62,22 @@ class eishk : MainAPI() {
         }
     }
 
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val document = app.get(mainUrl).document
+        val all = ArrayList<HomePageList>()
+
+        document.select("section.home-items-sec").forEach { section ->
+            val title = section.selectFirst(".sec-title")?.text() ?: return@forEach
+            val items =
+                section.select("li.type_item_box a.type_item, li.type_item_wide_box a.type_item_wide")
+                    .mapNotNull { it.toSearchResponse() }
+
+            if (items.isNotEmpty()) {
+                all.add(HomePageList(title, items))
+            }
+        }
+        return newHomePageResponse(all)
+    }
     
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/search/$query/"
