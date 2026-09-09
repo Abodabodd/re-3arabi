@@ -1,7 +1,5 @@
 package com.eshk
 
-
-
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.Qualities
