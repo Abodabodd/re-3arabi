@@ -37,7 +37,7 @@ class AnimeRift : MainAPI() {
         private var deviceId: String? = null
         private var syntheticBuildId: String? = null
         private var syntheticDeviceInfoJson: String? = null
-
+        private var vpnNoticeCount: Int = 0
         private fun getCacheFile(): File {
             val tmp = System.getProperty("java.io.tmpdir") ?: "."
             return File(tmp, "anime_rift_session_store.json")
@@ -307,12 +307,16 @@ class AnimeRift : MainAPI() {
         if (page > 1) {
             return newHomePageResponse(emptyList(), hasNext = false)
         }
-        try {
-            com.lagradost.cloudstream3.CommonActivity.showToast(
-                "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
-                android.widget.Toast.LENGTH_LONG
-            )
-        } catch (_: Exception) {}
+
+        if (vpnNoticeCount < 3) {
+            vpnNoticeCount++
+            try {
+                com.lagradost.cloudstream3.CommonActivity.showToast(
+                    "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
+                    android.widget.Toast.LENGTH_LONG
+                )
+            } catch (_: Exception) {}
+        }
 
         ensureInitialized()
         val baseUrl = gatewayBaseUrl ?: mainUrl
