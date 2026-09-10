@@ -68,6 +68,58 @@ jobs:
                       except Exception as e:
                           print(f"Error processing {file_path}: {e}")
 
+      - name: Push cleaned files to source branch (Before Secrets Injection)
+        working-directory: "src"
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Strip comments [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "No changes to push"
+          fi
+
+      - name: Inject Secrets into Source Code
+        working-directory: "src"
+        shell: python
+        env:
+          RIFT_JWT_SECRET: ${{ secrets.RIFT_JWT_SECRET }}
+          RIFT_FIREBASE_API_KEY: ${{ secrets.RIFT_FIREBASE_API_KEY }}
+          RIFT_FIREBASE_APP_ID: ${{ secrets.RIFT_FIREBASE_APP_ID }}
+          RIFT_ANDROID_PACKAGE: ${{ secrets.RIFT_ANDROID_PACKAGE }}
+          RIFT_ANDROID_CERT: ${{ secrets.RIFT_ANDROID_CERT }}
+        run: |
+          import os
+
+          replacements = {
+              "RIFT_JWT_SECRET_PLACEHOLDER": os.getenv("RIFT_JWT_SECRET", ""),
+              "RIFT_FIREBASE_API_KEY_PLACEHOLDER": os.getenv("RIFT_FIREBASE_API_KEY", ""),
+              "RIFT_FIREBASE_APP_ID_PLACEHOLDER": os.getenv("RIFT_FIREBASE_APP_ID", "")
+          }
+
+          for root, dirs, files in os.walk('.'):
+              for file in files:
+                  if file.endswith('.kt') or file.endswith('.kts'):
+                      file_path = os.path.join(root, file)
+                      try:
+                          with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                              content = f.read()
+                          
+                          modified = False
+                          for placeholder, secret_val in replacements.items():
+                              if placeholder in content and secret_val:
+                                  content = content.replace(placeholder, secret_val)
+                                  modified = True
+                          
+                          if modified:
+                              with open(file_path, 'w', encoding='utf-8') as f:
+                                  f.write(content)
+                              print(f"Injected secrets into: {file_path}")
+                      except Exception as e:
+                          print(f"Error processing {file_path}: {e}")
+
       - name: Build Plugins
         working-directory: "src"
         run: |
@@ -156,19 +208,6 @@ jobs:
 
           cp build/plugins.json $GITHUB_WORKSPACE/builds/plugins.json || echo "No plugins.json found in build"
           find . -type f -name "*.cs3" -exec cp {} $GITHUB_WORKSPACE/builds/ \; || echo "No .cs3 files found"
-
-      - name: Push updated files back to source branch
-        working-directory: "src"
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add -u
-          if ! git diff --cached --quiet; then
-            git commit -m "Strip comments [skip ci]"
-            git push origin HEAD:${{ github.ref_name }}
-          else
-            echo "No changes to push"
-          fi
 
       - name: Push builds
         working-directory: "builds"
