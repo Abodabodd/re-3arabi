@@ -13,5 +13,5 @@ cloudstream {
         "Movie"
     )
 
-    iconUrl = ""
+    iconUrl = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/AnimeRift/icon.png"
 }
