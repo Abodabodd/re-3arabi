@@ -1,7 +1,7 @@
 version = 1
 
 cloudstream {
-    description = ""
+    description = "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك"
     authors = listOf("Abodabodd")
     language = "ar"
 
