@@ -307,8 +307,6 @@ class AnimeRift : MainAPI() {
         if (page > 1) {
             return newHomePageResponse(emptyList(), hasNext = false)
         }
-
-        // 🔔 إظهار رسالة تنبيه للمستخدم على شاشة الهاتف
         try {
             com.lagradost.cloudstream3.CommonActivity.showToast(
                 "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
