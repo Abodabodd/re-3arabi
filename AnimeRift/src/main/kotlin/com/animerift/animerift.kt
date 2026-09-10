@@ -308,6 +308,14 @@ class AnimeRift : MainAPI() {
             return newHomePageResponse(emptyList(), hasNext = false)
         }
 
+        // 🔔 إظهار رسالة تنبيه للمستخدم على شاشة الهاتف
+        try {
+            com.lagradost.cloudstream3.CommonActivity.showToast(
+                "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
+                android.widget.Toast.LENGTH_LONG
+            )
+        } catch (_: Exception) {}
+
         ensureInitialized()
         val baseUrl = gatewayBaseUrl ?: mainUrl
         val url = "$baseUrl/library/home_content?with_genres=true"
@@ -573,29 +581,23 @@ class AnimeRift : MainAPI() {
                             val ticket = directLinkJson.get("ticket")?.asText() ?: ""
                             val waitTimeSeconds = directLinkJson.get("wait_time")?.asLong() ?: 5L
 
-                            android.util.Log.d(name, "⏳ [Streamtape] تذكرة للملف: $fileId | الوقت المطلوب للانتظار: $waitTimeSeconds ثوانٍ")
 
                             if (fileId.isNotEmpty() && ticket.isNotEmpty()) {
                                 kotlinx.coroutines.delay((waitTimeSeconds * 1000) + 500)
 
                                 val tapeApiUrl = "https://api.streamtape.com/file/dl?file=$fileId&ticket=$ticket"
-                                android.util.Log.d(name, "🚀 [Streamtape] جاري إرسال طلب التحميل -> $tapeApiUrl")
 
                                 var tapeRes = app.get(tapeApiUrl).parsed<JsonNode>()
                                 val status = tapeRes.get("status")?.asInt()
                                 val msg = tapeRes.get("msg")?.asText()
 
-                                android.util.Log.d(name, "📥 [Streamtape] رد السيرفر -> الحالة: $status | الرسالة: $msg | الرد الكامل: $tapeRes")
 
                                 if (status != 200) {
-                                    android.util.Log.d(name, "⚠️ [Streamtape] الحالة ليست 200، جاري الانتظار ثانيتين وإعادة المحاولة...")
                                     kotlinx.coroutines.delay(2000)
                                     tapeRes = app.get(tapeApiUrl).parsed<JsonNode>()
-                                    android.util.Log.d(name, "📥 [Streamtape] رد المحاولة الثانية -> الحالة: ${tapeRes.get("status")?.asInt()} | الرد: $tapeRes")
                                 }
 
                                 val tapeDirectUrl = tapeRes.get("result")?.get("url")?.asText()
-                                android.util.Log.d(name, "✅ [Streamtape] رابط الفيديو المستخرج: $tapeDirectUrl")
 
                                 if (!tapeDirectUrl.isNullOrEmpty()) {
                                     callback.invoke(
@@ -621,7 +623,6 @@ class AnimeRift : MainAPI() {
             }
             return@withContext true
         } catch (e: Exception) {
-            android.util.Log.e(name, "❌ [LoadLinks Fatal] فشل عام في جلب الروابط: ${e.message}")
             return@withContext false
         }
     }
