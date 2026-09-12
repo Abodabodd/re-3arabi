@@ -59,7 +59,6 @@ import com.lagradost.cloudstream3.newMovieSearchResponse
 
 class FASELHD(private val context: Context) : MainAPI() {
     override var name = "FASELHD"
-    override val hasQuickSearch = true
     override var mainUrl = "https://web31312x.faselhdx.bid"
     override var lang = "ar"
     override val hasMainPage = true
@@ -270,7 +269,6 @@ class FASELHD(private val context: Context) : MainAPI() {
         }
     }
 
-    override suspend fun quickSearch(query: String): List<SearchResponse>? = search(query,1)?.items
     override suspend fun search(query: String, page: Int): SearchResponseList {
         val base = baseUrl()
         val encoded = URLEncoder.encode(query, "UTF-8")
