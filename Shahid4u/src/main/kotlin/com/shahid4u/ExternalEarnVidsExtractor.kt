@@ -221,8 +221,6 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
             val symtab = sympipe.split("|")
 
             var payload = payloadRaw
-
-            // تطبيق نفس منطق جافاسكربت تماماً (المرور العكسي والتأكد من أن القيمة غير فارغة)
             for (i in (symtab.size - 1) downTo 0) {
                 val word = symtab[i]
                 if (word.isNotEmpty()) {
