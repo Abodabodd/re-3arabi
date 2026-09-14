@@ -47,8 +47,6 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
             val html = response.text ?: ""
             val finalResolvedUrl = response.url
             Log.d(name, "Fetched page length=${html.length} for $url")
-
-            // ---- 1) بحث سريع عن روابط مباشرة (m3u8 / mp4 / jwplayer file) ----
             val quick = findStreamUrl(html, url)
             if (quick != null) {
                 Log.i(name, "Found direct stream -> $quick")
@@ -60,8 +58,6 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
                 Log.w(name, "no eval(function) found - no stream extracted.")
                 return
             }
-
-            // ---- 2) فكّ حزم packer المتداخلة ----
             var working = html
             var unpacked: String? = null
             val maxIterations = 4
@@ -80,8 +76,6 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
                 Log.w(name, "❌ فشل فكّ تشفير الـ packer.")
                 return
             }
-
-            // ---- 3) قراءة كائن links (تفضيل hls4 ثم hls ثم hls2 ثم hls3) ----
             var extractedM3u8: String? = null
             val linksRegex = Regex("""var\s+links\s*=\s*(\{.*?\})\s*;""", RegexOption.DOT_MATCHES_ALL)
             val match = linksRegex.find(cleaned)
@@ -113,8 +107,6 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
                     ?: map["hls3"]
                     ?: map["file"]
             }
-
-            // ---- 4) بدائل بعد الفكّ: أي m3u8 ظاهر أو jwplayer file ----
             if (extractedM3u8.isNullOrBlank()) {
                 extractedM3u8 = Regex("""https?://[^'"\s>]+?\.m3u8[^'"\s>]*""", RegexOption.IGNORE_CASE)
                     .find(cleaned)?.value

@@ -331,8 +331,6 @@ class Shahid4u : MainAPI() {
             "Accept-Language" to "en-US,en;q=0.9",
             "Upgrade-Insecure-Requests" to "1"
         )
-
-        // ---- 1) صفحة المشاهدة: قراءة مصفوفة السيرفرات المضمّنة + أي iframe ظاهر ----
         try {
             val watchResponse = app.get(
                 watchUrl,
@@ -348,8 +346,6 @@ class Shahid4u : MainAPI() {
         } catch (e: Exception) {
             Log.e(logTag, "loadLinks -> failed to fetch watch page $watchUrl: ${e.message}")
         }
-
-        // ---- 2) صفحة التحميل: روابط {host}/d/{code} لمختلف الجودات ----
         try {
             val downloadUrl = watchUrl.replace("/watch/", "/download/")
             if (downloadUrl != watchUrl) {
