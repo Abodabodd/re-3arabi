@@ -15,7 +15,7 @@ import java.net.URLEncoder
 
 class Shahid4u : MainAPI() {
     override var mainUrl = "https://shhaiid4u.net/"
-    override var name = "شاهد فور يو (Shahid4u)"
+    override var name = "Shahid4u"
     override val hasMainPage = true
     override var lang = "ar"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.Anime)
