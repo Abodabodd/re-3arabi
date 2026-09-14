@@ -34,7 +34,7 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
                 "Accept-Language" to "en-US,en;q=0.5",
                 "Connection" to "keep-alive"
             )
-            val resolvedReferer = if (url.contains("fdewsdc.sbs", true)) {
+            val resolvedReferer = if (url.contains("fdewsdc", true)) {
                 "https://shhahid4u.cam"
             } else {
                 referer ?: mainUrl
@@ -103,9 +103,9 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
 
                 extractedM3u8 = map["hls4"]
                     ?: map["hls"]
-                    ?: map["hls2"]
-                    ?: map["hls3"]
-                    ?: map["file"]
+                            ?: map["hls2"]
+                            ?: map["hls3"]
+                            ?: map["file"]
             }
             if (extractedM3u8.isNullOrBlank()) {
                 extractedM3u8 = Regex("""https?://[^'"\s>]+?\.m3u8[^'"\s>]*""", RegexOption.IGNORE_CASE)
@@ -212,7 +212,7 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
     private fun unpackPackerSimple(js: String, pageUrl: String): String? {
         try {
             val regex = Regex(
-                """eval\(function\(p,a,c,k,e,d\)\{.*?\}\(\s*['"](.+?)['"]\s*,\s*(\d+)\s*,\s*\d+\s*,\s*['"](.+?)['"]""",
+                """eval\(function\(p,a,c,k,e,d\)\{.*?\}\(\s*['"](.+?)['"]\s*,\s*(\d+)\s*,\s*\d+\s*,\s*['"](.*?)['"]\.split\('\|'\)""",
                 RegexOption.DOT_MATCHES_ALL
             )
             val match = regex.find(js) ?: return null
@@ -221,25 +221,17 @@ open class ExternalEarnVidsExtractor : ExtractorApi() {
             val symtab = sympipe.split("|")
 
             var payload = payloadRaw
-                .replace("location.href", "'$pageUrl'")
-                .replace("location", "'$pageUrl'")
-                .replace("document.cookie", "''")
-                .replace("window.location", "'$pageUrl'")
-                .replace("window", "this")
 
-            val tokenRe = Regex("""\b[0-9a-zA-Z]+\b""")
-
-            val replaced = tokenRe.replace(payload) { mo ->
-                val tok = mo.value
-                try {
-                    val idx = tok.toInt(radix)
-                    if (idx in 0 until symtab.size) symtab[idx] else tok
-                } catch (_: Exception) {
-                    tok
+            // تطبيق نفس منطق جافاسكربت تماماً (المرور العكسي والتأكد من أن القيمة غير فارغة)
+            for (i in (symtab.size - 1) downTo 0) {
+                val word = symtab[i]
+                if (word.isNotEmpty()) {
+                    val token = Integer.toString(i, radix)
+                    payload = payload.replace(Regex("""\b$token\b"""), word)
                 }
             }
 
-            return replaced
+            return payload
         } catch (e: Exception) {
             Log.w(name, "unpackPackerSimple failed: ${e.message}")
             return null
