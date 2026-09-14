@@ -9,6 +9,7 @@ class Shahid4uProvider : Plugin() {
     override fun load(context: Context) {
         registerMainAPI(Shahid4u())
         registerExtractorAPI(ExternalEarnVidsExtractor())
+        registerExtractorAPI(ExternalFastVedExtractor())
 
     }
 }
