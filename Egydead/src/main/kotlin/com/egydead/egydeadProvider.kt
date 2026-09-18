@@ -21,7 +21,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 class EgyDead : MainAPI() {
-    override var mainUrl = "https://egydead.beer"
+    override var mainUrl = "https://tv10.egydead.live/"
     override var name = "ايجي ديد"
     override val hasMainPage = true
     override var lang = "ar"

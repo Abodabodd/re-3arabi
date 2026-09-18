@@ -14,7 +14,7 @@ import java.net.URI
 import java.net.URLEncoder
 
 class Shahid4u : MainAPI() {
-    override var mainUrl = "https://shhaiid4u.net/"
+    override var mainUrl = "https://shahed4u.im/"
     override var name = "Shahid4u"
     override val hasMainPage = true
     override var lang = "ar"
