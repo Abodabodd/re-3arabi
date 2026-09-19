@@ -11,7 +11,7 @@ import android.util.Base64
 import android.util.Log
 
 class YacineTVProvider : MainAPI() {
-    override var mainUrl = "https://def.ycnapi.com/api"
+    override var mainUrl = "https://def11.ycnapi.com/api"
     private val fallbackUrl = "https://deft.yacinelive.com/api"
 
     override var name = "Yacine TV"
