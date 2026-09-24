@@ -286,6 +286,7 @@ jobs:
           repo_data = {
               'name': '3rabi عربي',
               'description': 'مشاهدة الافلام والمسلسلات تجربة خالية من الاعلانات',
+              'iconUrl': 'https://raw.githubusercontent.com/${{ github.repository }}/refs/heads/main/icon.png',
               'manifestVersion': 1,
               'pluginLists': [
                   'https://raw.githubusercontent.com/${{ github.repository }}/builds/plugins.json'
