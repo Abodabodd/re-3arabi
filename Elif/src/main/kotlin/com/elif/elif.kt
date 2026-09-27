@@ -308,7 +308,6 @@ class ElifNewsProvider : MainAPI() {
                                     val isVidspeed = serverName.contains("vidspeed")
                                     val verifyHeaders = if (isVidspeed) {
                                         mapOf(
-                                            "User-Agent" to "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Mobile Safari/537.36",
                                             "Accept" to "*/*",
                                             "Origin" to domain.removeSuffix("/"),
                                             "Referer" to domain,
