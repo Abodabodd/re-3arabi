@@ -67,7 +67,7 @@ arb
 
 <p>
 📚 <b>الويكي:</b>
-<a href="https://cloudstream.miraheze.org/">
+<a href="https://cloudstream.miraheze.org/wiki/Main_Page">
 CloudStream Wiki
 </a>
 </p>
