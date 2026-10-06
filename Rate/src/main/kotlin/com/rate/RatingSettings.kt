@@ -97,9 +97,9 @@ object RatingSettings {
     )
 
     private val THEMES = listOf(
+        ThemeColor("#0D051A", "#160A2E", "#4C1D95", "#C084FC"),
         ThemeColor("#040C1A", "#081326", "#0E3A6E", "#38BDF8"),
-        ThemeColor("#120C03", "#1F1406", "#5C3A08", "#FBBF24"),
-        ThemeColor("#0D051A", "#160A2E", "#4C1D95", "#C084FC")
+        ThemeColor("#120C03", "#1F1406", "#5C3A08", "#FBBF24")
     )
 
     class RatingListDialog : DialogFragment() {
@@ -182,13 +182,13 @@ object RatingSettings {
             }
 
             val sortBtn = TextView(requireContext()).apply {
-                text = if (isEnglish) "🔥 Most Liked" else "🔥 الأكثر إعجاباً"
+                text = if (isEnglish) "📋 Default" else "📋 الافتراضي"
                 textSize = 11f
-                setTextColor(Color.parseColor("#38BDF8"))
+                setTextColor(Color.parseColor("#C084FC"))
                 gravity = Gravity.CENTER
                 background = roundedStrokeBackground(
-                    Color.parseColor("#0C1C36"),
-                    Color.parseColor("#0284C7"),
+                    Color.parseColor("#1E1438"),
+                    Color.parseColor("#7C3AED"),
                     1.dp(context),
                     11f
                 )
@@ -202,6 +202,16 @@ object RatingSettings {
             fun updateSortButtonText() {
                 when (sortMode) {
                     1 -> {
+                        sortBtn.text = if (isEnglish) "🔥 Most Liked" else "🔥 الأكثر إعجاباً"
+                        sortBtn.setTextColor(Color.parseColor("#38BDF8"))
+                        sortBtn.background = roundedStrokeBackground(
+                            Color.parseColor("#0C1C36"),
+                            Color.parseColor("#0284C7"),
+                            1.dp(context),
+                            11f
+                        )
+                    }
+                    2 -> {
                         sortBtn.text = if (isEnglish) "⭐ Top Rated" else "⭐ الأعلى تقييماً"
                         sortBtn.setTextColor(Color.parseColor("#FBBF24"))
                         sortBtn.background = roundedStrokeBackground(
@@ -211,22 +221,12 @@ object RatingSettings {
                             11f
                         )
                     }
-                    2 -> {
+                    else -> {
                         sortBtn.text = if (isEnglish) "📋 Default" else "📋 الافتراضي"
                         sortBtn.setTextColor(Color.parseColor("#C084FC"))
                         sortBtn.background = roundedStrokeBackground(
                             Color.parseColor("#1E1438"),
                             Color.parseColor("#7C3AED"),
-                            1.dp(context),
-                            11f
-                        )
-                    }
-                    else -> {
-                        sortBtn.text = if (isEnglish) "🔥 Most Liked" else "🔥 الأكثر إعجاباً"
-                        sortBtn.setTextColor(Color.parseColor("#38BDF8"))
-                        sortBtn.background = roundedStrokeBackground(
-                            Color.parseColor("#0C1C36"),
-                            Color.parseColor("#0284C7"),
                             1.dp(context),
                             11f
                         )
@@ -323,24 +323,24 @@ object RatingSettings {
         }
 
         private fun applySort() {
-    if (allPluginsMasterList.isEmpty()) return
+            if (allPluginsMasterList.isEmpty()) return
 
-    val result = when (sortMode) {
-        1 -> allPluginsMasterList.sortedWith(
-            compareByDescending<PluginRating> { it.likes }
-                .thenByDescending { it.likes - it.dislikes }
-                .thenBy { it.dislikes }
-        )
-        2 -> allPluginsMasterList.sortedWith(
-            compareByDescending<PluginRating> { calculateScore(it.likes, it.dislikes) }
-                .thenByDescending { it.likes + it.dislikes }
-                .thenByDescending { it.likes }
-        )
-        else -> allPluginsMasterList.toList() // <--- هذا السطر فقط هو ما يجعل الأولوية للترتيب الافتراضي
-    }
+            val result = when (sortMode) {
+                1 -> allPluginsMasterList.sortedWith(
+                    compareByDescending<PluginRating> { it.likes }
+                        .thenByDescending { it.likes - it.dislikes }
+                        .thenBy { it.dislikes }
+                )
+                2 -> allPluginsMasterList.sortedWith(
+                    compareByDescending<PluginRating> { calculateScore(it.likes, it.dislikes) }
+                        .thenByDescending { it.likes + it.dislikes }
+                        .thenByDescending { it.likes }
+                )
+                else -> allPluginsMasterList.toList()
+            }
 
-    adapter?.updateData(result, sortMode, isEnglish)
-}
+            adapter?.updateData(result, sortMode, isEnglish)
+        }
 
         private fun parseTypesList(typesArray: JSONArray?): List<String> {
             if (typesArray == null || typesArray.length() == 0) return emptyList()
