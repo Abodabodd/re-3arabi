@@ -253,12 +253,18 @@ class TopCinemaProvider : MainAPI() {
 
 
     private fun unwrapPlayUrl(url: String): String {
-        return try {
-            if (url.contains("play.php?to=")) {
-                val decoded = java.net.URLDecoder.decode(url.substringAfter("play.php?to="), "UTF-8").trim()
-                if (decoded.startsWith("http")) decoded else "https:${decoded.trimStart(':')}"
-            } else url
-        } catch (e: Exception) { url }
+    return try {
+        if (url.contains("play.php?to=")) {
+            var decoded = java.net.URLDecoder.decode(url.substringAfter("play.php?to="), "UTF-8").trim()
+            
+            // في حال تم تكرار https: مرتين بالخطأ
+            if (decoded.contains("https://") && decoded.indexOf("https://") != decoded.lastIndexOf("https://")) {
+                decoded = decoded.substring(decoded.lastIndexOf("https://"))
+            }
+
+            if (decoded.startsWith("http")) decoded else "https:${decoded.trimStart(':')}"
+        } else url
+    } catch (e: Exception) { url }
     }
     private fun getBaseUrl(url: String): String {
         return try {
@@ -371,21 +377,27 @@ class TopCinemaProvider : MainAPI() {
             }
 
             files.forEachIndexed { index, fileUrl ->
-                val label = labels.getOrNull(index) ?: "Auto"
-                try {
-                    callback(newExtractorLink(
-                        source = name,
-                        name = "Vidtube - $label",
-                        url = fileUrl
-                    ) {
-                        referer = url
-                        quality = getQualityFromName(label)
-                    })
-                    Log.d("TopCinema", "[Vidtube] Found Link: $label -> $fileUrl")
-                } catch (e: Exception) {
-                    Log.e("TopCinema", "[Vidtube] callback/newExtractorLink failed: ${e.message}")
-                }
-            }
+    val label = labels.getOrNull(index) ?: "Auto"
+    try {
+        // تنظيف الرابط المباشر من أي Referer قديم مدمج في الرابط
+        val cleanFileUrl = fileUrl.replace(Regex("""[&?]referer=.*"""), "")
+
+        // استخراج النطاق فقط بدون المسارات لتجنب التكرار
+        val cleanReferer = "${URI(url).scheme}://${URI(url).host}/"
+
+        callback(newExtractorLink(
+            source = name,
+            name = "Vidtube - $label",
+            url = cleanFileUrl
+        ) {
+            this.referer = cleanReferer // إرسال الهوست الأساسي فقط
+            this.quality = getQualityFromName(label)
+        })
+        Log.d("TopCinema", "[Vidtube] Found Link: $label -> $cleanFileUrl")
+    } catch (e: Exception) {
+        Log.e("TopCinema", "[Vidtube] callback/newExtractorLink failed: ${e.message}")
+    }
+}
         } catch (e: Exception) {
             Log.e("TopCinema", "[Vidtube] Connection/overall error: ${e.message}")
             logError(e)
