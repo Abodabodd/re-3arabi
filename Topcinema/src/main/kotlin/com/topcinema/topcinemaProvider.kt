@@ -256,8 +256,6 @@ class TopCinemaProvider : MainAPI() {
     return try {
         if (url.contains("play.php?to=")) {
             var decoded = java.net.URLDecoder.decode(url.substringAfter("play.php?to="), "UTF-8").trim()
-            
-            // في حال تم تكرار https: مرتين بالخطأ
             if (decoded.contains("https://") && decoded.indexOf("https://") != decoded.lastIndexOf("https://")) {
                 decoded = decoded.substring(decoded.lastIndexOf("https://"))
             }
@@ -379,10 +377,7 @@ class TopCinemaProvider : MainAPI() {
             files.forEachIndexed { index, fileUrl ->
     val label = labels.getOrNull(index) ?: "Auto"
     try {
-        // تنظيف الرابط المباشر من أي Referer قديم مدمج في الرابط
         val cleanFileUrl = fileUrl.replace(Regex("""[&?]referer=.*"""), "")
-
-        // استخراج النطاق فقط بدون المسارات لتجنب التكرار
         val cleanReferer = "${URI(url).scheme}://${URI(url).host}/"
 
         callback(newExtractorLink(
