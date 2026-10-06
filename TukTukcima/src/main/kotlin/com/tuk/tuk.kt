@@ -5,7 +5,6 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Element
-
 import java.net.URLEncoder
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -120,7 +119,7 @@ class TukTukHd : MainAPI() {
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url).document
         val fullTitle = doc.selectFirst("h1.post-title a")?.text() ?: doc.selectFirst("h1")?.text() ?: "Unknown"
-        val cleanTitle = fullTitle.replace(Regex("""\s*(الحلقة\s*\d+|مترجم|مدبلج).*"""), "").trim()
+        val cleanTitle = fullTitle.replace(Regex("""\s*(الحلقة\s*\d+|الموسم\s*\d+|مترجم|مدبلج).*"""), "").trim()
 
         val desc = doc.select(".story p").text()
         val poster = doc.selectFirst(".MainSingle .left .image img")?.attr("src")
@@ -129,23 +128,25 @@ class TukTukHd : MainAPI() {
         val year = doc.select(".RightTaxContent a[href*='release-year']").text().filter { it.isDigit() }.toIntOrNull()
         val ratingText = doc.select(".imdbS strong").text()
         val scoreValue = ratingText.toDoubleOrNull()?.times(1000)?.toInt()
-        val isSeries = doc.select(".allepcont, .allseasonss").isNotEmpty()
+        
+        // التحقق من كونه مسلسل (يدعم الكلاسات القديمة والجديدة)
+        val isSeries = doc.select(".allepcont, .allseasonss, .SeriesEpisodes, .SeriesSeasons").isNotEmpty()
 
         if (isSeries) {
             val episodesList = ArrayList<Episode>()
-            val seasonElements = doc.select(".allseasonss .Block--Item a")
+            val seasonElements = doc.select(".allseasonss .Block--Item a, .SeriesSeasons .Block--Item a")
 
             if (seasonElements.isNotEmpty()) {
                 seasonElements.amap { seasonEl ->
                     val seasonUrl = fixUrl(seasonEl.attr("href"))
-                    val seasonName = seasonEl.select("h3").text()
+                    val seasonName = seasonEl.select("h3").text().ifEmpty { seasonEl.attr("title") }
                     val seasonNum = seasonName.filter { it.isDigit() }.toIntOrNull() ?: 1
 
                     val seasonDoc = app.get(seasonUrl).document
-                    seasonDoc.select(".allepcont a").forEach { ep ->
-                        val epTitle = ep.select(".ep-info h2").text()
+                    seasonDoc.select(".allepcont a, .SeriesEpisodesGrid a.SeriesEpisodeCard").forEach { ep ->
+                        val epTitle = ep.select(".ep-info h2, .SeriesEpisodeInfo h3").text().ifEmpty { ep.attr("title") }
                         val epHref = fixUrl(ep.attr("href"))
-                        val epNum = ep.select(".epnum").text().filter { it.isDigit() }.toIntOrNull()
+                        val epNum = ep.select(".epnum, .SeriesEpisodeNumber strong").text().filter { it.isDigit() }.toIntOrNull()
                         val epThumb = ep.select("img").attr("data-src")
                             .ifEmpty { ep.select("img").attr("src") }
 
@@ -160,10 +161,11 @@ class TukTukHd : MainAPI() {
                     }
                 }
             } else {
-                doc.select(".allepcont a").forEach { ep ->
-                    val epTitle = ep.select(".ep-info h2").text()
+                // في حال كان المسلسل موسم واحد فقط ومباشر في الصفحة
+                doc.select(".allepcont a, .SeriesEpisodesGrid a.SeriesEpisodeCard").forEach { ep ->
+                    val epTitle = ep.select(".ep-info h2, .SeriesEpisodeInfo h3").text().ifEmpty { ep.attr("title") }
                     val epHref = fixUrl(ep.attr("href"))
-                    val epNum = ep.select(".epnum").text().filter { it.isDigit() }.toIntOrNull()
+                    val epNum = ep.select(".epnum, .SeriesEpisodeNumber strong").text().filter { it.isDigit() }.toIntOrNull()
                     val epThumb = ep.select("img").attr("data-src").ifEmpty { ep.select("img").attr("src") }
 
                     episodesList.add(
