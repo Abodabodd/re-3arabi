@@ -128,8 +128,6 @@ class TukTukHd : MainAPI() {
         val year = doc.select(".RightTaxContent a[href*='release-year']").text().filter { it.isDigit() }.toIntOrNull()
         val ratingText = doc.select(".imdbS strong").text()
         val scoreValue = ratingText.toDoubleOrNull()?.times(1000)?.toInt()
-        
-        // التحقق من كونه مسلسل (يدعم الكلاسات القديمة والجديدة)
         val isSeries = doc.select(".allepcont, .allseasonss, .SeriesEpisodes, .SeriesSeasons").isNotEmpty()
 
         if (isSeries) {
@@ -161,7 +159,6 @@ class TukTukHd : MainAPI() {
                     }
                 }
             } else {
-                // في حال كان المسلسل موسم واحد فقط ومباشر في الصفحة
                 doc.select(".allepcont a, .SeriesEpisodesGrid a.SeriesEpisodeCard").forEach { ep ->
                     val epTitle = ep.select(".ep-info h2, .SeriesEpisodeInfo h3").text().ifEmpty { ep.attr("title") }
                     val epHref = fixUrl(ep.attr("href"))
