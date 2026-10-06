@@ -323,24 +323,24 @@ object RatingSettings {
         }
 
         private fun applySort() {
-            if (allPluginsMasterList.isEmpty()) return
+    if (allPluginsMasterList.isEmpty()) return
 
-            val result = when (sortMode) {
-                1 -> allPluginsMasterList.sortedWith(
-                    compareByDescending<PluginRating> { calculateScore(it.likes, it.dislikes) }
-                        .thenByDescending { it.likes + it.dislikes }
-                        .thenByDescending { it.likes }
-                )
-                2 -> allPluginsMasterList.toList()
-                else -> allPluginsMasterList.sortedWith(
-                    compareByDescending<PluginRating> { it.likes }
-                        .thenByDescending { it.likes - it.dislikes }
-                        .thenBy { it.dislikes }
-                )
-            }
+    val result = when (sortMode) {
+        1 -> allPluginsMasterList.sortedWith(
+            compareByDescending<PluginRating> { it.likes }
+                .thenByDescending { it.likes - it.dislikes }
+                .thenBy { it.dislikes }
+        )
+        2 -> allPluginsMasterList.sortedWith(
+            compareByDescending<PluginRating> { calculateScore(it.likes, it.dislikes) }
+                .thenByDescending { it.likes + it.dislikes }
+                .thenByDescending { it.likes }
+        )
+        else -> allPluginsMasterList.toList() // <--- هذا السطر فقط هو ما يجعل الأولوية للترتيب الافتراضي
+    }
 
-            adapter?.updateData(result, sortMode, isEnglish)
-        }
+    adapter?.updateData(result, sortMode, isEnglish)
+}
 
         private fun parseTypesList(typesArray: JSONArray?): List<String> {
             if (typesArray == null || typesArray.length() == 0) return emptyList()
