@@ -56,6 +56,26 @@ arb
 <h2>⚖️ الحقوق</h2>
 <p>📝 حقوق التعديل والاستخدام مفتوحة لجميع المستخدمين.</p>
 
+<h2>🌙 الروابط الرسمية لـ CloudStream</h2>
+
+<p>
+📱 <b>تحميل التطبيق:</b>
+<a href="https://github.com/recloudstream/cloudstream/releases">
+الصفحة الرسمية للإصدارات
+</a>
+</p>
+
+<p>
+📚 <b>الويكي:</b>
+<a href="https://cloudstream.miraheze.org/">
+CloudStream Wiki
+</a>
+</p>
+
+<p>
+⚠️ يُنصح بتحميل التطبيق من المصادر الرسمية فقط، والتأكد من مصدر أي إضافات قبل استخدامها.
+</p>
+
 <h2>⚖️ DMCA Disclaimer</h2>
 <p>
 We hereby issue this notice to clarify that these extensions function similarly to a standard web browser by fetching video files from the internet.
