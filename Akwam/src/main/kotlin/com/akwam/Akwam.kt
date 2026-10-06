@@ -351,9 +351,6 @@ class Akwam : MainAPI() {
             val seenUrls = java.util.Collections.synchronizedSet(mutableSetOf<String>())
 
             kotlinx.coroutines.coroutineScope {
-                // -------------------------------------------------------------
-                // 1. جلب روابط المشاهدة (Watch Links)
-                // -------------------------------------------------------------
                 val watchElements = step1Doc.select("a.link-show, a[href*='/watch/']")
                 val watchJobs = watchElements.map { watchEl ->
                     async {
@@ -388,10 +385,6 @@ class Akwam : MainAPI() {
                         } catch (_: Exception) {}
                     }
                 }
-
-                // -------------------------------------------------------------
-                // 2. جلب روابط التحميل المباشرة (Download Links)
-                // -------------------------------------------------------------
                 val downloadElements = step1Doc.select("a.link-download, a[href*='/download/']")
                 val downloadJobs = downloadElements.map { downloadEl ->
                     async {
@@ -399,17 +392,11 @@ class Akwam : MainAPI() {
                             val rawDownloadPageUrl = downloadEl.attr("abs:href").ifBlank { downloadEl.attr("href") }
                             if (rawDownloadPageUrl.isNotBlank()) {
                                 val downloadDoc = app.get(rawDownloadPageUrl, headers = mapOf("Referer" to episodeUrl)).document
-                                
-                                // البحث عن الرابط النهائي للملف (الذي يحتوي على mp4 أو سيرفر downet)
                                 val directLinkElements = downloadDoc.select("a[href*='downet.net'], a[href*='.mp4'], a.link-btn[href*='/download/'], a:contains(تحميل)")
 
                                 for (directEl in directLinkElements) {
                                     val directUrl = directEl.attr("abs:href").ifBlank { directEl.attr("href") }.trim()
-
-                                    // التأكد من أنه ليس رابط صفحة التحميل نفسها
                                     if (directUrl.isBlank() || directUrl == rawDownloadPageUrl || !seenUrls.add(directUrl)) continue
-
-                                    // استخراج حجم الملف إن وجد بجانب الزر
                                     val sizeText = downloadEl.selectFirst("span.font-size-14")?.text()?.trim() ?: ""
                                     val displayName = if (sizeText.isNotEmpty()) {
                                         "${this@Akwam.name} Download ($sizeText)"
@@ -433,8 +420,6 @@ class Akwam : MainAPI() {
                         } catch (_: Exception) {}
                     }
                 }
-
-                // انتظار انتهاء فحص جميع الروابط
                 watchJobs.awaitAll()
                 downloadJobs.awaitAll()
             }
