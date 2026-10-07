@@ -470,7 +470,7 @@ object RatingSettings {
 
         private fun formatLanguageBadge(lang: String): String {
             return when (lang.lowercase()) {
-                "ar" -> if (isEnglish) "🇸🇦 Arabic" else "🇸🇦 عربي"
+                "ar" -> if (isEnglish) "🇮🇶 Arabic" else "🇮🇶 عربي"
                 "en" -> if (isEnglish) "🌐 English" else "🌐 EN"
                 "iq" -> if (isEnglish) "🇮🇶 Iraqi" else "🇮🇶 عراقي"
                 else -> lang.uppercase()
