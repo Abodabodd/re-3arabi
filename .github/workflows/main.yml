@@ -130,21 +130,33 @@ jobs:
         working-directory: "src"
         shell: python
         env:
-          RIFT_JWT_SECRET: ${{ secrets.RIFT_JWT_SECRET }}
-          RIFT_FIREBASE_API_KEY: ${{ secrets.RIFT_FIREBASE_API_KEY }}
-          RIFT_FIREBASE_APP_ID: ${{ secrets.RIFT_FIREBASE_APP_ID }}
-          RIFT_ANDROID_PACKAGE: ${{ secrets.RIFT_ANDROID_PACKAGE }}
-          RIFT_ANDROID_CERT: ${{ secrets.RIFT_ANDROID_CERT }}
+          ALL_SECRETS: ${{ toJson(secrets) }}
         run: |
           import os
+          import json
+
+          all_secrets = json.loads(os.getenv("ALL_SECRETS", "{}"))
+          mapping_file = os.path.join(".github", "secrets_mapping.json")
+
+          if not os.path.exists(mapping_file):
+              print(f"Warning: {mapping_file} not found. Skipping secrets injection.")
+              exit(0)
+
+          try:
+              with open(mapping_file, "r", encoding="utf-8") as f:
+                  mapping = json.loads(f.read())
+          except Exception as e:
+              print(f"Error reading {mapping_file}: {e}")
+              exit(1)
 
           replacements = {
-              "RIFT_JWT_SECRET_PLACEHOLDER": os.getenv("RIFT_JWT_SECRET", ""),
-              "RIFT_FIREBASE_API_KEY_PLACEHOLDER": os.getenv("RIFT_FIREBASE_API_KEY", ""),
-              "RIFT_FIREBASE_APP_ID_PLACEHOLDER": os.getenv("RIFT_FIREBASE_APP_ID", "")
+              placeholder: all_secrets.get(secret_name, "")
+              for placeholder, secret_name in mapping.items()
+              if all_secrets.get(secret_name)
           }
 
           for root, dirs, files in os.walk('.'):
+              dirs[:] = [d for d in dirs if not d.startswith('.')]
               for file in files:
                   if file.endswith('.kt') or file.endswith('.kts'):
                       file_path = os.path.join(root, file)
@@ -153,16 +165,14 @@ jobs:
                               content = f.read()
 
                           modified = False
-
                           for placeholder, secret_val in replacements.items():
-                              if placeholder in content and secret_val:
+                              if placeholder in content:
                                   content = content.replace(placeholder, secret_val)
                                   modified = True
 
                           if modified:
                               with open(file_path, 'w', encoding='utf-8') as f:
                                   f.write(content)
-
                               print(f"Injected secrets into: {file_path}")
 
                       except Exception as e:
