@@ -201,7 +201,7 @@
             "Abodabodd"
         ],
         "description": "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
-        "fileSize": 48567,
+        "fileSize": 49245,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -211,7 +211,7 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/AnimeRift/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-67d0d55cf4984efbe1572f9c00d980a329796215874d72eaba5038aabca3d950"
+        "fileHash": "sha256-4303b7122dda9da84628eb377e0e8b402edd58b2d7365c8e457d1e1452812624"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animewitcher.cs3",
@@ -385,13 +385,13 @@
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Egy.cs3",
         "status": 1,
         "version": 1,
-        "name": "Egy",
+        "name": "EgyWatch",
         "internalName": "Egy",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 49650,
+        "fileSize": 51510,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -400,7 +400,7 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/Egy/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-d0215f3dbe2dfef244bb9174f9354e43bf7fdd7fbeb9eddac9118ca2347c6ed2"
+        "fileHash": "sha256-14f4fe50d78a6ee9433b8e4958d4c5bfd578d66b8598522cb5de4f3e8d55c582"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Egydead.cs3",
@@ -670,7 +670,7 @@
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 28913,
+        "fileSize": 30279,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -679,7 +679,7 @@
         ],
         "iconUrl": "https://web8.topcinema.cam/wp-content/uploads/2023/05/cropped-icon-32x32.png",
         "apiVersion": 1,
-        "fileHash": "sha256-be724725a4ea3ce2c089e036449fb92405379c66d2470a337c155120c5b5de2f"
+        "fileHash": "sha256-13467ab2b8e20372b12939fe4fdfad83741ecc43a6451af54089b185d509fe12"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TukTukcima.cs3",
