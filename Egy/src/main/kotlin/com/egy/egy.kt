@@ -45,7 +45,7 @@ class EgyWatchProvider : MainAPI() {
     private val fbCertSha1 = "26B02D233509F4AECF56980032343456CEAB722A"
 
     private val appHeaders = mapOf(
-        "User-Agent" to "EasyPlex (Android 16; RMX5061; realme RE60ADL1; ar)",
+        "User-Agent" to "EasyPlex/5.0.0 (Android)",
         "packagename" to "com.linkletter.app",
         "Accept" to "application/json",
         "x-app-id" to "Egywatch-mobile",
