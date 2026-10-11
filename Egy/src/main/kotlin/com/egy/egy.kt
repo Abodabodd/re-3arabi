@@ -595,21 +595,17 @@ class EgyWatchProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         var foundAny = false
+        val cleanBody = responseBody.replace("\\/", "/").trim()
+        val labelMatches = Regex("""file\s*:\s*["']([^"']+)["']\s*,\s*label\s*:\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
+            .findAll(cleanBody).toList()
 
-        val textMatches = Regex("""file\s*:\s*["']([^"']+)["']\s*,\s*label\s*:\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
-            .findAll(responseBody).toList()
-
-        if (textMatches.isNotEmpty()) {
-            for (match in textMatches) {
+        if (labelMatches.isNotEmpty()) {
+            for (match in labelMatches) {
                 val streamUrl = match.groups[1]?.value ?: continue
                 val qualityStr = match.groups[2]?.value ?: "Auto"
 
                 callback.invoke(
-                    newExtractorLink(
-                        name = "$serverName ($qualityStr)",
-                        source = name,
-                        url = streamUrl
-                    ) {
+                    newExtractorLink(name = "$serverName ($qualityStr)", source = name, url = streamUrl) {
                         this.referer = cleanHeaders["referer"] ?: ""
                         this.headers = cleanHeaders
                         this.quality = getQualityFromName(qualityStr)
@@ -619,9 +615,8 @@ class EgyWatchProvider : MainAPI() {
             }
             if (foundAny) return true
         }
-
         try {
-            val jsonRes = JSONObject(responseBody)
+            val jsonRes = JSONObject(cleanBody)
             if (jsonRes.optString("status") == "success") {
                 val filteredContent = jsonRes.optJSONArray("filtered_content")
                 val qualityArray = jsonRes.optJSONArray("Quality")
@@ -632,11 +627,7 @@ class EgyWatchProvider : MainAPI() {
                         if (streamUrl.isNotEmpty()) {
                             val qualityStr = qualityArray?.optString(i) ?: "Normal"
                             callback.invoke(
-                                newExtractorLink(
-                                    name = "$serverName ($qualityStr)",
-                                    source = name,
-                                    url = streamUrl
-                                ) {
+                                newExtractorLink(name = "$serverName ($qualityStr)", source = name, url = streamUrl) {
                                     this.referer = cleanHeaders["referer"] ?: ""
                                     this.headers = cleanHeaders
                                     this.quality = getQualityFromName(qualityStr)
@@ -646,13 +637,47 @@ class EgyWatchProvider : MainAPI() {
                         }
                     }
                 }
+            } else if (jsonRes.has("file")) {
+                val streamUrl = jsonRes.optString("file")
+                if (streamUrl.isNotEmpty()) {
+                    callback.invoke(
+                        newExtractorLink(name = "$serverName (Auto)", source = name, url = streamUrl) {
+                            this.referer = cleanHeaders["referer"] ?: ""
+                            this.headers = cleanHeaders
+                            this.quality = getQualityFromName(serverName)
+                        }
+                    )
+                    foundAny = true
+                }
             }
         } catch (e: Exception) {
+        }
+        if (foundAny) return true
+        val universalVideoRegex = Regex("""https?://[^\s"'<>\\]+?\.(?:m3u8|mp4|mkv)(?:\?[^\s"'<>\\]*)?""", RegexOption.IGNORE_CASE)
+        val extractedVideoUrls = universalVideoRegex.findAll(cleanBody)
+            .map { it.value }
+            .distinct() // منع تكرار نفس الرابط إن ورد أكثر من مرة
+            .toList()
+
+        if (extractedVideoUrls.isNotEmpty()) {
+            for (streamUrl in extractedVideoUrls) {
+                callback.invoke(
+                    newExtractorLink(
+                        name = "$serverName (Direct)",
+                        source = name,
+                        url = streamUrl
+                    ) {
+                        this.referer = cleanHeaders["referer"] ?: ""
+                        this.headers = cleanHeaders
+                        this.quality = getQualityFromName(serverName)
+                    }
+                )
+                foundAny = true
+            }
         }
 
         return foundAny
     }
-
     private suspend fun fallbackRegexExtract(
         link: String,
         serverName: String,
