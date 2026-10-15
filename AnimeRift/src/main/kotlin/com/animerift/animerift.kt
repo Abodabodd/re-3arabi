@@ -43,6 +43,7 @@ class AnimeRift : MainAPI() {
             return File(tmp, "anime_rift_session_store.json")
         }
 
+        
         private fun saveToDisk(data: Map<String, String>) {
             try {
                 val file = getCacheFile()
