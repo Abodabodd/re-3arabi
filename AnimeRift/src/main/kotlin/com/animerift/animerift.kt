@@ -37,7 +37,7 @@ class AnimeRift : MainAPI() {
         private var deviceId: String? = null
         private var syntheticBuildId: String? = null
         private var syntheticDeviceInfoJson: String? = null
-        private var vpnNoticeCount: Int = 0
+
         private fun getCacheFile(): File {
             val tmp = System.getProperty("java.io.tmpdir") ?: "."
             return File(tmp, "anime_rift_session_store.json")
@@ -308,16 +308,6 @@ class AnimeRift : MainAPI() {
             return newHomePageResponse(emptyList(), hasNext = false)
         }
 
-        if (vpnNoticeCount < 3) {
-            vpnNoticeCount++
-            try {
-                com.lagradost.cloudstream3.CommonActivity.showToast(
-                    "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك",
-                    android.widget.Toast.LENGTH_LONG
-                )
-            } catch (_: Exception) {}
-        }
-
         ensureInitialized()
         val baseUrl = gatewayBaseUrl ?: mainUrl
         val url = "$baseUrl/library/home_content?with_genres=true"
@@ -466,7 +456,7 @@ class AnimeRift : MainAPI() {
             val animeId = parts[0]
             val episodeId = parts[1]
             val episodeNumber = parts.getOrNull(2)?.toIntOrNull() ?: 1
-
+            
             val baseUrl = gatewayBaseUrl ?: mainUrl
             val sourcesUrl = "$baseUrl/library/episode/sources"
             val sourcesBody = mapOf(
@@ -494,7 +484,7 @@ class AnimeRift : MainAPI() {
                 val serverName = src.get("server_name")?.asText() ?: "Server"
                 val provider = src.get("provider")?.asText() ?: ""
                 val subTitle = src.get("sub_title")?.asText() ?: ""
-
+                
                 val qualitiesNode = src.get("qualities")
                 val qualitiesList = if (qualitiesNode != null && qualitiesNode.isArray && qualitiesNode.size() > 0) {
                     qualitiesNode.map { it.asText() }
@@ -513,7 +503,7 @@ class AnimeRift : MainAPI() {
                         )
                         val canPlayJson = apiCall(canPlayUrl, "ANIME.LIBRARY.EPISODES.SOURCES.CHECK_AVAILABILITY", method = "POST", body = canPlayBody)
                         val sessionId = canPlayJson.get("sessionId")?.asText() ?: ""
-
+                        
                         val claimUrl = "$baseUrl/ads_manager/claim"
                         val claimBody = mapOf(
                             "event_name" to "play_episode_unlocked",
@@ -528,7 +518,7 @@ class AnimeRift : MainAPI() {
                         try {
                             apiCall(claimUrl, "USER.ADS_MANAGER.CLAIMS", method = "PUT", body = claimBody)
                         } catch (_: Exception) {}
-
+                        
                         val directLinkUrl = "$baseUrl/library/episode/source/direct_link"
                         val directLinkBody = mapOf(
                             "id" to hostId,
@@ -561,7 +551,7 @@ class AnimeRift : MainAPI() {
                                     null
                                 }
                                 customHeaders["Host"] = hostFromUrl ?: "media-1.rift-content.com"
-
+                                
                                 directLinkJson.get("http_headers")?.fields()?.forEach { (k, v) ->
                                     customHeaders[k] = v.asText()
                                 }
@@ -577,29 +567,35 @@ class AnimeRift : MainAPI() {
                                     }
                                 )
                             }
-                        }
+                        } 
                         else if (directLinkJson.get("ticket_response")?.asBoolean() == true) {
                             val fileId = directLinkJson.get("fileId")?.asText() ?: ""
                             val ticket = directLinkJson.get("ticket")?.asText() ?: ""
                             val waitTimeSeconds = directLinkJson.get("wait_time")?.asLong() ?: 5L
 
+                            android.util.Log.d(name, "⏳ [Streamtape] تذكرة للملف: $fileId | الوقت المطلوب للانتظار: $waitTimeSeconds ثوانٍ")
 
                             if (fileId.isNotEmpty() && ticket.isNotEmpty()) {
                                 kotlinx.coroutines.delay((waitTimeSeconds * 1000) + 500)
 
                                 val tapeApiUrl = "https://api.streamtape.com/file/dl?file=$fileId&ticket=$ticket"
+                                android.util.Log.d(name, "🚀 [Streamtape] جاري إرسال طلب التحميل -> $tapeApiUrl")
 
                                 var tapeRes = app.get(tapeApiUrl).parsed<JsonNode>()
                                 val status = tapeRes.get("status")?.asInt()
                                 val msg = tapeRes.get("msg")?.asText()
 
+                                android.util.Log.d(name, "📥 [Streamtape] رد السيرفر -> الحالة: $status | الرسالة: $msg | الرد الكامل: $tapeRes")
 
                                 if (status != 200) {
+                                    android.util.Log.d(name, "⚠️ [Streamtape] الحالة ليست 200، جاري الانتظار ثانيتين وإعادة المحاولة...")
                                     kotlinx.coroutines.delay(2000)
                                     tapeRes = app.get(tapeApiUrl).parsed<JsonNode>()
+                                    android.util.Log.d(name, "📥 [Streamtape] رد المحاولة الثانية -> الحالة: ${tapeRes.get("status")?.asInt()} | الرد: $tapeRes")
                                 }
 
                                 val tapeDirectUrl = tapeRes.get("result")?.get("url")?.asText()
+                                android.util.Log.d(name, "✅ [Streamtape] رابط الفيديو المستخرج: $tapeDirectUrl")
 
                                 if (!tapeDirectUrl.isNullOrEmpty()) {
                                     callback.invoke(
@@ -625,6 +621,7 @@ class AnimeRift : MainAPI() {
             }
             return@withContext true
         } catch (e: Exception) {
+            android.util.Log.e(name, "❌ [LoadLinks Fatal] فشل عام في جلب الروابط: ${e.message}")
             return@withContext false
         }
     }
