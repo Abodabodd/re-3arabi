@@ -12,5 +12,5 @@ cloudstream {
         "Movie"
     )
 
-    iconUrl = "https://3esk.onl/wp-content/uploads/2021/01/3isk-logo.png"
+    iconUrl = "https://3esk.onl/wp-content/u/2021/01/3isk-logo.png"
 }
