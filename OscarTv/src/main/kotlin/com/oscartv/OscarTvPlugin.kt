@@ -97,8 +97,8 @@ class OscarTvPlugin : Plugin() {
                         setOnClickListener { open(ctx, url); dlg.dismiss() }
                     }
 
-                card.addView(bigButton("✈️  قناة التليجرام", intArrayOf(0xFF2AABEE.toInt(), 0xFF1D86C9.toInt()), TELEGRAM))
-                card.addView(bigButton("💚  تبرع لنا", intArrayOf(0xFF1FBF75.toInt(), 0xFF0E9F5D.toInt()), DONATE))
+                card.addView(bigButton("✈️  قناة مطور اوسكار", intArrayOf(0xFF2AABEE.toInt(), 0xFF1D86C9.toInt()), TELEGRAM))
+                card.addView(bigButton("💚 تبرع له", intArrayOf(0xFF1FBF75.toInt(), 0xFF0E9F5D.toInt()), DONATE))
 
                 card.addView(TextView(ctx).apply {
                     text = "إغلاق"
