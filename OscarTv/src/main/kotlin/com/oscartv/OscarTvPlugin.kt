@@ -65,14 +65,14 @@ class OscarTvPlugin : Plugin() {
                     setPadding(0, dp(ctx, 10), 0, 0)
                 })
                 card.addView(TextView(ctx).apply {
-                    text = "إضافة عربية بواسطة mo7AmMeD64"
+                    text = "هذه الاضافة من غير مستودع طورها mo7AmMeD64"
                     textSize = 13f
                     setTextColor(0xFF9A9AB0.toInt())
                     gravity = Gravity.CENTER
                     setPadding(0, dp(ctx, 4), 0, dp(ctx, 16))
                 })
                 card.addView(TextView(ctx).apply {
-                    text = "انضم لقناة التليجرام لكل جديد و الدعم\nولدعم استمرار الإضافة و التحديثات تبرع لنا 💚"
+                    text = "ادعم المطور اللي سوا اضافة اوسكار"
                     textSize = 14f
                     setTextColor(0xFFD0D0E0.toInt())
                     gravity = Gravity.CENTER
