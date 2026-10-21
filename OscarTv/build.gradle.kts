@@ -14,4 +14,5 @@ cloudstream {
         "TvChannel",
         "Live",
     )
+iconUrl = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/OscarTv/icon.png"
 }
