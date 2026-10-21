@@ -80,8 +80,6 @@ class OscarTvProvider : MainAPI() {
     private fun JsonObject.dataArr(): List<JsonObject> =
         ((this["data"] as? JsonArray)?.mapNotNull { it as? JsonObject }) ?: emptyList()
 
-    // ---------- cards ----------
-
     private fun JsonObject.toSearch(tvType: TvType): SearchResponse? {
         val id = int("id") ?: return null
         val title = str("title_ar", "title_en", "name") ?: return null
@@ -100,8 +98,6 @@ class OscarTvProvider : MainAPI() {
     private suspend fun searchOne(pathPrefix: String, query: String, tvType: TvType): List<SearchResponse> =
         call("$pathPrefix/?page=1&limit=20&search=${java.net.URLEncoder.encode(query, "UTF-8")}")
             ?.dataArr()?.mapNotNull { it.toSearch(tvType) } ?: emptyList()
-
-    // ---------- catalog ----------
 
     override val mainPage = mainPageOf(
         "movies_top" to "رائج اليوم",
@@ -171,8 +167,6 @@ class OscarTvProvider : MainAPI() {
         return newHomePageResponse(request.name, items)
     }
 
-    // ---------- search ----------
-
     override suspend fun search(query: String): List<SearchResponse> {
         val q = java.net.URLEncoder.encode(query.trim(), "UTF-8")
         if (q.isBlank()) return emptyList()
@@ -184,8 +178,6 @@ class OscarTvProvider : MainAPI() {
             ).awaitAll().flatten()
         }.distinctBy { it.url }
     }
-
-    // ---------- load ----------
 
     private fun JsonObject.poster2(): String? = str("poster")?.let { if (it.startsWith("http")) it else "$mainUrl$it" }
 
@@ -296,8 +288,6 @@ class OscarTvProvider : MainAPI() {
             else -> null
         }
     }
-
-    // ---------- links ----------
 
     override suspend fun loadLinks(
         data: String,
