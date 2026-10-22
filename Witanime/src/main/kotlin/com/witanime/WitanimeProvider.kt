@@ -473,8 +473,6 @@ class WitAnime : MainAPI() {
     this.tags = genres
     this.year = year
     this.showStatus = status
-
-    // التقييم
     this.score = rating?.let {
         Score.from10(it)
     }
