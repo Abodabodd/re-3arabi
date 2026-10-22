@@ -2,15 +2,22 @@ package com.phoenix
 
 import android.util.Base64
 import android.util.Log
+import android.webkit.CookieManager
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.loadExtractor
-import org.jsoup.Jsoup
+import com.lagradost.cloudstream3.utils.newExtractorLink
+import com.lagradost.nicehttp.NiceResponse
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.json.JSONObject
+import org.jsoup.Jsoup
+import java.net.URL
 import java.net.URLDecoder
 import java.net.URLEncoder
-import com.lagradost.cloudstream3.utils.newExtractorLink
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 class AnimePhoenixProvider : MainAPI() {
     override var mainUrl = "https://anime-phoenix.com"
@@ -22,12 +29,108 @@ class AnimePhoenixProvider : MainAPI() {
         TvType.AnimeMovie
     )
 
+    private val userAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36"
+    private var savedCookies: String? = null
+    private val cfMutex = Mutex()
+
+    private fun buildHeaders(referer: String? = null): MutableMap<String, String> {
+        val headers = mutableMapOf(
+            "User-Agent" to userAgent,
+            "Referer" to (referer ?: mainUrl),
+            "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            "Accept-Language" to "ar,en-US;q=0.9,en;q=0.8",
+            "Upgrade-Insecure-Requests" to "1"
+        )
+        savedCookies?.let { headers["Cookie"] = it }
+        return headers
+    }
+
+    private suspend fun httpGet(url: String, referer: String? = null): NiceResponse {
+        var currentRequestUrl = url
+        var headers = buildHeaders(referer)
+
+        var res = app.get(currentRequestUrl, headers = headers, timeout = 30)
+        if (res.code in listOf(403, 503, 429)) {
+            cfMutex.withLock {
+                val currentCookies = CookieManager.getInstance().getCookie(currentRequestUrl)
+                if (currentCookies != null && currentCookies != savedCookies && currentCookies.contains("cf_clearance")) {
+                    savedCookies = currentCookies
+                } else {
+                    val activity = CommonActivity.activity
+                    if (activity != null) {
+                        val solverResult = CloudflareSolver.solve(activity, currentRequestUrl, userAgent)
+                        if (solverResult != null) {
+                            if (!solverResult.cookies.isNullOrEmpty()) {
+                                savedCookies = solverResult.cookies
+                            }
+                            if (solverResult.finalUrl != currentRequestUrl) {
+                                try {
+                                    val newHost = URL(solverResult.finalUrl).host
+                                    mainUrl = "https://$newHost"
+                                } catch (_: Exception) {}
+                                currentRequestUrl = solverResult.finalUrl
+                            }
+                        }
+                    }
+                }
+            }
+            headers = buildHeaders(referer)
+            res = app.get(currentRequestUrl, headers = headers, timeout = 30)
+        }
+        return res
+    }
+
+    private suspend fun httpPost(url: String, data: Map<String, String>, referer: String? = null): NiceResponse {
+        var currentRequestUrl = url
+        var headers = buildHeaders(referer).apply {
+            put("X-Requested-With", "XMLHttpRequest")
+            put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+        }
+
+        var res = app.post(currentRequestUrl, data = data, headers = headers, timeout = 30)
+        if (res.code in listOf(403, 503, 429)) {
+            cfMutex.withLock {
+                val currentCookies = CookieManager.getInstance().getCookie(currentRequestUrl)
+                if (currentCookies != null && currentCookies != savedCookies && currentCookies.contains("cf_clearance")) {
+                    savedCookies = currentCookies
+                } else {
+                    val activity = CommonActivity.activity
+                    if (activity != null) {
+                        val solverResult = CloudflareSolver.solve(activity, currentRequestUrl, userAgent)
+                        if (solverResult != null) {
+                            if (!solverResult.cookies.isNullOrEmpty()) {
+                                savedCookies = solverResult.cookies
+                            }
+                            if (solverResult.finalUrl != currentRequestUrl) {
+                                try {
+                                    val newHost = URL(solverResult.finalUrl).host
+                                    mainUrl = "https://$newHost"
+                                } catch (_: Exception) {}
+                                currentRequestUrl = solverResult.finalUrl
+                            }
+                        }
+                    }
+                }
+            }
+            headers = buildHeaders(referer).apply {
+                put("X-Requested-With", "XMLHttpRequest")
+                put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+            }
+            res = app.post(currentRequestUrl, data = data, headers = headers, timeout = 30)
+        }
+        return res
+    }
+
     override suspend fun getMainPage(
         page: Int,
         request: MainPageRequest
     ): HomePageResponse? {
         val url = if (page == 1) mainUrl else "$mainUrl/page/$page/"
-        val document = app.get(url, headers = customHeaders).document
+        val document = try {
+            httpGet(url).document
+        } catch (e: Exception) {
+            return null
+        }
 
         val homePageRows = mutableListOf<HomePageList>()
         val latestSection = document.selectFirst("main.FJ-Phoenix-Anastasia-Latest")
@@ -87,10 +190,11 @@ class AnimePhoenixProvider : MainAPI() {
         }
         return newHomePageResponse(homePageRows, hasNext = true)
     }
+
     private suspend fun getNonce(query: String): String {
         return try {
             val searchLandingUrl = "$mainUrl/search/?q=${URLEncoder.encode(query, "UTF-8")}"
-            val html = app.get(searchLandingUrl).text
+            val html = httpGet(searchLandingUrl).text
             val nonceRegex = """"nonce"\s*:\s*"([a-f0-9]+)"""".toRegex()
             nonceRegex.find(html)?.groupValues?.get(1) ?: "25ccbcb8fb"
         } catch (e: Exception) {
@@ -98,50 +202,138 @@ class AnimePhoenixProvider : MainAPI() {
         }
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val nonce = getNonce(query)
+    private fun parseSearchJson(jsonStr: String): List<SearchResponse> {
         val searchResults = mutableListOf<SearchResponse>()
-
         try {
-            val response = app.post(
-                "$mainUrl/wp-admin/admin-ajax.php",
-                headers = mapOf(
-                    "X-Requested-With" to "XMLHttpRequest",
-                    "Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8"
-                ),
-                data = mapOf(
-                    "action" to "phoenix_search",
-                    "nonce" to nonce,
-                    "q" to query,
-                    "type" to "all",
-                    "genre" to "",
-                    "status" to "",
-                    "year" to "",
-                    "season" to "",
-                    "sort" to "relevance",
-                    "page" to "1",
-                    "per_page" to "25",
-                    "dropdown" to "0"
-                )
-            ).text
+            val root = if (jsonStr.trim().startsWith("[")) {
+                org.json.JSONArray(jsonStr)
+            } else {
+                val obj = JSONObject(jsonStr)
+                when {
+                    obj.has("data") && obj.get("data") is JSONObject -> {
+                        val dataObj = obj.getJSONObject("data")
+                        dataObj.optJSONArray("results") ?: dataObj.optJSONArray("items")
+                    }
+                    obj.has("data") && obj.get("data") is org.json.JSONArray -> {
+                        obj.getJSONArray("data")
+                    }
+                    obj.has("results") -> obj.optJSONArray("results")
+                    obj.has("items") -> obj.optJSONArray("items")
+                    else -> null
+                }
+            } ?: return emptyList()
 
-            val json = JSONObject(response)
+            for (i in 0 until root.length()) {
+                val item = root.optJSONObject(i) ?: continue
+                val titleAr = item.optString("title_ar")
+                val titleEn = item.optString("title_en")
+                val titleDefault = item.optString("title")
+                val name = item.optString("name")
+                val title = when {
+                    titleAr.isNotBlank() -> titleAr
+                    titleEn.isNotBlank() -> titleEn
+                    titleDefault.isNotBlank() -> titleDefault
+                    name.isNotBlank() -> name
+                    else -> ""
+                }
+                val href = item.optString("url").ifEmpty { item.optString("link") }
+                val poster = item.optString("thumbnail_url").ifEmpty {
+                    item.optString("thumbnail").ifEmpty { item.optString("poster") }
+                }
+                val itemType = item.optString("item_type").ifEmpty { item.optString("type") }
+
+                val tvType = if (itemType == "movie" || href.contains("/movies/")) TvType.AnimeMovie else TvType.Anime
+
+                if (title.isNotEmpty() && href.isNotEmpty()) {
+                    searchResults.add(
+                        newAnimeSearchResponse(title, href, tvType).apply {
+                            this.posterUrl = poster
+                        }
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return searchResults
+    }
+    private fun computeSearchSignature(
+        query: String,
+        timestamp: Long,
+        publicKey: String,
+        type: String = "all",
+        genre: String = "",
+        status: String = "",
+        year: String = "",
+        season: String = "",
+        page: Int = 1,
+        sort: String = "relevance"
+    ): String {
+        return try {
+            val canonical = "$timestamp:$query:$type:$genre:$status:$year:$season:$page:$sort"
+            val mac = Mac.getInstance("HmacSHA256")
+            val secretKey = SecretKeySpec(publicKey.toByteArray(Charsets.UTF_8), "HmacSHA256")
+            mac.init(secretKey)
+            val hashBytes = mac.doFinal(canonical.toByteArray(Charsets.UTF_8))
+            hashBytes.joinToString("") { "%02x".format(it) }
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+    override suspend fun search(query: String): List<SearchResponse> {
+        val searchLandingUrl = "$mainUrl/search/?q=${URLEncoder.encode(query, "UTF-8")}"
+        val pageHtml = try {
+            httpGet(searchLandingUrl).text
+        } catch (e: Exception) {
+            ""
+        }
+
+        val publicKey = Regex(""""public_key"\s*:\s*"([^"]+)"""")
+            .find(pageHtml)?.groupValues?.get(1)
+            ?: "c8052e98457156515d839dd050a95ac1b862437995778d89422a45f117478009"
+
+        val rawApiUrl = Regex(""""api_url"\s*:\s*"([^"]+)"""")
+            .find(pageHtml)?.groupValues?.get(1)?.replace("\\/", "/")
+            ?: "$mainUrl/api/search.php"
+        val ts = System.currentTimeMillis() / 1000
+        val signature = computeSearchSignature(query = query, timestamp = ts, publicKey = publicKey)
+        val encodedQ = URLEncoder.encode(query, "UTF-8")
+        val apiUrl = "$rawApiUrl?q=$encodedQ&type=all&sort=relevance&page=1&per_page=25&dropdown=0"
+
+        val searchHeaders = buildHeaders(referer = searchLandingUrl).apply {
+            put("X-Requested-With", "XMLHttpRequest")
+            put("Accept", "application/json, text/javascript, */*; q=0.01")
+            if (signature.isNotEmpty()) {
+                put("X-PX-Timestamp", ts.toString())
+                put("X-PX-Signature", signature)
+            }
+        }
+        try {
+            val responseText = app.get(apiUrl, headers = searchHeaders).text
+            val json = JSONObject(responseText)
+
             if (json.optBoolean("success")) {
-                val data = json.getJSONObject("data")
-                val results = data.getJSONArray("results")
+                val data = json.optJSONObject("data") ?: return emptyList()
+                val resultsArray = data.optJSONArray("results") ?: return emptyList()
+                val searchResults = mutableListOf<SearchResponse>()
 
-                for (i in 0 until results.length()) {
-                    val item = results.getJSONObject(i)
+                for (i in 0 until resultsArray.length()) {
+                    val item = resultsArray.optJSONObject(i) ?: continue
                     val titleAr = item.optString("title_ar")
                     val titleEn = item.optString("title_en")
-                    val title = if (titleAr.isNotEmpty()) titleAr else titleEn
+                    val title = if (titleAr.isNotBlank()) titleAr else titleEn
                     val href = item.optString("url")
                     val poster = item.optString("thumbnail_url")
                     val itemType = item.optString("item_type")
 
-                    val tvType = if (itemType == "movie") TvType.AnimeMovie else TvType.Anime
-
                     if (title.isNotEmpty() && href.isNotEmpty()) {
+                        val tvType = if (itemType == "movie" || href.contains("/movies/")) {
+                            TvType.AnimeMovie
+                        } else {
+                            TvType.Anime
+                        }
+
                         searchResults.add(
                             newAnimeSearchResponse(title, href, tvType).apply {
                                 this.posterUrl = poster
@@ -149,72 +341,41 @@ class AnimePhoenixProvider : MainAPI() {
                         )
                     }
                 }
+                return searchResults
             }
         } catch (e: Exception) {
-            try {
-                val searchUrl = "$mainUrl/search/?q=${URLEncoder.encode(query, "UTF-8")}"
-                val response = app.get(searchUrl).text
-                val soup = Jsoup.parse(response)
-                soup.select("div.FJ-episode-wrap").forEach { wrap ->
-                    val titleEl = wrap.selectFirst("a.FJ-Phoenix-Anastasia-EpCard-Name")
-                    val linkEl = wrap.selectFirst("a.FJ-episode-img-box") ?: wrap.selectFirst("a")
-                    val title = titleEl?.text() ?: ""
-                    val href = linkEl?.attr("href") ?: ""
-                    if (title.isNotEmpty() && href.isNotEmpty()) {
-                        searchResults.add(
-                            newAnimeSearchResponse(title, href, TvType.Anime)
-                        )
-                    }
-                }
-            } catch (inner: Exception) {
-            }
+            e.printStackTrace()
         }
-        return searchResults
+
+        return emptyList()
     }
-    private val customHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language" to "ar,en-US;q=0.9,en;q=0.8",
-        "Referer" to mainUrl
-    )
-
-
     override suspend fun load(url: String): LoadResponse? {
         println("AnimePhoenix_DEBUG: Entering load() with url = $url")
-        android.util.Log.d("AnimePhoenix", "Entering load() with url = $url")
+        Log.d("AnimePhoenix", "Entering load() with url = $url")
 
         val response = try {
-            app.get(url, headers = customHeaders)
+            httpGet(url)
         } catch (e: Exception) {
-            println("AnimePhoenix_DEBUG: Exception during app.get(url): ${e.message}")
+            println("AnimePhoenix_DEBUG: Exception during httpGet(url): ${e.message}")
             return null
         }
 
         val finalUrl = response.url
-        val htmlText = response.text
-        val statusCode = response.code
-
-        println("AnimePhoenix_DEBUG: Initial Request Status Code = $statusCode")
-        println("AnimePhoenix_DEBUG: Final Redirected URL = $finalUrl")
-        println("AnimePhoenix_DEBUG: HTML Length = ${htmlText.length}")
-
         val document = response.document
 
         val title = document.selectFirst("h1.FJ-Phoenix-Hero-Title")?.text()
             ?: document.selectFirst("h1.FJ-CC-Title")?.text()
+            ?: document.selectFirst("h1")?.text()
             ?: ""
         val poster = document.selectFirst(".FJ-Phoenix-Hero-Poster img")?.attr("src")
+            ?: document.selectFirst("meta[property=og:image]")?.attr("content")
         val description = document.selectFirst(".FJ-Phoenix-Desc-Full")?.text()
+            ?: document.selectFirst("meta[property=og:description]")?.attr("content")
         val isMovie = finalUrl.contains("/movies/")
-
-        println("AnimePhoenix_DEBUG: Extracted Title = $title")
-        println("AnimePhoenix_DEBUG: Extracted Poster = $poster")
-        println("AnimePhoenix_DEBUG: Is Movie? = $isMovie")
 
         if (isMovie) {
             val watchBtn = document.selectFirst("a.FJ-Btn-Watch")
             val watchUrl = watchBtn?.attr("href") ?: "$finalUrl/watch"
-            println("AnimePhoenix_DEBUG: Movie watchUrl resolved to = $watchUrl")
 
             return newMovieLoadResponse(title, finalUrl, TvType.AnimeMovie, watchUrl).apply {
                 this.posterUrl = poster
@@ -222,105 +383,135 @@ class AnimePhoenixProvider : MainAPI() {
             }
         } else {
             val episodes = mutableListOf<Episode>()
-            val episodesPageUrl = "${finalUrl.removeSuffix("/")}/episodes/"
+            val isEpisodeUrl = finalUrl.contains("/episodes/")
+            val parentAnimeUrl = if (isEpisodeUrl) {
+                document.select("a[href*='/animes/'], a[href*='/series/'], a[href*='/tvshows/']").mapNotNull {
+                    it.attr("href")
+                }.firstOrNull { it.contains("/animes/") || it.contains("/series/") }?.let { fixUrlNull(it) }
+            } else {
+                null
+            }
+            val baseSeriesUrl = parentAnimeUrl ?: finalUrl
+            val episodesPageUrl = if (baseSeriesUrl.contains("/episodes/")) {
+                null // إذا لم نجد صفحة الأنمي وبقينا في رابط الحلقة، لا نضف /episodes/
+            } else {
+                "${baseSeriesUrl.removeSuffix("/")}/episodes/"
+            }
+            if (episodesPageUrl != null) {
+                try {
+                    val epResponse = httpGet(episodesPageUrl, referer = finalUrl)
+                    if (epResponse.code in 200..299) {
+                        val epDocument = epResponse.document
+                        val epHtml = epResponse.text
+                        val firstGroup = epDocument.select("div#episodesGrid a.FJ-episode-wrap").mapNotNull { item ->
+                            val titleEl = item.selectFirst(".FJ-Phoenix-Anastasia-EpCard-Name")
+                            val epTitle = titleEl?.text() ?: return@mapNotNull null
+                            val epUrl = item.attr("href") ?: return@mapNotNull null
+                            val cleanTitle = epTitle.replace("\\s+".toRegex(), " ").trim()
+                            val epNum = """(\d+)$""".toRegex().find(cleanTitle)?.groupValues?.get(1)?.toIntOrNull()
 
-            try {
-                val epResponse = app.get(episodesPageUrl, headers = customHeaders)
-                val epDocument = epResponse.document
-                val epHtml = epResponse.text
-                val firstGroup = epDocument.select("div#episodesGrid a.FJ-episode-wrap").mapNotNull { item ->
-                    val titleEl = item.selectFirst(".FJ-Phoenix-Anastasia-EpCard-Name")
-                    val epTitle = titleEl?.text() ?: return@mapNotNull null
-                    val epUrl = item.attr("href") ?: return@mapNotNull null
-                    val cleanTitle = epTitle.replace("\\s+".toRegex(), " ").trim()
-                    val epNum = """(\d+)$""".toRegex().find(cleanTitle)?.groupValues?.get(1)?.toIntOrNull()
+                            newEpisode(epUrl) {
+                                this.name = cleanTitle
+                                this.episode = epNum
+                                this.season = 1
+                                this.posterUrl = poster
+                            }
+                        }
 
-                    newEpisode(epUrl) {
-                        this.name = cleanTitle
-                        this.episode = epNum
-                        this.season = 1
-                        this.posterUrl = poster // تعيين بوستر المسلسل للحلقة
-                    }
-                }
+                        if (firstGroup.isNotEmpty()) {
+                            episodes.addAll(firstGroup)
+                            val tokenRegex = """"token"\s*:\s*"([^"]+)"""".toRegex()
+                            val sigRegex = """"sig"\s*:\s*"([^"]+)"""".toRegex()
 
-                if (firstGroup.isNotEmpty()) {
-                    episodes.addAll(firstGroup)
-                    val tokenRegex = """"token"\s*:\s*"([^"]+)"""".toRegex()
-                    val sigRegex = """"sig"\s*:\s*"([^"]+)"""".toRegex()
+                            val token = tokenRegex.find(epHtml)?.groupValues?.get(1)
+                            val sig = sigRegex.find(epHtml)?.groupValues?.get(1)
+                            val paginationEl = epDocument.selectFirst("#pagination") ?: epDocument.selectFirst(".FJ-Phoenix-Anastasia-Pagination-Wrap")
+                            val totalPages = paginationEl?.attr("data-total")?.toIntOrNull() ?: 1
 
-                    val token = tokenRegex.find(epHtml)?.groupValues?.get(1)
-                    val sig = sigRegex.find(epHtml)?.groupValues?.get(1)
-                    val paginationEl = epDocument.selectFirst("#pagination") ?: epDocument.selectFirst(".FJ-Phoenix-Anastasia-Pagination-Wrap")
-                    val totalPages = paginationEl?.attr("data-total")?.toIntOrNull() ?: 1
+                            if (totalPages > 1 && token != null && sig != null) {
+                                val ajaxUrl = "$mainUrl/wp-admin/admin-ajax.php?action=fj_get_episodes&token=${URLEncoder.encode(token, "UTF-8")}&sig=$sig&page=$totalPages&sort=oldest&search="
+                                val ajaxResponse = httpGet(ajaxUrl, referer = episodesPageUrl).text
+                                val json = JSONObject(ajaxResponse)
 
-                    if (totalPages > 1 && token != null && sig != null) {
-                        val ajaxUrl = "$mainUrl/wp-admin/admin-ajax.php?action=fj_get_episodes&token=${URLEncoder.encode(token, "UTF-8")}&sig=$sig&page=$totalPages&sort=oldest&search="
-                        val ajaxResponse = app.get(ajaxUrl, headers = customHeaders).text
-                        val json = JSONObject(ajaxResponse)
+                                if (json.optBoolean("success")) {
+                                    val data = json.getJSONObject("data")
+                                    val html = data.optString("html")
+                                    if (html.isNotEmpty()) {
+                                        val lastPageDoc = Jsoup.parse(html)
+                                        val lastGroup = lastPageDoc.select("a.FJ-episode-wrap").mapNotNull { item ->
+                                            val titleEl = item.selectFirst(".FJ-Phoenix-Anastasia-EpCard-Name")
+                                            val epTitle = titleEl?.text() ?: return@mapNotNull null
+                                            val epUrl = item.attr("href") ?: return@mapNotNull null
+                                            val cleanTitle = epTitle.replace("\\s+".toRegex(), " ").trim()
+                                            val epNum = """(\d+)$""".toRegex().find(cleanTitle)?.groupValues?.get(1)?.toIntOrNull()
 
-                        if (json.optBoolean("success")) {
-                            val data = json.getJSONObject("data")
-                            val html = data.optString("html")
-                            if (html.isNotEmpty()) {
-                                val lastPageDoc = Jsoup.parse(html)
-                                val lastGroup = lastPageDoc.select("a.FJ-episode-wrap").mapNotNull { item ->
-                                    val titleEl = item.selectFirst(".FJ-Phoenix-Anastasia-EpCard-Name")
-                                    val epTitle = titleEl?.text() ?: return@mapNotNull null
-                                    val epUrl = item.attr("href") ?: return@mapNotNull null
-                                    val cleanTitle = epTitle.replace("\\s+".toRegex(), " ").trim()
-                                    val epNum = """(\d+)$""".toRegex().find(cleanTitle)?.groupValues?.get(1)?.toIntOrNull()
+                                            newEpisode(epUrl) {
+                                                this.name = cleanTitle
+                                                this.episode = epNum
+                                                this.season = 1
+                                                this.posterUrl = poster
+                                            }
+                                        }
 
-                                    newEpisode(epUrl) {
-                                        this.name = cleanTitle
-                                        this.episode = epNum
-                                        this.season = 1
-                                        this.posterUrl = poster // تعيين بوستر المسلسل للحلقة
+                                        if (lastGroup.isNotEmpty()) {
+                                            val sampleEp = firstGroup.first()
+                                            val sampleTitle = sampleEp.name ?: ""
+                                            val sampleUrl = sampleEp.data
+
+                                            val titlePrefix = sampleTitle.replace("""\d+$""".toRegex(), "")
+                                            val urlPrefix = sampleUrl.replace("""\d+$""".toRegex(), "")
+
+                                            val startNum = (firstGroup.last().episode ?: firstGroup.size) + 1
+                                            val endNum = (lastGroup.first().episode ?: 1000) - 1
+
+                                            val middleEpisodes = mutableListOf<Episode>()
+                                            for (num in startNum..endNum) {
+                                                middleEpisodes.add(newEpisode("$urlPrefix$num") {
+                                                    this.name = "$titlePrefix$num"
+                                                    this.episode = num
+                                                    this.season = 1
+                                                    this.posterUrl = poster
+                                                })
+                                            }
+
+                                            episodes.addAll(middleEpisodes)
+                                            episodes.addAll(lastGroup)
+                                        }
                                     }
-                                }
-
-                                if (lastGroup.isNotEmpty()) {
-                                    val sampleEp = firstGroup.first()
-                                    val sampleTitle = sampleEp.name ?: ""
-                                    val sampleUrl = sampleEp.data
-
-                                    val titlePrefix = sampleTitle.replace("""\d+$""".toRegex(), "")
-                                    val urlPrefix = sampleUrl.replace("""\d+$""".toRegex(), "")
-
-                                    val startNum = (firstGroup.last().episode ?: firstGroup.size) + 1
-                                    val endNum = (lastGroup.first().episode ?: 1000) - 1
-
-                                    val middleEpisodes = mutableListOf<Episode>()
-                                    for (num in startNum..endNum) {
-                                        middleEpisodes.add(newEpisode("$urlPrefix$num") {
-                                            this.name = "$titlePrefix$num"
-                                            this.episode = num
-                                            this.season = 1
-                                            this.posterUrl = poster // تعيين بوستر المسلسل للحلقة المستحدثة
-                                        })
-                                    }
-
-                                    episodes.addAll(middleEpisodes)
-                                    episodes.addAll(lastGroup)
                                 }
                             }
                         }
                     }
+                } catch (e: Exception) {
+                    println("AnimePhoenix_DEBUG: Error fetching /episodes/: ${e.message}")
                 }
-            } catch (e: Exception) {
-                val epPills = document.select("div.FJ-EpsGrid a")
-                epPills.reversed().forEachIndexed { index, pill ->
-                    val epTitle = pill.attr("title").ifEmpty { "الحلقة" }
-                    val epUrl = pill.attr("href")
-                    val epNum = """(\d+)$""".toRegex().find(epTitle)?.groupValues?.get(1)?.toIntOrNull() ?: (index + 1)
-                    if (epUrl.isNotEmpty()) {
-                        episodes.add(newEpisode(epUrl) {
-                            this.name = epTitle
-                            this.episode = epNum
-                            this.season = 1
-                            this.posterUrl = poster // تعيين بوستر المسلسل في خطة التراجع
-                        })
+            }
+            if (episodes.isEmpty()) {
+                val epPills = document.select("div.FJ-EpsGrid a, div#episodesGrid a.FJ-episode-wrap, ul.episodes-list a")
+                if (epPills.isNotEmpty()) {
+                    epPills.reversed().forEachIndexed { index, pill ->
+                        val epTitle = pill.attr("title").ifEmpty { pill.text().ifEmpty { "الحلقة" } }
+                        val epUrl = pill.attr("href")
+                        val epNum = """(\d+)$""".toRegex().find(epTitle)?.groupValues?.get(1)?.toIntOrNull() ?: (index + 1)
+                        if (epUrl.isNotEmpty()) {
+                            episodes.add(newEpisode(epUrl) {
+                                this.name = epTitle
+                                this.episode = epNum
+                                this.season = 1
+                                this.posterUrl = poster
+                            })
+                        }
                     }
                 }
+            }
+            if (episodes.isEmpty() && isEpisodeUrl) {
+                val epNum = """(\d+)$""".toRegex().find(finalUrl)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+                episodes.add(newEpisode(finalUrl) {
+                    this.name = title.ifEmpty { "الحلقة 1" }
+                    this.episode = epNum
+                    this.season = 1
+                    this.posterUrl = poster
+                })
             }
 
             println("AnimePhoenix_DEBUG: Total successfully extracted episodes count = ${episodes.size}")
@@ -330,14 +521,17 @@ class AnimePhoenixProvider : MainAPI() {
             }
         }
     }
-
     override suspend fun loadLinks(
         data: String,
         isCdn: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val document = app.get(data).document
+        val document = try {
+            httpGet(data).document
+        } catch (e: Exception) {
+            return false
+        }
         val serverLinks = document.select("a.server-link")
 
         serverLinks.forEach { sLink ->
