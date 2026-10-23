@@ -29,6 +29,7 @@ class AnimeRift : MainAPI() {
     private val FIREBASE_APP_ID = "RIFT_FIREBASE_APP_ID_PLACEHOLDER"
     private val ANDROID_PACKAGE = "com.riftapps.animerift"
     private val ANDROID_CERT = "AF40CE82A52AA4107F311D8B9727D01C8D02250B"
+
     companion object {
         private var fid: String? = null
         private var firebaseToken: String? = null
@@ -43,7 +44,6 @@ class AnimeRift : MainAPI() {
             return File(tmp, "anime_rift_session_store.json")
         }
 
-        
         private fun saveToDisk(data: Map<String, String>) {
             try {
                 val file = getCacheFile()
@@ -77,6 +77,7 @@ class AnimeRift : MainAPI() {
     }
 
     private val mapper = ObjectMapper()
+
     private fun generateSyntheticDevice(): Pair<String, String> {
         val brands = listOf(
             Triple("google", "Google", "Pixel 8 Pro"),
@@ -150,7 +151,7 @@ class AnimeRift : MainAPI() {
 
     private suspend fun ensureInitialized(forceRefresh: Boolean = false) {
         if (!forceRefresh) {
-            if (!fid.isNullOrEmpty() && !gatewayBaseUrl.isNullOrEmpty() && !firebaseToken.isNullOrEmpty() && !deviceId.isNullOrEmpty()) {
+            if (!fid.isNullOrEmpty() && !gatewayBaseUrl.isNullOrEmpty() && !deviceId.isNullOrEmpty()) {
                 return
             }
 
@@ -164,16 +165,41 @@ class AnimeRift : MainAPI() {
                 syntheticBuildId = disk["syntheticBuildId"]
                 syntheticDeviceInfoJson = disk["syntheticDeviceInfoJson"]
 
-                if (!fid.isNullOrEmpty() && !gatewayBaseUrl.isNullOrEmpty() && !firebaseToken.isNullOrEmpty() && !deviceId.isNullOrEmpty()) {
+                if (!fid.isNullOrEmpty() && !gatewayBaseUrl.isNullOrEmpty() && !deviceId.isNullOrEmpty()) {
                     return
                 }
             }
         }
 
         withContext(Dispatchers.IO) {
-            registerFirebaseInstallation()
-            fetchRemoteConfig()
-            registerDevice()
+            if (gatewayBaseUrl.isNullOrEmpty()) {
+                gatewayBaseUrl = mainUrl
+            }
+
+            try {
+                registerFirebaseInstallation()
+            } catch (e: Exception) {
+                android.util.Log.e(name, "Firebase registration failed: ${e.message}")
+            }
+            if (fid.isNullOrEmpty()) {
+                fid = UUID.randomUUID().toString().replace("-", "").take(22)
+            }
+
+            try {
+                fetchRemoteConfig()
+            } catch (e: Exception) {
+                android.util.Log.e(name, "Fetch RemoteConfig failed, using mainUrl: ${e.message}")
+                gatewayBaseUrl = mainUrl
+            }
+
+            try {
+                registerDevice()
+            } catch (e: Exception) {
+                android.util.Log.e(name, "Register device failed: ${e.message}")
+                if (deviceId.isNullOrEmpty()) {
+                    deviceId = "${fid ?: ""}:${generateFcmToken()}"
+                }
+            }
 
             val map = mapOf(
                 "fid" to (fid ?: ""),
@@ -207,10 +233,15 @@ class AnimeRift : MainAPI() {
             .build()
 
         val response = app.baseClient.newCall(request).execute()
-        val body = response.body?.string() ?: throw Exception("No response from Firebase")
+        if (!response.isSuccessful) {
+            android.util.Log.e(name, "Firebase returned code: ${response.code}")
+            return
+        }
+
+        val body = response.body?.string() ?: return
         val json = mapper.readTree(body)
-        fid = json.get("fid").asText()
-        firebaseToken = json.get("authToken").get("token").asText()
+        fid = json.get("fid")?.asText()
+        firebaseToken = json.get("authToken")?.get("token")?.asText()
     }
 
     private suspend fun fetchRemoteConfig() {
@@ -235,8 +266,14 @@ class AnimeRift : MainAPI() {
             "Content-Type" to "application/json"
         )
 
-        val json = app.post(url, headers = headers, json = payload).parsed<JsonNode>()
-        gatewayBaseUrl = json.get("entries")?.get("anime_rift_android_gateway_base_url_v4")?.asText()?.replace("\"", "") ?: mainUrl
+        val res = app.post(url, headers = headers, json = payload)
+        if (res.isSuccessful) {
+            val json = res.parsed<JsonNode>()
+            val configUrl = json.get("entries")?.get("anime_rift_android_gateway_base_url_v4")?.asText()?.replace("\"", "")
+            if (!configUrl.isNullOrEmpty()) {
+                gatewayBaseUrl = configUrl
+            }
+        }
     }
 
     private suspend fun registerDevice() {
@@ -457,7 +494,7 @@ class AnimeRift : MainAPI() {
             val animeId = parts[0]
             val episodeId = parts[1]
             val episodeNumber = parts.getOrNull(2)?.toIntOrNull() ?: 1
-            
+
             val baseUrl = gatewayBaseUrl ?: mainUrl
             val sourcesUrl = "$baseUrl/library/episode/sources"
             val sourcesBody = mapOf(
@@ -485,7 +522,7 @@ class AnimeRift : MainAPI() {
                 val serverName = src.get("server_name")?.asText() ?: "Server"
                 val provider = src.get("provider")?.asText() ?: ""
                 val subTitle = src.get("sub_title")?.asText() ?: ""
-                
+
                 val qualitiesNode = src.get("qualities")
                 val qualitiesList = if (qualitiesNode != null && qualitiesNode.isArray && qualitiesNode.size() > 0) {
                     qualitiesNode.map { it.asText() }
@@ -504,7 +541,7 @@ class AnimeRift : MainAPI() {
                         )
                         val canPlayJson = apiCall(canPlayUrl, "ANIME.LIBRARY.EPISODES.SOURCES.CHECK_AVAILABILITY", method = "POST", body = canPlayBody)
                         val sessionId = canPlayJson.get("sessionId")?.asText() ?: ""
-                        
+
                         val claimUrl = "$baseUrl/ads_manager/claim"
                         val claimBody = mapOf(
                             "event_name" to "play_episode_unlocked",
@@ -519,7 +556,7 @@ class AnimeRift : MainAPI() {
                         try {
                             apiCall(claimUrl, "USER.ADS_MANAGER.CLAIMS", method = "PUT", body = claimBody)
                         } catch (_: Exception) {}
-                        
+
                         val directLinkUrl = "$baseUrl/library/episode/source/direct_link"
                         val directLinkBody = mapOf(
                             "id" to hostId,
@@ -552,7 +589,7 @@ class AnimeRift : MainAPI() {
                                     null
                                 }
                                 customHeaders["Host"] = hostFromUrl ?: "media-1.rift-content.com"
-                                
+
                                 directLinkJson.get("http_headers")?.fields()?.forEach { (k, v) ->
                                     customHeaders[k] = v.asText()
                                 }
@@ -568,36 +605,24 @@ class AnimeRift : MainAPI() {
                                     }
                                 )
                             }
-                        } 
-                        else if (directLinkJson.get("ticket_response")?.asBoolean() == true) {
+                        } else if (directLinkJson.get("ticket_response")?.asBoolean() == true) {
                             val fileId = directLinkJson.get("fileId")?.asText() ?: ""
                             val ticket = directLinkJson.get("ticket")?.asText() ?: ""
                             val waitTimeSeconds = directLinkJson.get("wait_time")?.asLong() ?: 5L
-
-                            android.util.Log.d(name, "⏳ [Streamtape] تذكرة للملف: $fileId | الوقت المطلوب للانتظار: $waitTimeSeconds ثوانٍ")
 
                             if (fileId.isNotEmpty() && ticket.isNotEmpty()) {
                                 kotlinx.coroutines.delay((waitTimeSeconds * 1000) + 500)
 
                                 val tapeApiUrl = "https://api.streamtape.com/file/dl?file=$fileId&ticket=$ticket"
-                                android.util.Log.d(name, "🚀 [Streamtape] جاري إرسال طلب التحميل -> $tapeApiUrl")
-
                                 var tapeRes = app.get(tapeApiUrl).parsed<JsonNode>()
                                 val status = tapeRes.get("status")?.asInt()
-                                val msg = tapeRes.get("msg")?.asText()
-
-                                android.util.Log.d(name, "📥 [Streamtape] رد السيرفر -> الحالة: $status | الرسالة: $msg | الرد الكامل: $tapeRes")
 
                                 if (status != 200) {
-                                    android.util.Log.d(name, "⚠️ [Streamtape] الحالة ليست 200، جاري الانتظار ثانيتين وإعادة المحاولة...")
                                     kotlinx.coroutines.delay(2000)
                                     tapeRes = app.get(tapeApiUrl).parsed<JsonNode>()
-                                    android.util.Log.d(name, "📥 [Streamtape] رد المحاولة الثانية -> الحالة: ${tapeRes.get("status")?.asInt()} | الرد: $tapeRes")
                                 }
 
                                 val tapeDirectUrl = tapeRes.get("result")?.get("url")?.asText()
-                                android.util.Log.d(name, "✅ [Streamtape] رابط الفيديو المستخرج: $tapeDirectUrl")
-
                                 if (!tapeDirectUrl.isNullOrEmpty()) {
                                     callback.invoke(
                                         newExtractorLink(
@@ -616,13 +641,13 @@ class AnimeRift : MainAPI() {
                             }
                         }
                     } catch (e: Exception) {
-                        android.util.Log.e(name, "❌ [LoadLinks Error] حدث خطأ في السيرفر: ${e.message}")
+                        android.util.Log.e(name, "LoadLinks single item error: ${e.message}")
                     }
                 }
             }
             return@withContext true
         } catch (e: Exception) {
-            android.util.Log.e(name, "❌ [LoadLinks Fatal] فشل عام في جلب الروابط: ${e.message}")
+            android.util.Log.e(name, "LoadLinks fatal error: ${e.message}")
             return@withContext false
         }
     }
