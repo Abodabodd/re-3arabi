@@ -100,7 +100,7 @@ class TukTukHd : MainAPI() {
                 title.contains("فلم", true) ||
                 title.contains("movie", true)
             ) {
-                grouped[title] = item
+                grouped[item.url] = item
                 continue
             }
             val normalized = title
