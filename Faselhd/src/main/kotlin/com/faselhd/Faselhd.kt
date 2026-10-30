@@ -59,6 +59,7 @@ import com.lagradost.cloudstream3.newMovieSearchResponse
 
 class FASELHD(private val context: Context) : MainAPI() {
     override var name = "FASELHD"
+    override val hasQuickSearch = true
     override var mainUrl = "https://web31312x.faselhdx.bid"
     override var lang = "ar"
     override val hasMainPage = true
@@ -269,6 +270,7 @@ class FASELHD(private val context: Context) : MainAPI() {
         }
     }
 
+    override suspend fun quickSearch(query: String): List<SearchResponse>? = search(query,1)?.items
     override suspend fun search(query: String, page: Int): SearchResponseList {
         val base = baseUrl()
         val encoded = URLEncoder.encode(query, "UTF-8")
@@ -505,19 +507,18 @@ class FASELHD(private val context: Context) : MainAPI() {
             "google.com/recaptcha",
             "google.com/ads",
             "googlesyndication.com",
-            "googletagmanager.com"
+            "googletagmanager.com",
+            "?p=" // استبعاد الروابط المختصرة للصفحة نفسها
         )
+
         fun addResult(url: String) {
             val fixedUrl = fixUrl(url)
             if (blockedKeywords.none { fixedUrl.contains(it) }) {
-                results.add(fixedUrl)
-            } else {
-                Log.d("FASELHD_IFRAME", "🚫 Blocked unwanted iframe: $fixedUrl")
+                if (fixedUrl.contains("player") || fixedUrl.contains("embed") || fixedUrl.contains("video")) {
+                    results.add(fixedUrl)
+                }
             }
         }
-
-        Log.d("FASELHD_IFRAME", "========== START iframe extraction ==========")
-        Log.d("FASELHD_IFRAME", "Document URL: ${doc.baseUri()}")
         doc.select("iframe[src]").forEach { el ->
             val src = el.attr("src")
             if (src.isNotBlank()) addResult(src)
@@ -541,17 +542,6 @@ class FASELHD(private val context: Context) : MainAPI() {
                 }
             }
         }
-        doc.select("div.shortLink, span#liskSh, a[data-src]").forEach { el ->
-            val text = el.text().trim()
-            if (text.startsWith("http")) addResult(text)
-        }
-
-        Log.d("FASELHD_IFRAME", "========== RESULT (Filtered) ==========")
-        results.forEachIndexed { i, url ->
-            Log.d("FASELHD_IFRAME", "FINAL[$i] = $url")
-        }
-        Log.d("FASELHD_IFRAME", "Total valid iframe URLs found: ${results.size}")
-        Log.d("FASELHD_IFRAME", "========== END iframe extraction ==========")
 
         return results.toList()
     }
@@ -561,11 +551,11 @@ class FASELHD(private val context: Context) : MainAPI() {
     private suspend fun resolveWithWebView(
         iframeUrl: String,
         referer: String
-    ): String? = suspendCancellableCoroutine { cont ->
+    ): List<String> = suspendCancellableCoroutine { cont ->
 
         val activity = context as? Activity
         if (activity == null || activity.isFinishing) {
-            cont.resume(null)
+            cont.resume(emptyList())
             return@suspendCancellableCoroutine
         }
 
@@ -574,35 +564,27 @@ class FASELHD(private val context: Context) : MainAPI() {
 
         activity.runOnUiThread {
             val dialog = Dialog(activity)
-
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(false)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setCancelable(false) // غير قابل للإلغاء لأنه مخفي
 
             dialog.window?.apply {
                 setBackgroundDrawableResource(android.R.color.transparent)
-                setDimAmount(0f) // بدون تعتيم
+                setDimAmount(0f)
                 clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 addFlags(
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 )
-
                 attributes = attributes?.apply {
-                    width = 1
-                    height = 1
-                    x = -10000
-                    y = -10000
+                    width = 1; height = 1; x = -10000; y = -10000
                     gravity = Gravity.START or Gravity.TOP
                 }
             }
 
             val webView = WebView(activity).apply {
                 layoutParams = ViewGroup.LayoutParams(1, 1)
-                visibility = View.INVISIBLE // إخفاء إضافي للعنصر نفسه
-                isHorizontalScrollBarEnabled = false
-                isVerticalScrollBarEnabled = false
+                visibility = View.INVISIBLE
             }
 
             try {
@@ -614,203 +596,110 @@ class FASELHD(private val context: Context) : MainAPI() {
                     decor?.addView(webView, FrameLayout.LayoutParams(1, 1, Gravity.START or Gravity.TOP))
                 } catch (_: Exception) {}
             }
+
             webView.settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
                 databaseEnabled = true
-                allowContentAccess = true
-                allowFileAccess = true
-                allowFileAccessFromFileURLs = true
-                allowUniversalAccessFromFileURLs = true
-                javaScriptCanOpenWindowsAutomatically = true
-                setSupportMultipleWindows(true)
                 mediaPlaybackRequiresUserGesture = false
-                loadWithOverviewMode = true
-                useWideViewPort = true
-                builtInZoomControls = true
-                displayZoomControls = false
                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 cacheMode = WebSettings.LOAD_DEFAULT
                 userAgentString = lastValidUserAgent
                 blockNetworkImage = true
             }
 
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-
             val cookieManager = CookieManager.getInstance()
             try {
                 cookieManager.setAcceptCookie(true)
                 cookieManager.setAcceptThirdPartyCookies(webView, true)
-                cookieManager.flush()
             } catch (_: Exception) {}
-
-            val client = app.baseClient.newBuilder()
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .cookieJar(okhttp3.CookieJar.NO_COOKIES)
-                .build()
 
             val foundM3u8 = linkedSetOf<String>()
             var finished = false
             val finishLock = Any()
             val handler = Handler(Looper.getMainLooper())
-            var finishRunnable: Runnable? = null
-
-            var currentAttempt = 0
-            val maxAttempts = 2
-            val attemptTimeoutMs = 12_000L
-            var attemptTimeoutRunnable: Runnable? = null
-            var autoTouchRunnable: Runnable? = null // سنستخدمه لتكرار تشغيل الـ JS داخل المحاولة
+            var timeoutRunnable: Runnable? = null
+            var autoStepRunnable: Runnable? = null
 
             fun cleanup() {
-                try { attemptTimeoutRunnable?.let { handler.removeCallbacks(it) } } catch (_: Exception) {}
-                try { autoTouchRunnable?.let { handler.removeCallbacks(it) } } catch (_: Exception) {}
+                try { timeoutRunnable?.let { handler.removeCallbacks(it) } } catch (_: Exception) {}
+                try { autoStepRunnable?.let { handler.removeCallbacks(it) } } catch (_: Exception) {}
                 try { (webView.parent as? ViewGroup)?.removeView(webView) } catch (_: Exception) {}
                 try { webView.stopLoading() } catch (_: Exception) {}
                 try { webView.destroy() } catch (_: Exception) {}
-                try { cookieManager.flush() } catch (_: Exception) {}
                 try { if (dialog.isShowing) dialog.dismiss() } catch (_: Exception) {}
             }
 
-            fun safeFinish(result: String?) {
+            fun safeFinish() {
                 synchronized(finishLock) {
                     if (finished) return
                     finished = true
                 }
-                try { if (cont.isActive) cont.resume(result) } catch (_: Exception) {}
+                val list = synchronized(foundM3u8) { foundM3u8.toList() }
+                try { if (cont.isActive) cont.resume(list) } catch (_: Exception) {}
                 cleanup()
             }
 
-            fun chooseAndFinish() {
-                if (foundM3u8.isEmpty()) { safeFinish(null); return }
-                val strict = foundM3u8.firstOrNull {
-                    val clean = it.substringBefore("?")
-                    clean.endsWith(".m3u8") && (clean.contains("master") || clean.contains("playlist") || clean.contains("index"))
-                } ?: foundM3u8.firstOrNull { it.substringBefore("?").endsWith(".m3u8") }
-                safeFinish(strict ?: foundM3u8.first())
+            fun clickQuality(qualityLabel: String) {
+                val js = """
+                (function() {
+                    let clicked = false;
+                    let els = document.querySelectorAll('ul.quality_ch li, .quality_ch > *, [class*="quality"] li, .jw-settings-content-item, button');
+                    for (let el of els) {
+                        let txt = (el.innerText || el.textContent || '').trim().toLowerCase();
+                        if (txt.includes('$qualityLabel'.toLowerCase())) {
+                            ['mouseover', 'mousedown', 'mouseup', 'click'].forEach(evt => {
+                                el.dispatchEvent(new MouseEvent(evt, { bubbles: true, cancelable: true, view: window }));
+                            });
+                            if (typeof el.onclick === 'function') { el.onclick(); }
+                            clicked = true;
+                            break;
+                        }
+                    }
+                    if (!clicked) {
+                        let p = typeof window.jwplayer === 'function' ? window.jwplayer("player") : null;
+                        if (p && typeof p.play === 'function') { p.setMute(true); p.play(); }
+                    }
+                })();
+                """.trimIndent()
+                activity.runOnUiThread { webView.evaluateJavascript(js, null) }
+            }
+
+            val qualitiesToTest = listOf("1080", "720", "360")
+            var currentQualityIndex = 0
+
+            fun scheduleNextQuality() {
+                autoStepRunnable?.let { handler.removeCallbacks(it) }
+                if (currentQualityIndex >= qualitiesToTest.size) {
+                    safeFinish()
+                    return
+                }
+
+                val currentTarget = qualitiesToTest[currentQualityIndex]
+                clickQuality(currentTarget)
+
+                autoStepRunnable = Runnable {
+                    currentQualityIndex++
+                    scheduleNextQuality()
+                }
+                handler.postDelayed(autoStepRunnable!!, 2500)
             }
 
             fun handleFoundLink(url: String) {
                 val clean = url.substringBefore("?")
                 if (!clean.endsWith(".m3u8")) return
+
                 synchronized(foundM3u8) {
-                    if (!foundM3u8.contains(url)) {
-                        foundM3u8.add(url)
-                        Log.d("FASEL_FAST", "🎯 Caught Link (Attempt $currentAttempt): $url")
-                        finishRunnable?.let { handler.removeCallbacks(it) }
-                        if (clean.contains("master") || clean.contains("playlist") || clean.contains("index")) {
-                            finishRunnable = Runnable { chooseAndFinish() }
-                            handler.postDelayed(finishRunnable!!, 300)
-                        } else {
-                            if (finishRunnable == null) {
-                                finishRunnable = Runnable { chooseAndFinish() }
-                                handler.postDelayed(finishRunnable!!, 1500)
-                            }
-                        }
-                    }
-                }
-            }
-            fun startNextAttempt() {
-                synchronized(finishLock) { if (finished) return }
-
-                if (currentAttempt >= maxAttempts) {
-                    Log.d("FASEL_FAST", "❌ All $maxAttempts attempts failed.")
-                    chooseAndFinish()
-                    return
+                    if (foundM3u8.contains(url)) return
+                    foundM3u8.add(url)
                 }
 
-                Log.d("FASEL_FAST", "🔄 Loading Attempt ${currentAttempt + 1}/$maxAttempts")
-                attemptTimeoutRunnable?.let { handler.removeCallbacks(it) }
-                attemptTimeoutRunnable = Runnable {
-                    synchronized(foundM3u8) {
-                        if (foundM3u8.isEmpty()) {
-                            Log.d("FASEL_FAST", "⚠️ Attempt ${currentAttempt + 1} Timed Out.")
-                            currentAttempt++
-                            startNextAttempt() // ابدأ المحاولة التالية
-                        } else {
-                            chooseAndFinish()
-                        }
-                    }
-                }
-                handler.postDelayed(attemptTimeoutRunnable!!, attemptTimeoutMs)
-                activity.runOnUiThread {
-                    try { webView.loadUrl(finalUrl, mapOf("Referer" to referer)) } catch (_: Exception) {}
+                handler.post {
+                    currentQualityIndex++
+                    scheduleNextQuality()
                 }
             }
-            fun getStrategyJs(attempt: Int): String {
-                return """
-                (function() {
-                    const strategy = $attempt;
-                    Object.defineProperty(navigator, 'userActivation', { get: () => ({ hasBeenActive: true, isActive: true }) });
-                    const Decryptor = {
-                        key1: "V2@%YSU2B]G~", key2: "bv0fim4qf17",
-                        ie: function(c) {
-                            const x = c.charCodeAt(0);
-                            if(x>=97 && x<=122) return x-97; if(x>=65 && x<=90) return x-65+26;
-                            if(x>=48 && x<=57) return x-48+52; if(x===43) return 62; if(x===47) return 63; return 0;
-                        },
-                        bn: function(x) {
-                            if(x<=25) return String.fromCharCode(x+97); if(x<=51) return String.fromCharCode(x-26+65);
-                            if(x<=61) return String.fromCharCode(x-52+48); if(x===62) return '+'; if(x===63) return '/'; return ' ';
-                        },
-                        dec: function(e, k) {
-                            let r=''; for(let i=0; i<e.length; i++) {
-                                const kc=k[i%(k.length-1)]; const M=this.ie(e[i])-this.ie(kc); r+=this.bn(M<0?M+64:M);
-                            } return r;
-                        },
-                        parse: function(url) {
-                            if(!url || !url.startsWith('enc:')) return url;
-                            try { return this.dec(this.dec(url.substring(4), this.key2), this.key1); } catch(e){return url;}
-                        }
-                    };
-                    if ((strategy === 0 || strategy === 4) && !window.__isDecryptionHooked) {
-                        window.__isDecryptionHooked = true;
-                        let chk = setInterval(function() {
-                            if (typeof window.jwplayer === 'function' && !window.jwplayer.__hooked) {
-                                const orig = window.jwplayer;
-                                window.jwplayer = function() {
-                                    const p = orig.apply(this, arguments);
-                                    if (!p.__sHook) {
-                                        p.__sHook = true;
-                                        const oSetup = p.setup;
-                                        p.setup = function(cfg) {
-                                            try {
-                                                let s = cfg.sources || (cfg.playlist && cfg.playlist[0] ? cfg.playlist[0].sources : []);
-                                                if (s) s.forEach(x => { if (x.file && x.file.startsWith('enc:')) x.file = Decryptor.parse(x.file); });
-                                            } catch(e){}
-                                            cfg.autostart = true; cfg.mute = true;
-                                            return oSetup.call(this, cfg);
-                                        };
-                                    }
-                                    return p;
-                                };
-                                Object.assign(window.jwplayer, orig);
-                                window.jwplayer.prototype = orig.prototype;
-                                window.jwplayer.__hooked = true;
-                                clearInterval(chk);
-                            }
-                        }, 10);
-                    }
-                    try {
-                        let p = typeof window.jwplayer === 'function' ? window.jwplayer("player") : null;
-                        let isPlaying = p && (p.getState() === 'playing' || p.getState() === 'buffering');
-                        if (isPlaying) return;
 
-                        if (strategy === 0 || strategy === 1 || strategy === 7) {
-                            var els = document.querySelectorAll('button, a, [onclick], video, [role="button"], .jw-icon, .vjs-control, .po-play-btn, .plyr__control');
-                            els.forEach(el => {
-                                if (el.href && (el.href.includes('google.com') || el.href.includes('recaptcha'))) return;
-                                try { el.click(); } catch(e){}
-                            });
-                        }
-                        if (strategy === 2 || strategy === 7) {
-                            if (p && typeof p.play === 'function') { p.setMute(true); p.play(); }
-                        }
-           
-                    } catch(e) {}
-                })();
-            """.trimIndent()
-            }
             val fastSnifferJs = """
             (function() {
                 try {
@@ -841,87 +730,29 @@ class FASELHD(private val context: Context) : MainAPI() {
                     }
                 } catch(err){}
             })();
-        """.trimIndent()
+            """.trimIndent()
 
-            lateinit var sharedWebViewClient: WebViewClient
-            sharedWebViewClient = object : WebViewClient() {
-
+            webView.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                    val url = request?.url.toString()
-                    val lowerUrl = url.lowercase()
-
-                    if (!lowerUrl.startsWith("http")) return true
-
-                    if (lowerUrl.contains("policies.google.com") || lowerUrl.contains("recaptcha") || lowerUrl.contains("mcaptcha") || lowerUrl.contains("melbet")) {
-                        Handler(Looper.getMainLooper()).post { view?.loadUrl(finalUrl, mapOf("Referer" to referer)) }
-                        return true
-                    }
-
-                    val currentHost = try { Uri.parse(url).host?.replace("www.", "") ?: "" } catch(e:Exception){""}
-                    if (originalHost.isNotBlank() && currentHost.isNotBlank() && !currentHost.contains(originalHost)) {
-                        return true
-                    }
-
-                    return false
-                }
-
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    super.onPageStarted(view, url, favicon)
-                    view?.evaluateJavascript(fastSnifferJs, null)
+                    val url = request?.url.toString().lowercase()
+                    if (!url.startsWith("http")) return true
+                    if (url.contains("recaptcha") || url.contains("melbet") || url.contains("policies.google")) return true
+                    val currentHost = try { Uri.parse(url).host?.replace("www.", "") ?: "" } catch (e: Exception) { "" }
+                    return originalHost.isNotBlank() && currentHost.isNotBlank() && !currentHost.contains(originalHost)
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     view?.evaluateJavascript(fastSnifferJs, null)
-                    autoTouchRunnable?.let { handler.removeCallbacks(it) }
-                    autoTouchRunnable = object : Runnable {
-                        override fun run() {
-                            if (finished) return
-                            view?.evaluateJavascript(getStrategyJs(currentAttempt), null)
-                            handler.postDelayed(this, 1000)
-                        }
-                    }
-                    handler.postDelayed(autoTouchRunnable!!, 500)
+                    handler.postDelayed({ scheduleNextQuality() }, 1200)
                 }
+
                 override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
                     val url = request.url.toString()
-                    val method = request.method
                     val lower = url.lowercase()
 
-                    if (lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".woff2") || lower.endsWith(".css")) {
-                        return super.shouldInterceptRequest(view, request)
-                    }
-
-                    if (method.equals("GET", ignoreCase = true) && lower.contains(".m3u8") && lower.substringBefore("?").endsWith(".m3u8")) {
+                    if (lower.contains(".m3u8")) {
                         handleFoundLink(url)
-                        try {
-                            val reqBuilder = OkRequest.Builder().url(url)
-                                .header("User-Agent", lastValidUserAgent)
-                                .header("Referer", referer)
-                                .header("Origin", mainUrl)
-                            try { cookieManager.getCookie(url)?.let { ck -> reqBuilder.header("Cookie", ck) } } catch (_: Exception) {}
-
-                            val response = client.newCall(reqBuilder.build()).execute()
-                            if (!response.isSuccessful) return null
-
-                            response.headers("Set-Cookie").forEach { try { cookieManager.setCookie(url, it) } catch (_: Exception) {} }
-                            val contentType = response.header("content-type")?.split(";")?.first() ?: "application/vnd.apple.mpegurl"
-                            return WebResourceResponse(contentType, "utf-8", response.body?.byteStream())
-                        } catch (e: Exception) { return null }
-                    }
-
-                    if (method.equals("GET", ignoreCase = true) && (lower.contains("fasel") || lower.contains("jwplayer") || lower.contains("config") || lower.contains("player"))) {
-                        try {
-                            val reqBuilder = OkRequest.Builder().url(url)
-                                .header("User-Agent", lastValidUserAgent)
-                                .header("Referer", referer)
-                            try { cookieManager.getCookie(url)?.let { ck -> reqBuilder.header("Cookie", ck) } } catch (_: Exception) {}
-
-                            val response = client.newCall(reqBuilder.build()).execute()
-                            response.headers("Set-Cookie").forEach { try { cookieManager.setCookie(url, it) } catch (_: Exception) {} }
-                            val contentType = response.header("content-type")?.split(";")?.first() ?: "text/html"
-                            return WebResourceResponse(contentType, "utf-8", response.body?.byteStream())
-                        } catch (e: Exception) { return super.shouldInterceptRequest(view, request) }
                     }
                     return super.shouldInterceptRequest(view, request)
                 }
@@ -932,8 +763,6 @@ class FASELHD(private val context: Context) : MainAPI() {
                 }
             }
 
-            webView.webViewClient = sharedWebViewClient
-
             webView.webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(cm: ConsoleMessage?): Boolean {
                     val msg = cm?.message() ?: ""
@@ -942,41 +771,14 @@ class FASELHD(private val context: Context) : MainAPI() {
                     }
                     return true
                 }
-
-                override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: android.os.Message?): Boolean {
-                    try {
-                        val transport = resultMsg?.obj as? WebView.WebViewTransport
-
-                        val adWebView = WebView(activity).apply {
-                            layoutParams = FrameLayout.LayoutParams(1, 1, Gravity.START or Gravity.TOP)
-                            visibility = View.INVISIBLE
-                        }
-                        adWebView.settings.apply {
-                            javaScriptEnabled = true
-                            domStorageEnabled = true
-                            userAgentString = lastValidUserAgent
-                        }
-
-                        try { (activity.window?.decorView as? ViewGroup)?.addView(adWebView) } catch (_: Exception) {}
-
-                        adWebView.webViewClient = sharedWebViewClient
-                        transport?.webView = adWebView
-                        resultMsg?.sendToTarget()
-
-                        handler.postDelayed({
-                            try {
-                                (adWebView.parent as? ViewGroup)?.removeView(adWebView)
-                                adWebView.destroy()
-                            } catch (e: Exception) {}
-                        }, 1000)
-
-                        return true
-                    } catch (e: Exception) { return false }
-                }
             }
-            startNextAttempt()
 
-            cont.invokeOnCancellation { handler.post { safeFinish(null) } }
+            timeoutRunnable = Runnable { safeFinish() }
+            handler.postDelayed(timeoutRunnable!!, 8500L)
+
+            webView.loadUrl(finalUrl, mapOf("Referer" to referer))
+
+            cont.invokeOnCancellation { handler.post { safeFinish() } }
         }
     }
 
@@ -989,33 +791,54 @@ class FASELHD(private val context: Context) : MainAPI() {
         val doc = smartGet(data)
         val iframeUrls = extractIframeSources(doc)
 
-        if (iframeUrls.isEmpty()) {
-            Log.e("FASELHD", "❌ No iframe found")
-            return false
-        }
+        if (iframeUrls.isEmpty()) return false
 
-        var foundLink = false
-        iframeUrls.distinct().forEach { iframeUrl ->
-            if (foundLink) return@forEach // إذا وجدنا رابط وتوقفنا
+        var totalExtractedLinks = 0
+        val cm = CookieManager.getInstance()
 
-            Log.d("FASELHD", "Testing iframe: $iframeUrl")
-            val m3u8 = resolveWithWebView(iframeUrl, data)
+        for ((index, iframeUrl) in iframeUrls.distinct().withIndex()) {
+            val caughtM3u8List = resolveWithWebView(iframeUrl, data)
+            if (caughtM3u8List.isEmpty()) continue
 
-            if (!m3u8.isNullOrBlank()) {
-                foundLink = true
+            val iframeUri = try { Uri.parse(iframeUrl) } catch (e: Exception) { null }
+            val iframeOrigin = if (iframeUri != null && iframeUri.host != null) "${iframeUri.scheme}://${iframeUri.host}" else iframeUrl
 
-                M3u8Helper.generateM3u8(
-                    source = name,
-                    streamUrl = m3u8,
-                    referer = iframeUrl, // هنا السيرفر يتوقع أن الطلب قادم من الـ iframe
-                    headers = mapOf(
-                        "Referer" to iframeUrl,
-                        "User-Agent" to lastValidUserAgent
-                    )
-                ).forEach(callback)
+            caughtM3u8List.forEach { m3u8Url ->
+                val streamCookies = cm.getCookie(m3u8Url) ?: cm.getCookie(iframeUrl) ?: ""
+                val streamHeaders = mutableMapOf(
+                    "User-Agent" to lastValidUserAgent,
+                    "Referer" to iframeUrl,
+                    "Origin" to iframeOrigin
+                )
+                if (streamCookies.isNotBlank()) {
+                    streamHeaders["Cookie"] = streamCookies
+                }
+
+                val (qName, qValue) = when {
+                    m3u8Url.contains("1080") -> "1080p" to Qualities.P1080.value
+                    m3u8Url.contains("720") -> "720p" to Qualities.P720.value
+                    m3u8Url.contains("480") -> "480p" to Qualities.P480.value
+                    m3u8Url.contains("360") -> "360p" to Qualities.P360.value
+                    m3u8Url.contains("master") -> "Auto" to Qualities.Unknown.value
+                    else -> "Server ${index + 1}" to Qualities.Unknown.value
+                }
+
+                callback(
+                    newExtractorLink(
+                        source = name,
+                        name = "$name - Server ${index + 1} ($qName)",
+                        url = m3u8Url,
+                        type = ExtractorLinkType.M3U8
+                    ) {
+                        this.referer = iframeUrl
+                        this.quality = qValue
+                        this.headers = streamHeaders
+                    }
+                )
+                totalExtractedLinks++
             }
         }
 
-        return foundLink
+        return totalExtractedLinks > 0
     }
 }
