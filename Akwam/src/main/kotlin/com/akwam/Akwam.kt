@@ -18,7 +18,7 @@ import kotlinx.coroutines.async
 class Akwam : MainAPI() {
     data class PosterData(val posterUrl: String?)
 
-    override var mainUrl = "https://ak.sv"
+    override var mainUrl = "https://akwam.ss"
     override var name = "Akwam"
     override val hasMainPage = true
     override var lang = "ar"
