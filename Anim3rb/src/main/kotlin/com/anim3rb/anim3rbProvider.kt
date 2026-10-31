@@ -107,70 +107,76 @@ class Anime3rb(val context: Context) : MainAPI() {
         }
     }
     override suspend fun search(query: String): List<SearchResponse> {
-        val mainDoc = getDocumentSmart(mainUrl) ?: return emptyList()
+    val mainDoc = getDocumentSmart(mainUrl) ?: return emptyList()
 
-        val scriptTag = mainDoc.selectFirst("script[src*=livewire.min.js]")
-        val csrfToken = scriptTag?.attr("data-csrf") ?: return emptyList()
-
-        val form = mainDoc.selectFirst("form[wire:id]")
-        val snapshotRaw = form?.attr("wire:snapshot") ?: return emptyList()
-        val snapshotStr = org.jsoup.parser.Parser.unescapeEntities(snapshotRaw, true)
-
-        val headers = mutableMapOf(
-            "User-Agent" to USER_AGENT,
-            "Accept" to "*/*",
-            "Content-Type" to "application/json",
-            "Origin" to mainUrl,
-            "Referer" to "$mainUrl/"
-        )
-        if (savedCookies.isNotBlank()) {
-            headers["Cookie"] = savedCookies
-        }
-
-        val updateUrl = "$mainUrl/livewire/update"
-        val payload = mapOf(
-            "_token" to csrfToken,
-            "components" to listOf(
-                mapOf(
-                    "snapshot" to snapshotStr,
-                    "updates" to mapOf("query" to query),
-                    "calls" to emptyList<Any>()
-                )
-            )
-        )
-
-        val postRes = app.post(updateUrl, headers = headers, json = payload)
-        if (postRes.code != 200) return emptyList()
-
-        val responseJson = AppUtils.parseJson<Map<String, Any>>(postRes.text)
-        val components = responseJson["components"] as? List<Map<String, Any>> ?: return emptyList()
-        val effects = components.firstOrNull()?.get("effects") as? Map<String, Any> ?: return emptyList()
-        val htmlContent = effects["html"] as? String ?: return emptyList()
-
-        val soupResults = Jsoup.parse(htmlContent)
-
-        return soupResults.select("a.simple-title-card").mapNotNull { item ->
-            val rawTitle = item.selectFirst("h4")?.text()?.trim() ?: return@mapNotNull null
-            val title = cleanTitleText(rawTitle)
-            val link = item.attr("href")
-            val absoluteLink = toAbsoluteUrl(link)
-            val img = item.selectFirst("img")
-            val image = img?.attr("src")
-            val ratingTag = item.selectFirst(".badge")
-            val rating = ratingTag?.text()?.trim() ?: "N/A"
-
-            val type = if (rating.contains("Movie") || rating.contains("Film") || title.contains("فيلم")) {
-                TvType.AnimeMovie
-            } else {
-                TvType.Anime
-            }
-
-            newAnimeSearchResponse(title, absoluteLink, type) {
-                this.posterUrl = image
-            }
-        }
+    val scriptTag = mainDoc.selectFirst("script[data-csrf]") ?: return emptyList()
+    val csrfToken = scriptTag.attr("data-csrf")
+    val updateUriAttr = scriptTag.attr("data-update-uri")
+    val updateUrl = if (updateUriAttr.isNotBlank()) {
+        toAbsoluteUrl(updateUriAttr)
+    } else {
+        "$mainUrl/livewire/update" // fallback احتياطي
     }
 
+    val form = mainDoc.selectFirst("form[wire:id]")
+    val snapshotRaw = form?.attr("wire:snapshot") ?: return emptyList()
+    val snapshotStr = org.jsoup.parser.Parser.unescapeEntities(snapshotRaw, true)
+
+    val headers = mutableMapOf(
+        "User-Agent" to USER_AGENT,
+        "Accept" to "*/*",
+        "X-Livewire" to "1",
+        "Sec-Fetch-Site" to "same-origin",
+        "Content-Type" to "application/json",
+        "Origin" to mainUrl,
+        "Referer" to "$mainUrl/"
+    )
+    if (savedCookies.isNotBlank()) {
+        headers["Cookie"] = savedCookies
+    }
+
+    val payload = mapOf(
+        "_token" to csrfToken,
+        "components" to listOf(
+            mapOf(
+                "snapshot" to snapshotStr,
+                "updates" to mapOf("query" to query),
+                "calls" to emptyList<Any>()
+            )
+        )
+    )
+
+    val postRes = app.post(updateUrl, headers = headers, json = payload)
+    if (postRes.code != 200) return emptyList()
+
+    val responseJson = AppUtils.parseJson<Map<String, Any>>(postRes.text)
+    val components = responseJson["components"] as? List<Map<String, Any>> ?: return emptyList()
+    val effects = components.firstOrNull()?.get("effects") as? Map<String, Any> ?: return emptyList()
+    val htmlContent = effects["html"] as? String ?: return emptyList()
+
+    val soupResults = Jsoup.parse(htmlContent)
+
+    return soupResults.select("a.simple-title-card").mapNotNull { item ->
+        val rawTitle = item.selectFirst("h4")?.text()?.trim() ?: return@mapNotNull null
+        val title = cleanTitleText(rawTitle)
+        val link = item.attr("href")
+        val absoluteLink = toAbsoluteUrl(link)
+        val img = item.selectFirst("img")
+        val image = img?.attr("src")
+        val ratingTag = item.selectFirst(".badge")
+        val rating = ratingTag?.text()?.trim() ?: "N/A"
+
+        val type = if (rating.contains("Movie") || rating.contains("Film") || title.contains("فيلم")) {
+            TvType.AnimeMovie
+        } else {
+            TvType.Anime
+        }
+
+        newAnimeSearchResponse(title, absoluteLink, type) {
+            this.posterUrl = image
+        }
+    }
+    }
     override suspend fun load(url: String): LoadResponse? {
         val doc = getDocumentSmart(url) ?: return null
 
