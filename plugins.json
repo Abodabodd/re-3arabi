@@ -2,7 +2,7 @@
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/3isk.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "3isk",
         "internalName": "3isk",
         "authors": [
@@ -18,12 +18,12 @@
         ],
         "iconUrl": "https://3esk.onl/wp-content/uploads/2021/01/3isk-logo.png",
         "apiVersion": 1,
-        "fileHash": "sha256-4cfc2ee656e3027e99593ca637015e80e620e968ed433f10999f41bac11a4492"
+        "fileHash": "sha256-c94b00a5faf005851769037c2f2158117fdcf0faa015a52ba42beab05aa2f8aa"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/5TV.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "5TV",
         "internalName": "5TV",
         "authors": [
@@ -40,12 +40,12 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/5TV/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-3b5e0d25c6fdf184a1d2feaf01b49d1f77891122ce6231cd5b37f986cb58417d"
+        "fileHash": "sha256-581ad6f054700bdbad0cf8b1eab1cf5106584c114ddf5394be87563fb152213d"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Aflaam.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Aflaam",
         "internalName": "Aflaam",
         "authors": [
@@ -61,19 +61,19 @@
         ],
         "iconUrl": "https://aflaam.com/style/assets/images/logo.png",
         "apiVersion": 1,
-        "fileHash": "sha256-c8cbba4f4f36d76907d2b366baa480d9201b16079cef9c3bd85f20cc3049e183"
+        "fileHash": "sha256-e20404da8384e7f5873f682a1908181751db574df035b607966dfb4acbd849b0"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Aia2tv 2.cs3",
         "status": 1,
-        "version": 3,
+        "version": 4,
         "name": "Asia2tv 2",
         "internalName": "Aia2tv 2",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 14286,
+        "fileSize": 14287,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -83,12 +83,12 @@
         ],
         "iconUrl": "https://media.licdn.com/dms/image/v2/C4D0BAQEhyYSi351HRw/company-logo_200_200/company-logo_200_200/0/1630489719119?e=2147483647&v=beta&t=Br69OJ2AwT5vdJHgl-DTvliEqOmp6VQLYwUWcFqG4u4",
         "apiVersion": 1,
-        "fileHash": "sha256-1de87a498012cf7252b83f54eeb637a8b4cb482fe7114a1bd66b3adfbae1154e"
+        "fileHash": "sha256-d28dac44087f36ac58277c1a45dda5276bdc79f778d12792b1893586d0e14025"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Akwam.cs3",
         "status": 1,
-        "version": 3,
+        "version": 4,
         "name": "Akwam",
         "internalName": "Akwam",
         "authors": [
@@ -104,19 +104,19 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2vuGLv4zY3XpoN2jza2unCQ95xFfypfe-h3k3xteMbGxl7taw-ziXyNg&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-8bd033994d342dcd0f8cf33356ed474aad3adc48e908d5329dd9d012f5d26560"
+        "fileHash": "sha256-50f9777349cb0a40cd1cb60bca18efd1b3d82191f375810d4670ed79ba728843"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Alooytv.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Alooytv",
         "internalName": "Alooytv",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 14658,
+        "fileSize": 15003,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -125,12 +125,12 @@
         ],
         "iconUrl": "https://fitnur.com/uploads/avatars/c5ae8dadf88bcea9549657ec451a1563.jpg",
         "apiVersion": 1,
-        "fileHash": "sha256-96607f1f5b4e32f5ce688a75b459ab77d8bad97d08b1a2a2bc5f5dcd54035197"
+        "fileHash": "sha256-8dc3850bb169fad209b545cd6de5ef4a1c666db7ec0c45bea95ae26d373961b9"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anim3rb.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Anime3rb",
         "internalName": "Anim3rb",
         "authors": [
@@ -146,12 +146,12 @@
         ],
         "iconUrl": "https://images.anime3rb.com/favicon/apple-touch-icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-06ace8dd11e728d071ec7035836ef6d4f29dd8d1f2cf8aa39483a30e00075561"
+        "fileHash": "sha256-60549f8a6def2dc2455c6d2aba476104ca676e7c935d09e6f8e41ca6a3d51d67"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anime-Phoenix.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Anime-Phoenix",
         "internalName": "Anime-Phoenix",
         "authors": [
@@ -168,12 +168,12 @@
         ],
         "iconUrl": "https://yt3.googleusercontent.com/mBIIR5cqQC4Y-o7HaxbkJfs305X6tbHLSNPk6MRMCDJsH8xP0SfGhK-CBDpSmH95wSff9z99sg=s900-c-k-c0x00ffffff-no-rj",
         "apiVersion": 1,
-        "fileHash": "sha256-0fdf714ffe859daa3fc0acee11e58311fb86e8fee3766302a6f694bec3461e27"
+        "fileHash": "sha256-d3f0c1e3ad811774615c40c7bb88cadd34bc56118020090b3605e7b5c57ac6a6"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Anime4up.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Anime4up",
         "internalName": "Anime4up",
         "authors": [
@@ -190,12 +190,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkVDfHjqUpRyrWJjW8wUHH87BhSO6B9uxI-B80sAy_AQ&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-30ae4aaab6596ed950a55d5a41dfd44d42721c7d1e9af0fea2eabc61a40ece06"
+        "fileHash": "sha256-80b5d5f87fb0da6bbe42e0977c765bcce2c6cb918e251d9c17e996f7144d01da"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animerco.cs3",
         "status": 1,
-        "version": 3,
+        "version": 4,
         "name": "Animerco",
         "internalName": "Animerco",
         "authors": [
@@ -211,12 +211,12 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/file_0000000042f861f49090744dc097ee2f.png",
         "apiVersion": 1,
-        "fileHash": "sha256-795b94f18654b53250a61513711ace519593a3583bfc48a6cf2e0d5af43bbf7f"
+        "fileHash": "sha256-970322f4969467c943711c3a257657684dac3a191743d3efde76687a0257e07b"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/AnimeRift.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "AnimeRift",
         "internalName": "AnimeRift",
         "authors": [
@@ -233,12 +233,12 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/AnimeRift/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-986a25407da636b4dd1656712b594ca4f4daba02448103661818edd9dc61ed1e"
+        "fileHash": "sha256-12863cdfb62b4bd57f0d8bf12d80733805cf5c281b6c5ede45c145864f0cc08c"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Animewitcher.cs3",
         "status": 1,
-        "version": 3,
+        "version": 4,
         "name": "AnimeWitcher",
         "internalName": "Animewitcher",
         "authors": [
@@ -253,12 +253,12 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/anime_witcher_round_icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-4c639f9392d46e45f4ee84e8799c810cc1d11fba2f13ff7e32865c71987c2fb4"
+        "fileHash": "sha256-35bde495e70046cde642d1afcfd568f8adef1600aa5d29dd40a2edf373b72adf"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Bristege.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Brstej",
         "internalName": "Bristege",
         "authors": [
@@ -273,12 +273,36 @@
         ],
         "iconUrl": "https://amd.brstej.com/22.png",
         "apiVersion": 1,
-        "fileHash": "sha256-17c6074460176b5547d0d242c09727c427bedae8bfe2529693e60f0b0348cb31"
+        "fileHash": "sha256-245c5e85b6e5dc40afd0ed8fbd11571327ee06fbc7dd24ff52f0b6de67aa73df"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Carateen.cs3",
+        "status": 1,
+        "version": 2,
+        "name": "Carateen",
+        "internalName": "Carateen",
+        "authors": [
+            "abodabodd"
+        ],
+        "description": "عد بالزمن للوراء وشاهد كارتون الطفولة ✨",
+        "fileSize": 24316,
+        "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
+        "language": "ar",
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "Anime",
+            "Cartoon",
+            "Live"
+        ],
+        "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/Carateen/icon.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-2c790fea78a85cfe39aa99016f638b98669d97e657c2cb27c527663622e54dfc"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cee.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Cee (🇮🇶)",
         "internalName": "Cee",
         "authors": [
@@ -294,19 +318,19 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNEnHalnMz2EfG48BZUI6iC86seq09uafFngG8gz1OWQ&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-131f942fa11bc89677543280a02ae2a9e2e19bc5c4d73fa3636ae8c5444c4f46"
+        "fileHash": "sha256-ba0b10a5996a1de5cbf2a072efff564dad504ad10eebc503309e64b1a0af3176"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/CimaClub.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "CimaClub",
         "internalName": "CimaClub",
         "authors": [
             "Abodabodd"
         ],
         "description": "سيرفرات الموقع بها ضعف احيانا اذا لم يفتح  غالبا المشكلة من الموقع",
-        "fileSize": 17361,
+        "fileSize": 17362,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -315,12 +339,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX1z-0NYyzyEiFs4q7X9c8SSBR6kJtVl7f7A&s",
         "apiVersion": 1,
-        "fileHash": "sha256-2cfbf3abb5892b22f299ac8b5ca7711c073ed38a930c91748e696fbfdd885052"
+        "fileHash": "sha256-a7322d3368dd9da08655653b936cd4a4232ad530f11e4bc39662998846133f7f"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cimalight.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Cimalight",
         "internalName": "Cimalight",
         "authors": [
@@ -337,12 +361,12 @@
         ],
         "iconUrl": "https://yt3.googleusercontent.com/n2PDvQiQVV00JjGsg66dvMZKmyoolvCeu59Xe40pmEvhiMNE1tHqKsoEY1IpfdNNXdlle4It=s900-c-k-c0x00ffffff-no-rj",
         "apiVersion": 1,
-        "fileHash": "sha256-41def442115b7018006e81b3184a3ab99ba75552900a9e043ac257a1bd18651a"
+        "fileHash": "sha256-f6b309909655043648791734c450893e9b1c4170c914d2aff2ed868c07c712ca"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Cimatn.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Cimatn",
         "internalName": "Cimatn",
         "authors": [
@@ -359,12 +383,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-7OxHmLaqTWIj7eJv55zxus1xKVp5ssQPAKYjydt7Lg&s",
         "apiVersion": 1,
-        "fileHash": "sha256-1540f9de487a50bf0b67d2a79de14314439fda95c1b2df51ca385b6c15402a50"
+        "fileHash": "sha256-033d3e74bbab8aa9f87dd5ba72515fbe5363564bd6f58fcdc3367ad3aee21cd2"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/cinemana.cs3",
         "status": 1,
-        "version": 4,
+        "version": 5,
         "name": "Shabakaty Cinemana (🇮🇶)",
         "internalName": "cinemana",
         "authors": [
@@ -380,12 +404,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZlAGH56cEnNEL93W3QqZWpUe8XR8i90olTA&s",
         "apiVersion": 1,
-        "fileHash": "sha256-5e1efeda9d8770f78eeefab77fc1c0454379496156cdfa8f939277124c1c2ece"
+        "fileHash": "sha256-7962d550ffc410155c9c67ff79b7682ae1a3dcb50a627a8b739f99f142def7b2"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/dima-toon.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Dima toon",
         "internalName": "dima-toon",
         "authors": [
@@ -401,12 +425,12 @@
         ],
         "iconUrl": "https://www.dima-toon.com/wp-content/uploads/2025/10/DimaToonlogo11.png",
         "apiVersion": 1,
-        "fileHash": "sha256-048fc02cd74f7d43a2618a563a17c3727a2a801accb20f9e1cf13ef6e68619ef"
+        "fileHash": "sha256-cc92b98d7eb1eac19ef9c450363ec88fc881ad2deb36aa51a93ae48d3ab45b85"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Egy.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "EgyWatch",
         "internalName": "Egy",
         "authors": [
@@ -422,19 +446,19 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/Egy/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-14f4fe50d78a6ee9433b8e4958d4c5bfd578d66b8598522cb5de4f3e8d55c582"
+        "fileHash": "sha256-99393044291b6558d6058c070f31139424a6c146623fab5ddf9df237d2d7f6bf"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Egydead.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Egydead",
         "internalName": "Egydead",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 53726,
+        "fileSize": 53727,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -445,19 +469,19 @@
         ],
         "iconUrl": "https://yt3.googleusercontent.com/ytc/AIdro_kgVTM6DJtx3tcS4gkPOOPnwFXKNhsrFyMRigWOlWomuQ=s900-c-k-c0x00ffffff-no-rj",
         "apiVersion": 1,
-        "fileHash": "sha256-837684d369f62ef16deda7e23eb460eac3aae6b8f14183aef700bd203e9ccb3d"
+        "fileHash": "sha256-d54fdf0ecb9a57aaa0247b5f6345c74841120d97e94f6b47172f3c574967d1ea"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Elif.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Elif",
         "internalName": "Elif",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 31057,
+        "fileSize": 31058,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -467,12 +491,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq14Sk88U37tIhiRndbNczqn0ectswZly90f1oCa_zbg&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-c64058bd30c7e7b6feb0ab6cbcfbf46109529d2e2c3804d12885a9f402e3f8a2"
+        "fileHash": "sha256-9bd1f22bd17cc965822d7632a06ce1bd05abfb0912f4197a6f8bd26f35bee06b"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/eseek.cs3",
         "status": 1,
-        "version": 3,
+        "version": 4,
         "name": "Eshek",
         "internalName": "eseek",
         "authors": [
@@ -488,19 +512,19 @@
         ],
         "iconUrl": "https://gesseh.net/wp-content/uploads/2024/10/keesatlogo.png",
         "apiVersion": 1,
-        "fileHash": "sha256-70bf9c63b28da3e848ede393cf592fa51d10f42b5518fac3e6c063662c17b166"
+        "fileHash": "sha256-bc8d81c7d4c3ee8aa2420fddabf756664b60242fbc10aa508f90e4c0c7d4a216"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Faselhd.cs3",
         "status": 1,
-        "version": 3,
+        "version": 6,
         "name": "Faselhd",
         "internalName": "Faselhd",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 52317,
+        "fileSize": 58844,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -509,12 +533,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ03aoQBNDy_Hkm5MUGGvluPvK7To7BdGiSnzQn7WJ3fQ&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-db34023930921e4075060c728cf6205244911e3a7f9829886b1cd69c2d6a43a9"
+        "fileHash": "sha256-feb3c35b52d437d5e501c547d757e2896613decd213c87f12745e90746254f87"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Krmzy.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Krmzy",
         "internalName": "Krmzy",
         "authors": [
@@ -530,12 +554,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwTnAJOvyri3uHzHxjkEdlaBBKs8MAvIuJtFmCoo9u5qYiuFpHZjcl6tDi&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-785b7fc9326398763dd7343b90658e28b5aae1f7ce3fa1de72fc09a67e6b99e6"
+        "fileHash": "sha256-2cf8fd4fdd8840bd3e785c07fb43e00f2cfb45f3a6201304549c9a07efacddac"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Lodynet.cs3",
         "status": 1,
-        "version": 2,
+        "version": 3,
         "name": "LodyNet",
         "internalName": "Lodynet",
         "authors": [
@@ -551,19 +575,19 @@
         ],
         "iconUrl": "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp",
         "apiVersion": 1,
-        "fileHash": "sha256-56a9ab9dc9f8e2c05ce66a0a572591581e47575711c378c1d1929c7244ca9f73"
+        "fileHash": "sha256-79a853a9b5a84ead13bc7ee474d2acf58c734758c4ab0741d98300b6539fdf2e"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/MyCimaProvider.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Mycima",
         "internalName": "MyCimaProvider",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 45475,
+        "fileSize": 45476,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -574,12 +598,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxoF3lscri32oVf0iQlhbjFEoUn2xg3OmQIx4wYdDmqw&s",
         "apiVersion": 1,
-        "fileHash": "sha256-ff8e09bb07cb94fad7216e8c6a29bdff3d5758e6f7f1c4b68bacad18935bfe5a"
+        "fileHash": "sha256-5509bf74326ff713809ba3aad86474fbf57ccf94c8fbd22304885b43d549963f"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/OscarTv.cs3",
-        "status": 1,
-        "version": 1,
+        "status": 0,
+        "version": 2,
         "name": "OscarTv",
         "internalName": "OscarTv",
         "authors": [
@@ -598,12 +622,12 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/OscarTv/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-b6121a08938519e4bcb9ab9c0b9361a7e16fffb4741f0709b108f546fe726415"
+        "fileHash": "sha256-66f73150539b08274a7ef339abad52932cefa6d0957f8f31f0bf5307a098bb53"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Rate.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": ".Extension Rating تقييم الاضافات",
         "internalName": "Rate",
         "authors": [
@@ -619,12 +643,12 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/Rate/src/main/icon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-3c81c2479bca04347271c3e13dc7b32965633f7d1aeb659f1aa7202b81dc9f14"
+        "fileHash": "sha256-f6a5142e72c662cdc1b113081106c346bf3242126631f85975c018d23e25c44c"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Replaymatch.cs3",
         "status": 1,
-        "version": 2,
+        "version": 3,
         "name": "FullMatchShows",
         "internalName": "Replaymatch",
         "authors": [
@@ -641,19 +665,19 @@
         ],
         "iconUrl": "https://fullmatchshows.com/wp-content/uploads/2024/04/LOGOSASO.png",
         "apiVersion": 1,
-        "fileHash": "sha256-9702287e1acdbc6556a5f43350aac49df0fc323c2bb50ecc55f0f9173851e147"
+        "fileHash": "sha256-2ea8e3af37bb0ddfb3020e80c29eff6dedfc761641228d61d4c6575c3eccb3b9"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Shahid4u.cs3",
         "status": 1,
-        "version": 2,
+        "version": 3,
         "name": "Shahid4u",
         "internalName": "Shahid4u",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 36553,
+        "fileSize": 36552,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -662,12 +686,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Ig85ZYdRsjDw--peeI2RsBqOWmvnmvKKsT4UONdPMQ&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-4b96b8b6f45a5e2f630ae2ef8d5f8e40f2037a927dbc5275eae30dc7b63b35af"
+        "fileHash": "sha256-00a54b90e58154fd0e2fe6f603264b3c0896be7b3ea99318494709d35bd3dafb"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Shahidwbas.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Shahidwbas",
         "internalName": "Shahidwbas",
         "authors": [
@@ -683,12 +707,12 @@
         ],
         "iconUrl": "https://cdn.wccftech.com/wp-content/uploads/2018/01/Youtube-music.png",
         "apiVersion": 1,
-        "fileHash": "sha256-f89172fe028aa79efa3ca5a4c48ddb5080548fb430528ee2f42a56f89280895d"
+        "fileHash": "sha256-07da67cd795d17b5b8189cfdfb544b429563260c6182397ccdb2244f193a622d"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Syria-live.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Syrialive",
         "internalName": "Syria-live",
         "authors": [
@@ -704,19 +728,19 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF607wnarFL8Ob8KLPahUPJzcLjbtg1pEH0A&s",
         "apiVersion": 1,
-        "fileHash": "sha256-48b9fa4a88c0372a6c2c756a5502bf21e8f01c7215ab2dc3daebfe259eb8e955"
+        "fileHash": "sha256-dba038b11f01549cec54675fd75c58ea5ee2ac3501490eaaa24aecbe4d901e23"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Topcinema.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "TopCinema",
         "internalName": "Topcinema",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 30279,
+        "fileSize": 30280,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -725,12 +749,12 @@
         ],
         "iconUrl": "https://web8.topcinema.cam/wp-content/uploads/2023/05/cropped-icon-32x32.png",
         "apiVersion": 1,
-        "fileHash": "sha256-13467ab2b8e20372b12939fe4fdfad83741ecc43a6451af54089b185d509fe12"
+        "fileHash": "sha256-df67b3c8f47a04bcf892d54bc794507ee0998a46d710d0c4046a2c2bf7e456a2"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TukTukcima.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Tuktukcima",
         "internalName": "TukTukcima",
         "authors": [
@@ -746,12 +770,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ10TEG3tTtkEF9_g3IslEP3xs0wx9EVhBs7b_H5M1gpg&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-752af5fd56bb7cfd1f70036a31fe797d1d582c2529e6f4eda12125eee7634e68"
+        "fileHash": "sha256-c3269d7f149e53773adb026be70248cb9f88581f1eb9a7df8d670057e7bd1a31"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TuniflexBlog.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "TuniflexBlog",
         "internalName": "TuniflexBlog",
         "authors": [
@@ -768,12 +792,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo47ccjaIfUnxJjGujQd6qTKTZH70W6LFeaFXht5TE8w&s",
         "apiVersion": 1,
-        "fileHash": "sha256-fb5f3d6a382d5f161d8c0bcaad709a494c3b8acb0579bb491f6c2dcb28771224"
+        "fileHash": "sha256-01f4cc4c73eb0a7e84809cca3dd0abdfae1833240976c2eb25c8083cd0336534"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Tuniflix.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Tuniflix",
         "internalName": "Tuniflix",
         "authors": [
@@ -790,12 +814,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe95deIIAAbyR9ArSievPWdM2QwiVG9bbQ6Y1uDIbRBpathzSs45b8uQ4&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-14a4553a97f20063f294bf38ab70317e54e496d94a4923ebad830dc966e63f88"
+        "fileHash": "sha256-3e662928ff7f2dbd2c50f8050fc59caad288bad8112921b9a20639a59d9a4c6a"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/TVgarden.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "TVgarden(Famelack)",
         "internalName": "TVgarden",
         "authors": [
@@ -812,12 +836,12 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9Lci-tXtOtWaHcEp9An7bqIkXs4yzH7EcfA&s",
         "apiVersion": 1,
-        "fileHash": "sha256-2e81fb135538fb427a6ea20d7a9a4472d240826136088c0deb09352a5c24ee5e"
+        "fileHash": "sha256-1a8092d559060b58db82a9999485afc433b8cf46b1dd4e4d2eadd0ce97dffcfe"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Viu.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "VIU",
         "internalName": "Viu",
         "authors": [
@@ -834,19 +858,19 @@
         ],
         "iconUrl": "https://img.utdstc.com/icon/a99/c9e/a99c9ee56e731144b335282e9981a54a7584be93fc9644ad7a03b45552307876:200",
         "apiVersion": 1,
-        "fileHash": "sha256-9ff5e88654aa3d58257d681042b74119e55e0f6417b4774532797e923ca63e40"
+        "fileHash": "sha256-cfe2f00d6c432a168708832ac48464d17b18622512311f556cd6e18c9126f9e9"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Wecima.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "WeCima",
         "internalName": "Wecima",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 29438,
+        "fileSize": 29439,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -855,19 +879,19 @@
         ],
         "iconUrl": "https://wecima.ac/static/img/favicon.png",
         "apiVersion": 1,
-        "fileHash": "sha256-98b3b61a6e305f48c154cbca21d6bc162d6514dab8ab6d8253978a1422924fdb"
+        "fileHash": "sha256-bd63bcb260505a009108c719af078be842f70705382f79abe9684f845c71af61"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Witanime.cs3",
         "status": 1,
-        "version": 1,
+        "version": 2,
         "name": "Witanime",
         "internalName": "Witanime",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 60602,
+        "fileSize": 60603,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -876,19 +900,19 @@
         ],
         "iconUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7AH2oC7LwumXRpHM8_WLpIFvDIfmS67jkjlhsCKpPaZdqcneigzUQX4g&s=10",
         "apiVersion": 1,
-        "fileHash": "sha256-c44a16641dbac196199ca600d69457da0105b62e54a9f6a0760f75d928ff258c"
+        "fileHash": "sha256-61567898515085b543b7a1b17399c93fcbaafca1ca09bdf903546836b0972078"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Yacintv.cs3",
         "status": 1,
-        "version": 1,
+        "version": 4,
         "name": "Yacintv",
         "internalName": "Yacintv",
         "authors": [
             "Abodabodd"
         ],
         "description": "",
-        "fileSize": 24443,
+        "fileSize": 32134,
         "repositoryUrl": "https://github.com/Abodabodd/re-3arabi",
         "language": "ar",
         "tvTypes": [
@@ -898,12 +922,12 @@
         ],
         "iconUrl": "https://yt3.googleusercontent.com/ulm35tweg3do5istps0TgCjMmJSVczGUL2NIrXMwI1DDRi5ty29BIzQSUHVgqZN5CSo1PHhiA6M=s900-c-k-c0x00ffffff-no-rj",
         "apiVersion": 1,
-        "fileHash": "sha256-440fb181a313ab67f7d420f4a657eb02dcd65a0aa75df28db4e3994b5ba72c1d"
+        "fileHash": "sha256-bcc4906d2ffa43251e5aa057d32b9d1d98675f21797d4afe91381c23f31c26bc"
     },
     {
         "url": "https://raw.githubusercontent.com/Abodabodd/re-3arabi/builds/Youtube.cs3",
         "status": 1,
-        "version": 2,
+        "version": 3,
         "name": "YouTube",
         "internalName": "Youtube",
         "authors": [
@@ -923,6 +947,6 @@
         ],
         "iconUrl": "https://raw.githubusercontent.com/Abodabodd/Oldarabrepo/refs/heads/main/img/IMG_%D9%A2%D9%A0%D9%A2%D9%A5%D9%A1%D9%A2%D9%A0%D9%A6_%D9%A1%D9%A7%D9%A2%D9%A6%D9%A1%D9%A6.jpg",
         "apiVersion": 1,
-        "fileHash": "sha256-dc1d7eed7ec6bdf47ff36d1ee60b1062e974399ee2995563f62229114b63e530"
+        "fileHash": "sha256-aff2fd145d58601af6f843646d678fcd07d0aea493d979772a72fafa6bc48a9a"
     }
 ]
