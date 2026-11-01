@@ -33,8 +33,6 @@ import javax.crypto.spec.SecretKeySpec
 
 private const val UA =
     "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-
-// The site's JS wraps every API reply in AES-256-CBC with this key.
 private const val AES_KEY = "7annaba3l_loves_crypto_safe_key!"
 
 class CarateenProvider : MainAPI() {
@@ -52,9 +50,6 @@ class CarateenProvider : MainAPI() {
     )
 
     private val json = Json { ignoreUnknownKeys = true }
-
-    // shortcut: catalogs stay cached for the app session because each is 442/336 shows and several MB;
-    // restart or add a TTL if the site adds shows and freshness matters.
     private val shows = java.util.concurrent.ConcurrentHashMap<String, List<JsonObject>>()
 
     private val requestHeaders get() = mapOf(
@@ -74,8 +69,6 @@ class CarateenProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val q = query.trim()
         if (q.isBlank()) return emptyList()
-        // shortcut: the site has no search endpoint, so both cached catalogs are filtered locally;
-        // switch to a server query if the site ever exposes one.
         return listOf("sp", "tg").flatMap { kind ->
             getShows(kind)
                 .filter { it.title(kind)?.contains(q, ignoreCase = true) == true }
@@ -85,7 +78,6 @@ class CarateenProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        // CloudStream prepends mainUrl to our data strings (fixUrl), so strip it back off.
         val parts = url.substringAfter("$mainUrl/").split("|")
         val kind = parts.getOrNull(0) ?: return null
         val showId = parts.getOrNull(1) ?: return null
@@ -140,7 +132,6 @@ class CarateenProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        // Episode ids are fixed by newEpisode too, so the same strip applies.
         val parts = data.substringAfter("$mainUrl/").split("|")
         val kind = parts.getOrNull(0) ?: return false
         val showId = parts.getOrNull(1) ?: return false
@@ -149,7 +140,6 @@ class CarateenProvider : MainAPI() {
             val channel = getChannels().firstOrNull { it.str("id") == showId } ?: return false
             val streamUrl = channel.str("url") ?: return false
             val link = if (streamUrl.startsWith("http")) streamUrl else "$mainUrl$streamUrl"
-            // Legacy CDNs reject the carateen referer; the site's own proxy requires it.
             val headers = if (channel.str("isLegacy") == "true") mapOf("User-Agent" to UA)
             else requestHeaders
             callback(
@@ -159,8 +149,6 @@ class CarateenProvider : MainAPI() {
             )
             return true
         }
-
-        // Movie data has no episode id: emit one link per part (some "movies" ship as 2+ files).
         val targets: List<Pair<String, String?>> = parts.getOrNull(2)?.let { listOf(it to null) }
             ?: fetchEpisodes(kind, showId).mapNotNull { ep ->
                 val epId = ep.episodeId(kind) ?: return@mapNotNull null
