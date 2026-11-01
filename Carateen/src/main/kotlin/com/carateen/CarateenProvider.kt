@@ -36,7 +36,7 @@ private const val UA =
 private const val AES_KEY = "7annaba3l_loves_crypto_safe_key!"
 
 class CarateenProvider : MainAPI() {
-    override var name = "كراتين"
+    override var name = "Carateen"
     override var mainUrl = "https://carateen.tv"
     override var lang = "ar"
     override val supportedTypes =
