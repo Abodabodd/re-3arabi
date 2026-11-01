@@ -1,4 +1,4 @@
-version = 3
+version = 1
 
 cloudstream {
     description = "عد بالزمن للوراء وشاهد كارتون الطفولة ✨"
@@ -14,5 +14,5 @@ cloudstream {
         "Cartoon",
         "Live",
     )
-    iconUrl = "https://carateen.tv/assets/img/favicons/apple-touch-icon.png"
+    iconUrl = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/Carateen/icon.png"
 }
