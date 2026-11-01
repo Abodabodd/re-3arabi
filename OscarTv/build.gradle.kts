@@ -5,7 +5,7 @@ cloudstream {
     authors = listOf("mo7AmMeD64")
     language = "ar"
 
-    status = 2
+    status = 0
 
     tvTypes = listOf(
         "Movie",
