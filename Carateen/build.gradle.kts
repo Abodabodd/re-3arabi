@@ -1,8 +1,8 @@
 version = 3
 
 cloudstream {
-    description = "كراتين — سبيستون غو وكرتون أيام زمان"
-    authors = listOf("mo7AmMeD64")
+    description = "عد بالزمن للوراء وشاهد كارتون الطفولة ✨"
+    authors = listOf("abodabodd")
     language = "ar"
 
     status = 1
