@@ -547,7 +547,7 @@ class FASELHD(private val context: Context) : MainAPI() {
     }
 
 
-    @SuppressLint("SetJavaScriptEnabled")
+   @SuppressLint("SetJavaScriptEnabled")
     private suspend fun resolveWithWebView(
         iframeUrl: String,
         referer: String
@@ -747,13 +747,47 @@ class FASELHD(private val context: Context) : MainAPI() {
                     handler.postDelayed({ scheduleNextQuality() }, 1200)
                 }
 
-                override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-                    val url = request.url.toString()
-                    val lower = url.lowercase()
+                override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+                    val reqUrl = request?.url.toString()
+                    val lowerUrl = reqUrl.lowercase()
 
-                    if (lower.contains(".m3u8")) {
-                        handleFoundLink(url)
+                    if (lowerUrl.contains(".m3u8")) {
+                        handleFoundLink(reqUrl)
                     }
+                    if (lowerUrl.contains("faselhdx.life") || lowerUrl.contains("video_player")) {
+                        try {
+                            val url = URL(reqUrl)
+                            val connection = (url.openConnection() as HttpURLConnection).apply {
+                                requestMethod = "GET"
+                                setRequestProperty("sec-ch-ua", "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Android WebView\";v=\"156\"")
+                                setRequestProperty("sec-ch-ua-mobile", "?1")
+                                setRequestProperty("sec-ch-ua-platform", "\"Android\"")
+                                setRequestProperty("upgrade-insecure-requests", "1")
+                                setRequestProperty("user-agent", lastValidUserAgent)
+                                setRequestProperty("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
+                                setRequestProperty("sec-fetch-mode", "navigate")
+                                setRequestProperty("sec-fetch-site", "none")
+                                setRequestProperty("sec-fetch-dest", "document")
+                                setRequestProperty("accept-language", "ar-IQ,ar;q=0.9,en-US;q=0.8,en;q=0.7")
+
+                                val cookies = cookieManager.getCookie(reqUrl)
+                                if (!cookies.isNullOrBlank()) {
+                                    setRequestProperty("Cookie", cookies)
+                                }
+
+                                connect()
+                            }
+
+                            connection.headerFields["Set-Cookie"]?.forEach { ck ->
+                                cookieManager.setCookie(reqUrl, ck)
+                            }
+
+                            val mimeType = connection.contentType?.substringBefore(";") ?: "text/html"
+                            val encoding = connection.contentEncoding ?: "utf-8"
+                            return WebResourceResponse(mimeType, encoding, connection.inputStream)
+                        } catch (_: Exception) {}
+                    }
+
                     return super.shouldInterceptRequest(view, request)
                 }
 
