@@ -27,7 +27,6 @@ class AlooyTvProvider : MainAPI() {
 
         return try {
             val doc = app.get(mainUrl).document
-            // البحث عن أي رابط يحتوي على alooytv ولديه بروتوكول http/https (دون التقيد بـ .xyz)
             val link = doc.select("a[href*='alooytv']").map { it.attr("href") }
                 .firstOrNull { it.startsWith("http") && !it.contains("t.me") && !it.contains("instagram") }
 
