@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
+
 class AlooyTvProvider : MainAPI() {
     override var mainUrl = "https://fitnur.com/alooytv"
     override var name = "AlooyTv"
