@@ -111,7 +111,42 @@ jobs:
                       except Exception as e:
                           print(f"Error processing {file_path}: {e}")
 
-      - name: Push cleaned files to source branch (Before Secrets Injection)
+      - name: Auto-increment version in build.gradle.kts
+        working-directory: "src"
+        shell: python
+        run: |
+          import os
+          import re
+
+          # مطابقة version = X أو version=X
+          version_pattern = re.compile(r'(\bversion\s*=\s*)(\d+)')
+
+          for root, dirs, files in os.walk('.'):
+              dirs[:] = [d for d in dirs if not d.startswith('.')]
+              for file in files:
+                  if file == 'build.gradle.kts':
+                      file_path = os.path.join(root, file)
+                      try:
+                          with open(file_path, 'r', encoding='utf-8') as f:
+                              content = f.read()
+
+                          def increment(match):
+                              prefix = match.group(1)
+                              current_ver = int(match.group(2))
+                              new_ver = current_ver + 1
+                              print(f"Bumping version in {file_path}: {current_ver} -> {new_ver}")
+                              return f"{prefix}{new_ver}"
+
+                          new_content = version_pattern.sub(increment, content)
+
+                          if new_content != content:
+                              with open(file_path, 'w', encoding='utf-8') as f:
+                                  f.write(new_content)
+
+                      except Exception as e:
+                          print(f"Error updating {file_path}: {e}")
+
+      - name: Push cleaned files and version bump to source branch (Before Secrets Injection)
         working-directory: "src"
         run: |
           git config --local user.email "actions@github.com"
@@ -120,7 +155,7 @@ jobs:
           git add -u
 
           if ! git diff --cached --quiet; then
-            git commit -m "Strip comments [skip ci]"
+            git commit -m "Bump versions and strip comments [skip ci]"
             git push origin HEAD:${{ github.ref_name }}
           else
             echo "No changes to push"
@@ -171,7 +206,7 @@ jobs:
                   if file.endswith('.kt') or file.endswith('.kts'):
                       file_path = os.path.join(root, file)
                       try:
-                          with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                          with open(file_path, 'r', encoding='utf-8') as f:
                               content = f.read()
 
                           modified = False
