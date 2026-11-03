@@ -111,7 +111,69 @@ jobs:
                       except Exception as e:
                           print(f"Error processing {file_path}: {e}")
 
-      - name: Push cleaned files to source branch (Before Secrets Injection)
+      - name: Auto-increment version for modified plugins only
+        working-directory: "src"
+        shell: python
+        run: |
+          import os
+          import re
+          import subprocess
+
+          version_pattern = re.compile(r'(\bversion\s*=\s*)(\d+)')
+
+          try:
+              diff_output = subprocess.check_output(
+                  ["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"],
+                  text=True
+              ).strip().splitlines()
+          except Exception as e:
+              print(f"Error fetching git diff: {e}")
+              diff_output = []
+
+          print(f"Files changed in this commit: {diff_output}")
+
+          changed_plugin_dirs = set()
+          for path in diff_output:
+              parts = os.path.normpath(path).split(os.sep)
+              if len(parts) > 1:
+                  changed_plugin_dirs.add(parts[0])
+
+          print(f"Plugins detected with changes: {changed_plugin_dirs}")
+
+          for root, dirs, files in os.walk('.'):
+              dirs[:] = [d for d in dirs if not d.startswith('.')]
+              for file in files:
+                  if file == 'build.gradle.kts':
+                      file_path = os.path.join(root, file)
+                      norm_path = os.path.normpath(file_path)
+                      parts = norm_path.split(os.sep)
+
+                      plugin_dir = parts[1] if len(parts) > 1 and parts[0] == '.' else parts[0]
+
+                      if plugin_dir in changed_plugin_dirs:
+                          try:
+                              with open(file_path, 'r', encoding='utf-8') as f:
+                                  content = f.read()
+
+                              def increment(match):
+                                  prefix = match.group(1)
+                                  current_ver = int(match.group(2))
+                                  new_ver = current_ver + 1
+                                  print(f"Bumping version in [{plugin_dir}] -> {file_path}: {current_ver} to {new_ver}")
+                                  return f"{prefix}{new_ver}"
+
+                              new_content = version_pattern.sub(increment, content)
+
+                              if new_content != content:
+                                  with open(file_path, 'w', encoding='utf-8') as f:
+                                      f.write(new_content)
+
+                          except Exception as e:
+                              print(f"Error updating {file_path}: {e}")
+                      else:
+                          print(f"Skipping unchanged plugin: {plugin_dir}")
+
+      - name: Push cleaned files and version bump to source branch (Before Secrets Injection)
         working-directory: "src"
         run: |
           git config --local user.email "actions@github.com"
@@ -120,7 +182,7 @@ jobs:
           git add -u
 
           if ! git diff --cached --quiet; then
-            git commit -m "Strip comments [skip ci]"
+            git commit -m "Bump modified plugin versions and strip comments [skip ci]"
             git push origin HEAD:${{ github.ref_name }}
           else
             echo "No changes to push"
@@ -130,14 +192,7 @@ jobs:
         working-directory: "src"
         shell: python
         env:
-          APP_API_KEY: ${{ secrets.APP_API_KEY }}
-          FB_API_KEY: ${{ secrets.FB_API_KEY }}
-          FB_APP_ID: ${{ secrets.FB_APP_ID }}
-          RIFT_JWT_SECRET: ${{ secrets.RIFT_JWT_SECRET }}
-          RIFT_FIREBASE_API_KEY: ${{ secrets.RIFT_FIREBASE_API_KEY }}
-          RIFT_FIREBASE_APP_ID: ${{ secrets.RIFT_FIREBASE_APP_ID }}
-          RIFT_ANDROID_PACKAGE: ${{ secrets.RIFT_ANDROID_PACKAGE }}
-          RIFT_ANDROID_CERT: ${{ secrets.RIFT_ANDROID_CERT }}
+          ALL_SECRETS: ${{ toJson(secrets) }}
         run: |
           import os
           import json
@@ -155,15 +210,22 @@ jobs:
               print(f"Error reading {mapping_file}: {e}")
               exit(1)
 
+          raw_secrets = os.environ.get("ALL_SECRETS", "{}")
+          try:
+              available_secrets = json.loads(raw_secrets)
+          except Exception as e:
+              print(f"Error decoding secrets JSON: {e}")
+              available_secrets = {}
+
           replacements = {}
           for placeholder, secret_name in mapping.items():
-              secret_val = os.environ.get(secret_name, "")
+              secret_val = available_secrets.get(secret_name, "")
               if secret_val:
                   replacements[placeholder] = secret_val
               else:
-                  print(f"Warning: Secret '{secret_name}' is empty or not configured in GitHub Secrets!")
+                  print(f"Warning: Secret '{secret_name}' not found in GitHub Secrets!")
 
-          print(f"Loaded {len(replacements)} secrets for replacement.")
+          print(f"Loaded {len(replacements)} secrets dynamically for replacement.")
 
           for root, dirs, files in os.walk('.'):
               dirs[:] = [d for d in dirs if not d.startswith('.')]
