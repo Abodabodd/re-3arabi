@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "سيرفرات الموقع بها ضعف احيانا اذا لم يفتح  غالبا المشكلة من الموقع"

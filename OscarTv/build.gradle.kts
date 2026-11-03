@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "أفلام ومسلسلات وأنمي وقنوات مباشرة — Oscar TV — سيرفرات مباشرة 360p-1080p"

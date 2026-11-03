@@ -1,4 +1,4 @@
-version = 4
+version = 5
 
 cloudstream {
     description = "لا يعمل خارج العراق او اي شبكة غير ايرثلنك"

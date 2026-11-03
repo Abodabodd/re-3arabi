@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "⚠️ تنبيه: يُرجى استخدام VPN لتجنب حظر عنوان الـ IP الخاص بك"
