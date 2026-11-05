@@ -67,17 +67,7 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
-@CloudstreamPlugin
-class YacineTVPlugin : Plugin() {
-    override fun load(context: Context) {
-        registerMainAPI(YacineTVProvider())
-        openSettings = { activityContext ->
-            (activityContext as? AppCompatActivity)?.let { activity ->
-                YacineSettings().show(activity.supportFragmentManager, "YacineSettings")
-            }
-        }
-    }
-}
+
 
 
 
