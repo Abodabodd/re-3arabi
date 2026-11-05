@@ -4,8 +4,13 @@ import com.lagradost.cloudstream3.plugins.Plugin
 import android.content.Context
 
 @CloudstreamPlugin
-class YacineTVPlugin: Plugin() {
+class YacineTVPlugin : Plugin() {
     override fun load(context: Context) {
         registerMainAPI(YacineTVProvider())
+        openSettings = { activityContext ->
+            (activityContext as? AppCompatActivity)?.let { activity ->
+                YacineSettings().show(activity.supportFragmentManager, "YacineSettings")
+            }
+        }
     }
 }
