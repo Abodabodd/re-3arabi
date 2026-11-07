@@ -1,25 +1,36 @@
 package com.faselhd
+
+import android.content.Context
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
+import android.net.Uri
+import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
 import com.lagradost.cloudstream3.plugins.Plugin
-import android.content.Context
-import com.faselhd.FASELHD
-import com.lagradost.cloudstream3.Episode
-import com.lagradost.cloudstream3.LoadResponse
-import com.lagradost.cloudstream3.TvType
-import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.newEpisode
-import com.lagradost.cloudstream3.newMovieLoadResponse
-import com.lagradost.cloudstream3.newTvSeriesLoadResponse
-import com.lagradost.cloudstream3.newTvSeriesSearchResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.sync.Semaphore
 
 @CloudstreamPlugin
-class FaselhdPlugin: Plugin() {
+class FaselhdPlugin : Plugin() {
     override fun load(context: Context) {
         registerMainAPI(FASELHD(context))
+        openSettings = { activityContext ->
+            (activityContext as? AppCompatActivity)?.let { activity ->
+                Settings().show(activity.supportFragmentManager, "FaselhdSettings")
+            }
+        }
     }
 }
+
