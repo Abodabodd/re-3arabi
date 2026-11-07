@@ -225,7 +225,7 @@ class Settings : BottomSheetDialogFragment() {
                 badgeColor = "#229ED9",
                 titleText = "قناة التليجرام",
                 descText = "أحدث الإصدارات، الروابط والأخبار",
-                targetUrl = "https://t.me/cs3ara"
+                targetUrl = "https://t.me/cs3iq"
             )
         )
 
