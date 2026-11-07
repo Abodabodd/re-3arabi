@@ -27,6 +27,8 @@ object CloudflareSolver {
                 return@suspendCoroutine
             }
 
+            Log.d(TAG, "🚀 [بدء السولفر] فتح الرابط الأولي: $url")
+
             Handler(Looper.getMainLooper()).post {
                 val rootView = activity.findViewById<ViewGroup>(R.id.content) ?: run {
                     continuation.resume(null)
@@ -61,10 +63,28 @@ object CloudflareSolver {
                 var isProcessingClick = false
                 val pollingHandler = Handler(Looper.getMainLooper())
 
-                fun finishSuccess(html: String?) {
+                fun finishSuccess(html: String?, finalResolvedUrl: String) {
                     if (!isSolved) {
                         isSolved = true
                         cookieManager.flush()
+
+                        Log.d(TAG, "==================================================")
+                        Log.d(TAG, "🎯 [نجاح] الرابط النهائي المستقر بعد التحويلات:")
+                        Log.d(TAG, "📍 Final URL: $finalResolvedUrl")
+                        Log.d(TAG, "🍪 Cookies: ${cookieManager.getCookie(finalResolvedUrl)}")
+                        Log.d(TAG, "==================================================")
+                        try {
+                            val parsedUri = android.net.Uri.parse(finalResolvedUrl)
+                            val host = parsedUri.host
+                            if (!host.isNullOrBlank() && host.contains("faselhdx")) {
+                                val detectedBase = "${parsedUri.scheme ?: "https"}://$host"
+                                FASELHD.savePermanentBaseUrl(detectedBase)
+                                Log.d(TAG, "💾 [تم الحفظ الدائم]: $detectedBase")
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "خطأ في حفظ الدومين الدائم: ${e.message}")
+                        }
+
                         try {
                             pollingHandler.removeCallbacksAndMessages(null)
                             rootView.removeView(webView)
@@ -72,6 +92,7 @@ object CloudflareSolver {
                         } catch (e: Exception) {}
 
                         if (html == null) {
+                            Log.w(TAG, "⚠️ فشل جلب محتوى HTML (انتهت المهلة)")
                             continuation.resume(null)
                             return
                         }
@@ -82,11 +103,15 @@ object CloudflareSolver {
                             .replace("\\\"", "\"")
                             .replace("\\\\", "\\")
 
-                        continuation.resume(Jsoup.parse(cleanHtml))
+                        continuation.resume(Jsoup.parse(cleanHtml, finalResolvedUrl))
                     }
                 }
 
-                pollingHandler.postDelayed({ finishSuccess(null) }, 60000)
+                pollingHandler.postDelayed({ 
+                    val currentFallbackUrl = webView.url ?: url
+                    Log.w(TAG, "⏰ انتهت مهلة 60 ثانية. الرابط عند التوقف: $currentFallbackUrl")
+                    finishSuccess(null, currentFallbackUrl) 
+                }, 60000)
 
                 fun simulateRealTouch(view: WebView, cssX: Float, cssY: Float) {
                     val density = activity.resources.displayMetrics.density
@@ -140,6 +165,7 @@ object CloudflareSolver {
                                         val (rx, ry) = sides[0].split(",").map { it.toFloatOrNull() }
                                         val (lx, ly) = sides[1].split(",").map { it.toFloatOrNull() }
                                         if (rx != null && ry != null && lx != null && ly != null) {
+                                            Log.d(TAG, "👆 محاكاة نقر مربع Cloudflare...")
                                             simulateRealTouch(webView, rx, ry)
                                             pollingHandler.postDelayed({
                                                 simulateRealTouch(webView, lx, ly)
@@ -186,7 +212,9 @@ object CloudflareSolver {
 
                         val (currentUrl, ready, hasBox, stillCloudflare) = parts
                         val now = SystemClock.uptimeMillis()
+
                         if (currentUrl != lastUrl) {
+                            Log.d(TAG, "🔄 [تحويل مسار / Redirect]: $lastUrl ➡️ $currentUrl")
                             lastUrl = currentUrl
                             stableSince = now
                         }
@@ -194,9 +222,10 @@ object CloudflareSolver {
 
                         if (hasBox == "false" && stillCloudflare == "false" && ready == "complete" && stableTime > 1500 && !fetched) {
                             fetched = true
+                            Log.d(TAG, "✨ تم فك الحماية وتخطي التحدي بنجاح، جاري استخراج كود الصفحة...")
                             pollingHandler.postDelayed({
                                 webView.evaluateJavascript("document.documentElement.outerHTML") { html ->
-                                    finishSuccess(html)
+                                    finishSuccess(html, currentUrl)
                                 }
                             }, 500)
                             return@evaluateJavascript
@@ -206,8 +235,9 @@ object CloudflareSolver {
                 }
 
                 webView.webViewClient = object : WebViewClient() {
-                    override fun onPageFinished(view: WebView?, url: String?) {
-                        super.onPageFinished(view, url)
+                    override fun onPageFinished(view: WebView?, loadedUrl: String?) {
+                        super.onPageFinished(view, loadedUrl)
+                        Log.d(TAG, "📄 اكتمل تحميل صفحة: $loadedUrl")
                         isProcessingClick = false
                         startPolling()
                         waitUntilReady()
