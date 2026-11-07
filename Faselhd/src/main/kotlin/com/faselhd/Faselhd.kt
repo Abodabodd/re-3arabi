@@ -1,14 +1,27 @@
 package com.faselhd
 
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
+import android.net.Uri
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
@@ -16,8 +29,26 @@ import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
+import android.webkit.ConsoleMessage
+import android.webkit.SslErrorHandler
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.Toast
+
+import androidx.appcompat.app.AppCompatActivity
+
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.CloudStreamApp.Companion.getKey
+import com.lagradost.cloudstream3.CloudStreamApp.Companion.setKey
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -26,69 +57,228 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+
 import okhttp3.CookieJar
 import okhttp3.FormBody
 import okhttp3.Request as OkRequest
+
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+
 import java.net.URLEncoder
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.graphics.Color
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.net.Uri
-import android.widget.LinearLayout
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.net.HttpURLConnection
 import java.net.URL
-import android.webkit.JavascriptInterface
-import android.widget.ScrollView
-import android.webkit.WebChromeClient
-import android.view.View
-import android.webkit.ConsoleMessage
-import android.graphics.Bitmap
 import java.io.InputStream
-import android.webkit.SslErrorHandler
-import android.widget.Toast
-import com.lagradost.cloudstream3.newMovieSearchResponse
 
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+class Settings : BottomSheetDialogFragment() {
+
+    private fun dp(dp: Int): Int = (dp * resources.displayMetrics.density + 0.5f).toInt()
+
+    override fun onStart() {
+        super.onStart()
+        val dialog = dialog as? BottomSheetDialog
+        dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let { sheet ->
+            sheet.background = null
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val ctx = requireContext()
+
+        val root = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(12), dp(20), dp(28))
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor("#181926")) // خلفية داكنة حديثة
+                cornerRadii = floatArrayOf(
+                    dp(24).toFloat(), dp(24).toFloat(),
+                    dp(24).toFloat(), dp(24).toFloat(),
+                    0f, 0f, 0f, 0f
+                )
+            }
+        }
+        val handle = View(ctx).apply {
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor("#45475A"))
+                cornerRadius = dp(3).toFloat()
+            }
+            layoutParams = LinearLayout.LayoutParams(dp(44), dp(5)).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+                bottomMargin = dp(20)
+            }
+        }
+        root.addView(handle)
+        val title = TextView(ctx).apply {
+            text = "مجتمع ودعم الإضافة"
+            textSize = 19f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(Color.parseColor("#CAD3F5"))
+            gravity = Gravity.CENTER
+        }
+        root.addView(title)
+
+        val subtitle = TextView(ctx).apply {
+            text = "تابع التحديثات وانضم لمجتمع النقاش والمطورين"
+            textSize = 12.5f
+            setTextColor(Color.parseColor("#8087A2"))
+            gravity = Gravity.CENTER
+            setPadding(0, dp(4), 0, dp(22))
+        }
+        root.addView(subtitle)
+        fun createPlatformCard(
+            badgeIcon: String,
+            badgeColor: String,
+            titleText: String,
+            descText: String,
+            targetUrl: String
+        ): View {
+            val card = LinearLayout(ctx).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(16), dp(14), dp(16), dp(14))
+
+                val shape = GradientDrawable().apply {
+                    setColor(Color.parseColor("#24273A"))
+                    cornerRadius = dp(16).toFloat()
+                    setStroke(dp(1), Color.parseColor("#363A4F"))
+                }
+                background = RippleDrawable(
+                    ColorStateList.valueOf(Color.parseColor("#3B4252")),
+                    shape,
+                    shape
+                )
+
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)))
+                    } catch (e: Exception) { }
+                }
+
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    bottomMargin = dp(12)
+                }
+            }
+
+            val iconBadge = TextView(ctx).apply {
+                text = badgeIcon
+                textSize = 18f
+                gravity = Gravity.CENTER
+                background = GradientDrawable().apply {
+                    setColor(Color.parseColor(badgeColor))
+                    cornerRadius = dp(12).toFloat()
+                }
+                layoutParams = LinearLayout.LayoutParams(dp(44), dp(44)).apply {
+                    marginEnd = dp(14)
+                }
+            }
+            card.addView(iconBadge)
+
+            val textContainer = LinearLayout(ctx).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+
+            val cardTitle = TextView(ctx).apply {
+                text = titleText
+                textSize = 15f
+                setTypeface(null, Typeface.BOLD)
+                setTextColor(Color.parseColor("#CAD3F5"))
+            }
+            textContainer.addView(cardTitle)
+
+            val cardDesc = TextView(ctx).apply {
+                text = descText
+                textSize = 12f
+                setTextColor(Color.parseColor("#A5ADCB"))
+                setPadding(0, dp(2), 0, 0)
+            }
+            textContainer.addView(cardDesc)
+
+            card.addView(textContainer)
+
+            val arrow = TextView(ctx).apply {
+                text = "↗"
+                textSize = 17f
+                setTextColor(Color.parseColor("#6E738D"))
+                setTypeface(null, Typeface.BOLD)
+            }
+            card.addView(arrow)
+
+            return card
+        }
+        root.addView(
+            createPlatformCard(
+                badgeIcon = "📧",
+                badgeColor = "#229ED9",
+                titleText = "قناة التليجرام",
+                descText = "أحدث الإصدارات، الروابط والأخبار",
+                targetUrl = "https://t.me/cs3ara"
+            )
+        )
+
+        root.addView(
+            createPlatformCard(
+                badgeIcon = "💬",
+                badgeColor = "#5865F2",
+                titleText = "سيرفر الديسكورد",
+                descText = "نقاشات المجتمع، الدعم الفني والاقتراحات",
+                targetUrl = "https://discord.gg/xY63qaQRw"
+            )
+        )
+
+        root.addView(
+            createPlatformCard(
+                badgeIcon = "🔗",
+                badgeColor = "#313244",
+                titleText = "مشروع GitHub",
+                descText = "المستودع المفتوح، الإبلاغ عن مشاكل والمساهمة",
+                targetUrl = "https://github.com/Abodabodd/re-3arabi"
+            )
+        )
+
+        return root
+    }
+}
 class FASELHD(private val context: Context) : MainAPI() {
     override var name = "FASELHD"
     override val hasQuickSearch = true
-    override var mainUrl = "https://web31312x.faselhdx.bid"
+    override var mainUrl = "https://web11118x.faselhdx.life"
     override var lang = "ar"
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.Anime)
     companion object {
-
+        private const val SAVED_BASE_KEY = "FASELHD_PERSISTENT_BASE_URL"
         var redirectUrl: String? = null
-
-    }
-    private suspend fun baseUrl(): String {
-        redirectUrl?.let { return it }
-
-        return try {
-            val response = app.get(mainUrl, allowRedirects = true)
-            val finalUrl = response.url
-
-            val base = try {
-                val uri = java.net.URI(finalUrl)
-                "${uri.scheme}://${uri.host}"
-            } catch (e: Exception) {
-                mainUrl
-            }
-
-            redirectUrl = base
-
-            base
-        } catch (e: Exception) {
-            mainUrl
+        fun savePermanentBaseUrl(url: String) {
+            redirectUrl = url
+            try {
+                setKey(SAVED_BASE_KEY, url)
+                Log.d("FASELHD", "💾 تم حفظ الرابط الدائم في الجهاز: $url")
+            } catch (_: Exception) {}
         }
+    }
+
+    private fun baseUrl(): String {
+        redirectUrl?.let { return it }
+        val persistentUrl = try { getKey<String>(SAVED_BASE_KEY) } catch (_: Exception) { null }
+        if (!persistentUrl.isNullOrBlank()) {
+            redirectUrl = persistentUrl
+            return persistentUrl
+        }
+        return mainUrl
     }
 
     private val cfLock = Mutex()
@@ -122,11 +312,16 @@ class FASELHD(private val context: Context) : MainAPI() {
         referer: String? = null,
         timeoutSeconds: Long? = null
     ): Document {
-        val cleanUrl = if (!url.endsWith("/") && !url.substringAfterLast("/").contains(".")) "$url/" else url
+        val cleanUrl = if (url.endsWith("/") && url.count { it == '/' } > 3) {
+            url.removeSuffix("/")
+        } else {
+            url
+        }
+
         for (attempt in 1..3) {
             try {
                 val headers = getModernHeaders(cleanUrl)
-                if (referer != null) headers["Referer"] = referer
+                if (referer != null) headers["Referer"] = referer.removeSuffix("/")
 
                 val response = app.get(
                     cleanUrl,
@@ -216,22 +411,31 @@ class FASELHD(private val context: Context) : MainAPI() {
         }
     }
     override val mainPage = mainPageOf(
-        "$mainUrl/main" to "الرئيسية" // تحديث الرابط ليكون /main
+        "$mainUrl/main" to "الرئيسية"
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val url = if (page > 1 && !request.data.endsWith("/main")) {
-            if (request.data.contains("all_movies"))
-                "${request.data.removeSuffix("/")}/page/$page"
-            else
-                "${request.data}/page/$page"
+        val base = baseUrl()
+        val targetPath = if (request.data.startsWith(mainUrl)) {
+            request.data.replace(mainUrl, base)
+        } else if (!request.data.startsWith("http")) {
+            "$base/${request.data.removePrefix("/")}"
         } else {
             request.data
         }
 
+        val url = if (page > 1 && !targetPath.endsWith("/main")) {
+            if (targetPath.contains("all_movies"))
+                "${targetPath.removeSuffix("/")}/page/$page"
+            else
+                "${targetPath}/page/$page"
+        } else {
+            targetPath
+        }
+
         val document = smartGet(url)
         val headers = getProtectedHeaders()
-        if (request.data.endsWith("/main") || request.data == mainUrl) {
+        if (targetPath.endsWith("/main") || targetPath == base || targetPath == mainUrl) {
             val lists = mutableListOf<HomePageList>()
             val sliderItems = document.select("#homeSlide .swiper-slide").mapNotNull {
                 val slideHref = it.selectFirst("a")?.attr("href") ?: return@mapNotNull null
@@ -270,61 +474,53 @@ class FASELHD(private val context: Context) : MainAPI() {
         }
     }
 
-    override suspend fun quickSearch(query: String): List<SearchResponse>? = search(query,1)?.items
+    override suspend fun search(query: String): List<SearchResponse>? {
+        return search(query, 1)?.items
+    }
+
     override suspend fun search(query: String, page: Int): SearchResponseList {
         val base = baseUrl()
         val encoded = URLEncoder.encode(query, "UTF-8")
-        val originalSearch = if (page == 1) {
-            "$base/?s=$encoded"
+        val searchUrl = if (page == 1) {
+            "$base?s=$encoded"
         } else {
-            "$base/page/$page/?s=$encoded"
+            "$base/page/$page?s=$encoded"
         }
 
-        var finalSearchUrl = originalSearch
-        try {
-            val resp = app.get(originalSearch, allowRedirects = true)
-            val final = resp.url
-            finalSearchUrl =
-                if (final.contains("?s=", ignoreCase = true)) final else "$final?s=$encoded"
-        } catch (_: Exception) {
-            finalSearchUrl = originalSearch
-        }
-        val document = try {
-            smartGet(finalSearchUrl, referer = base)
+        val doc = try {
+            smartGet(searchUrl, referer = base)
         } catch (e: Exception) {
-            Log.d("FASELHD", "search: smartGet failed: ${e.message}")
-            Jsoup.parse("", finalSearchUrl)
+            Jsoup.parse("", searchUrl)
         }
+        var items = doc.select("div#postList div.postDiv, div.postDiv, article").mapNotNull { it.toSearchResult() }
+        val nextPage = page + 1
+        var hasNext = doc.select("ul.pagination a[href*='/page/$nextPage']").isNotEmpty() ||
+                doc.select("ul.pagination a").any { it.text().contains("›") || it.text().contains("»") }
+        if (items.isEmpty() && page == 1) {
+            try {
+                val ajaxUrl = "$base/wp-admin/admin-ajax.php"
+                val formBody = FormBody.Builder()
+                    .add("action", "dtc_live")
+                    .add("trsearch", query)
+                    .build()
 
-        var items = document.select("div#postList div.postDiv, div.postDiv, article")
-            .mapNotNull { it.toSearchResult() }
-        var hasNext = document.select("ul.pagination a[href*='/page/${page + 1}']").isNotEmpty()
-
-            if (items.isEmpty() && page == 1) {
-                try {
-                    val ajaxUrl = "${baseUrl()}/wp-admin/admin-ajax.php"
-                    val formBody = FormBody.Builder()
-                        .add("action", "dtc_live")
-                        .add("trsearch", query)
-                        .build()
-                    val bodyStr = executeRequestWithCloudflareRetry { cookies ->
-                        makeAjaxRequest(ajaxUrl, finalSearchUrl, formBody, cookies)
-                    }
-                    if (!bodyStr.isNullOrBlank()) {
-                        val ajaxDoc = Jsoup.parse(bodyStr, baseUrl()) // يعمل الآن بأمان!
-
-                        items = ajaxDoc.select("div.postDiv, article, .result, .search-item").mapNotNull { it.toSearchResult() }
-                        hasNext = ajaxDoc.select("a.dtc_more").isNotEmpty() ||
-                                ajaxDoc.select("a").any { it.text().contains("المزيد", ignoreCase = true) }
-                        Log.d("FASELHD", "Search fallback: found ${items.size} items from AJAX")
-                    }
-                } catch (e: Exception) {
-                    Log.d("FASELHD", "Search fallback error: ${e.message}")
+                val bodyStr = executeRequestWithCloudflareRetry { cookies ->
+                    makeAjaxRequest(ajaxUrl, "$base/", formBody, cookies)
                 }
-            }
 
-            return newSearchResponseList(items, hasNext)
+                if (!bodyStr.isNullOrBlank()) {
+                    val ajaxDoc = Jsoup.parse(bodyStr, base)
+                    items = ajaxDoc.select("div.postDiv, article, .result, .search-item, li").mapNotNull { it.toSearchResult() }
+                    hasNext = ajaxDoc.select("a.dtc_more").isNotEmpty() ||
+                            ajaxDoc.select("a").any { it.text().contains("المزيد", ignoreCase = true) }
+                }
+            } catch (e: Exception) {
+                Log.d("FASELHD", "AJAX fallback failed: ${e.message}")
+            }
         }
+
+        return newSearchResponseList(items, hasNext)
+    }
 
         /**
          * دالة مساعدة لتنفيذ أي طلب مع إعادة محاولة تلقائية عند فشل Cloudflare.
@@ -377,7 +573,8 @@ class FASELHD(private val context: Context) : MainAPI() {
         }
     override suspend fun load(url: String): LoadResponse? {
         val base = baseUrl()
-        val absoluteUrl = if (url.startsWith("/")) "$base$url" else url
+        val rawAbsoluteUrl = if (url.startsWith("/")) "$base$url" else url
+        val absoluteUrl = rawAbsoluteUrl.removeSuffix("/")
         val doc = smartGet(absoluteUrl)
         val rawTitle = doc.selectFirst(".singleInfo .title.h1")?.ownText() ?: ""
         val title = rawTitle.replace("\\n", "").replace("\n", "").trim()
@@ -404,7 +601,7 @@ class FASELHD(private val context: Context) : MainAPI() {
             val seasonUrlRel = seasonUrlRegex.find(onclickAttr)?.groupValues?.get(1) ?: return@mapNotNull null
             val seasonTitle = seasonEl.selectFirst(".title")?.text()?.replace("\\n", "")?.trim() ?: "موسم"
             val fullSeasonUrl = if (seasonUrlRel.startsWith("http")) seasonUrlRel else "$base$seasonUrlRel"
-            newTvSeriesSearchResponse(seasonTitle, fullSeasonUrl, TvType.TvSeries) {
+            newTvSeriesSearchResponse(seasonTitle, fullSeasonUrl.removeSuffix("/"), TvType.TvSeries) {
                 this.posterUrl = seasonPoster
                 this.posterHeaders = headers
             }
@@ -419,7 +616,7 @@ class FASELHD(private val context: Context) : MainAPI() {
                 val onclickAttr = seasonEl.attr("onclick")
                 val seasonUrlRel = seasonUrlRegex.find(onclickAttr)?.groupValues?.get(1) ?: ""
                 val fullSeasonUrl = if (seasonUrlRel.startsWith("http")) seasonUrlRel else "$base$seasonUrlRel"
-                if (fullSeasonUrl.removeSuffix("/") == absoluteUrl.removeSuffix("/")) {
+                if (fullSeasonUrl.removeSuffix("/") == absoluteUrl) {
                     currentSeasonIndex = idx
                 }
             }
@@ -433,7 +630,6 @@ class FASELHD(private val context: Context) : MainAPI() {
             }
             if (currentSeasonIndex == -1) currentSeasonIndex = 0
 
-
             var fakeSeasonCounter = 2
             for (i in 0 until seasonCards.size) {
                 val actualSeasonNum = i + 1
@@ -446,7 +642,8 @@ class FASELHD(private val context: Context) : MainAPI() {
                             val epTitle = el.ownText().ifBlank { el.text() }.replace("\\n", "").replace("\n", "").trim()
                             if (!epTitle.contains("باقي الحلقات") && !epTitle.contains("المزيد")) {
                                 val epNum = Regex("""\d+""").find(epTitle)?.value?.toIntOrNull()
-                                currentSeasonEpisodes.add(newEpisode(if (epUrlRaw.startsWith("http")) epUrlRaw else "$base$epUrlRaw") {
+                                val fullEpUrl = if (epUrlRaw.startsWith("http")) epUrlRaw else "$base$epUrlRaw"
+                                currentSeasonEpisodes.add(newEpisode(fullEpUrl.removeSuffix("/")) {
                                     this.name = "$seasonName - $epTitle"
                                     this.episode = epNum
                                     this.season = 1
@@ -471,7 +668,8 @@ class FASELHD(private val context: Context) : MainAPI() {
                 if (epUrlRaw.isNotBlank()) {
                     val epTitle = el.ownText().ifBlank { el.text() }.replace("\\n", "").replace("\n", "").trim()
                     val epNum = Regex("""\d+""").find(epTitle)?.value?.toIntOrNull()
-                    currentSeasonEpisodes.add(newEpisode(if (epUrlRaw.startsWith("http")) epUrlRaw else "$base$epUrlRaw") {
+                    val fullEpUrl = if (epUrlRaw.startsWith("http")) epUrlRaw else "$base$epUrlRaw"
+                    currentSeasonEpisodes.add(newEpisode(fullEpUrl.removeSuffix("/")) {
                         this.name = epTitle
                         this.episode = epNum
                         this.season = 1
@@ -547,7 +745,7 @@ class FASELHD(private val context: Context) : MainAPI() {
     }
 
 
-   @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled")
     private suspend fun resolveWithWebView(
         iframeUrl: String,
         referer: String
