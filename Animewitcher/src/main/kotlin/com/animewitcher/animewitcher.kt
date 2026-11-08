@@ -2,18 +2,278 @@ package com.animewitcher
 
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
+import com.lagradost.cloudstream3.plugins.Plugin
+
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+
 import java.net.URL
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
-import kotlin.collections.HashMap
+import java.util.concurrent.ConcurrentHashMap
+import android.content.Context
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.*
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
+import android.net.Uri
+import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.PathParser
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+
+@CloudstreamPlugin
+class animewitcherPlugin : Plugin() {
+    override fun load(context: Context) {
+        registerMainAPI(AnimeWitcherProvider())
+
+        openSettings = { activityContext ->
+            (activityContext as? AppCompatActivity)?.let { activity ->
+                Settings().show(activity.supportFragmentManager, "AnimewitcherSettings")
+            }
+        }
+    }
+}
+
+class Settings : BottomSheetDialogFragment() {
+
+    private fun dp(dp: Int): Int = (dp * resources.displayMetrics.density + 0.5f).toInt()
+    private class PathDrawable(
+        pathData: String,
+        private val iconColor: Int,
+        private val viewportWidth: Float = 24f,
+        private val viewportHeight: Float = 24f
+    ) : Drawable() {
+        private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = iconColor
+            style = Paint.Style.FILL
+        }
+        
+        private val path: Path = try {
+            PathParser.createPathFromPathData(pathData)
+        } catch (e: Exception) {
+            Path() // في حال حدوث أي خطأ لا ينهار التطبيق
+        }
+
+        override fun draw(canvas: Canvas) {
+            val b = bounds
+            val scaleX = b.width().toFloat() / viewportWidth
+            val scaleY = b.height().toFloat() / viewportHeight
+            val count = canvas.save()
+            canvas.translate(b.left.toFloat(), b.top.toFloat())
+            canvas.scale(scaleX, scaleY)
+            canvas.drawPath(path, paint)
+            canvas.restoreToCount(count)
+        }
+
+        override fun setAlpha(alpha: Int) { paint.alpha = alpha }
+        override fun setColorFilter(colorFilter: ColorFilter?) { paint.colorFilter = colorFilter }
+        @Deprecated("Deprecated in Java")
+        override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val dialog = dialog as? BottomSheetDialog
+        dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let { sheet ->
+            sheet.background = null
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val ctx = requireContext()
+
+        val root = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(12), dp(20), dp(28))
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor("#181926"))
+                cornerRadii = floatArrayOf(
+                    dp(24).toFloat(), dp(24).toFloat(),
+                    dp(24).toFloat(), dp(24).toFloat(),
+                    0f, 0f, 0f, 0f
+                )
+            }
+        }
+
+        val handle = View(ctx).apply {
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor("#45475A"))
+                cornerRadius = dp(3).toFloat()
+            }
+            layoutParams = LinearLayout.LayoutParams(dp(44), dp(5)).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+                bottomMargin = dp(20)
+            }
+        }
+        root.addView(handle)
+
+        val title = TextView(ctx).apply {
+            text = "مجتمع ودعم الإضافة"
+            textSize = 19f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(Color.parseColor("#CAD3F5"))
+            gravity = Gravity.CENTER
+        }
+        root.addView(title)
+
+        val subtitle = TextView(ctx).apply {
+            text = "تابع التحديثات وانضم لمجتمع النقاش والمطورين"
+            textSize = 12.5f
+            setTextColor(Color.parseColor("#8087A2"))
+            gravity = Gravity.CENTER
+            setPadding(0, dp(4), 0, dp(22))
+        }
+        root.addView(subtitle)
+
+        fun createPlatformCard(
+            svgPath: String,
+            iconTintColor: String,
+            badgeBackgroundColor: String,
+            titleText: String,
+            descText: String,
+            targetUrl: String
+        ): View {
+            val card = LinearLayout(ctx).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(16), dp(14), dp(16), dp(14))
+
+                val shape = GradientDrawable().apply {
+                    setColor(Color.parseColor("#24273A"))
+                    cornerRadius = dp(16).toFloat()
+                    setStroke(dp(1), Color.parseColor("#363A4F"))
+                }
+                background = RippleDrawable(
+                    ColorStateList.valueOf(Color.parseColor("#3B4252")),
+                    shape,
+                    shape
+                )
+
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)))
+                    } catch (e: Exception) { }
+                }
+
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    bottomMargin = dp(12)
+                }
+            }
+
+            val iconBadge = ImageView(ctx).apply {
+                setImageDrawable(PathDrawable(svgPath, Color.parseColor(iconTintColor)))
+                setPadding(dp(10), dp(10), dp(10), dp(10))
+                background = GradientDrawable().apply {
+                    setColor(Color.parseColor(badgeBackgroundColor))
+                    cornerRadius = dp(12).toFloat()
+                }
+                layoutParams = LinearLayout.LayoutParams(dp(44), dp(44)).apply {
+                    marginEnd = dp(14)
+                }
+            }
+            card.addView(iconBadge)
+
+            val textContainer = LinearLayout(ctx).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+
+            val cardTitle = TextView(ctx).apply {
+                text = titleText
+                textSize = 15f
+                setTypeface(null, Typeface.BOLD)
+                setTextColor(Color.parseColor("#CAD3F5"))
+            }
+            textContainer.addView(cardTitle)
+
+            val cardDesc = TextView(ctx).apply {
+                text = descText
+                textSize = 12f
+                setTextColor(Color.parseColor("#A5ADCB"))
+                setPadding(0, dp(2), 0, 0)
+            }
+            textContainer.addView(cardDesc)
+
+            card.addView(textContainer)
+
+            val arrow = TextView(ctx).apply {
+                text = "↗"
+                textSize = 17f
+                setTextColor(Color.parseColor("#6E738D"))
+                setTypeface(null, Typeface.BOLD)
+            }
+            card.addView(arrow)
+
+            return card
+        }
+        val telegramSvg = "M 9.78 18.65 L 10.06 14.42 L 17.74 7.5 C 18.08 7.19 17.67 7.04 17.22 7.31 L 7.74 13.3 L 3.64 12 C 2.76 11.75 2.75 11.14 3.84 10.7 L 19.81 4.54 C 20.54 4.21 21.24 4.72 20.96 5.84 L 18.24 18.65 C 18.05 19.56 17.5 19.78 16.74 19.36 L 12.6 16.3 L 10.61 18.23 C 10.38 18.46 10.19 18.65 9.78 18.65 Z"
+        
+        val discordSvg = "M 19.27 5.33 C 17.94 4.71 16.5 4.26 15.0 4.0 C 14.9 4.0 14.85 4.1 14.8 4.2 C 14.6 4.55 14.4 5.0 14.25 5.3 C 12.75 5.05 11.25 5.05 9.75 5.3 C 9.6 5.0 9.4 4.55 9.2 4.2 C 9.15 4.1 9.1 4.0 9.0 4.0 C 7.5 4.26 6.06 4.71 4.73 5.33 C 2.0 9.4 1.26 13.37 1.63 17.29 C 3.43 18.61 5.16 19.41 6.87 19.94 C 7.27 19.39 7.63 18.81 7.94 18.2 C 7.37 17.98 6.83 17.72 6.3 17.42 C 6.41 17.34 6.52 17.25 6.63 17.17 C 10.07 18.74 13.78 18.74 17.18 17.17 C 17.29 17.26 17.4 17.34 17.51 17.42 C 16.99 17.73 16.44 17.98 15.86 18.2 C 16.18 18.81 16.54 19.39 16.94 19.94 C 18.66 19.41 20.39 18.61 22.19 17.29 C 22.63 12.76 21.46 8.83 19.27 5.33 Z M 8.52 14.91 C 7.49 14.91 6.63 13.96 6.63 12.79 C 6.63 11.62 7.47 10.67 8.52 10.67 C 9.58 10.67 10.42 11.63 10.41 12.79 C 10.41 13.96 9.57 14.91 8.52 14.91 Z M 15.49 14.91 C 14.46 14.91 13.6 13.96 13.6 12.79 C 13.6 11.62 14.44 10.67 15.49 10.67 C 16.55 10.67 17.39 11.63 17.38 12.79 C 17.38 13.96 16.55 14.91 15.49 14.91 Z"
+
+        val githubSvg = "M 12.0 2.0 C 6.48 2.0 2.0 6.48 2.0 12.0 C 2.0 16.42 4.87 20.17 8.84 21.5 C 9.34 21.58 9.5 21.27 9.5 21.0 C 9.5 20.76 9.5 20.13 9.5 19.3 C 6.72 19.9 6.13 17.96 6.13 17.96 C 5.68 16.8 5.02 16.49 5.02 16.49 C 4.11 15.87 5.09 15.88 5.09 15.88 C 6.1 15.95 6.63 16.91 6.63 16.91 C 7.52 18.44 8.97 18.0 9.54 17.74 C 9.63 17.09 9.89 16.65 10.18 16.4 C 7.96 16.15 5.62 15.29 5.62 11.45 C 5.62 10.36 6.01 9.47 6.65 8.77 C 6.55 8.52 6.21 7.5 6.75 6.12 C 6.75 6.12 7.59 5.85 9.5 7.15 C 10.3 6.93 11.15 6.82 12.0 6.81 C 12.85 6.82 13.7 6.93 14.5 7.15 C 16.41 5.85 17.25 6.12 17.25 6.12 C 17.79 7.5 17.45 8.52 17.35 8.77 C 17.99 9.47 18.38 10.36 18.38 11.45 C 18.38 15.3 16.03 16.14 13.8 16.39 C 14.16 16.7 14.48 17.32 14.48 18.25 C 14.48 19.59 14.47 20.67 14.47 21.0 C 14.47 21.27 14.65 21.59 15.16 21.5 C 19.13 20.17 22.0 16.42 22.0 12.0 C 22.0 6.48 17.52 2.0 12.0 2.0 Z"
+
+        root.addView(
+            createPlatformCard(
+                svgPath = telegramSvg,
+                iconTintColor = "#FFFFFF",
+                badgeBackgroundColor = "#229ED9",
+                titleText = "قناة التليجرام",
+                descText = "أحدث الإصدارات، الروابط والأخبار",
+                targetUrl = "https://t.me/cs3iq"
+            )
+        )
+
+        root.addView(
+            createPlatformCard(
+                svgPath = discordSvg,
+                iconTintColor = "#FFFFFF",
+                badgeBackgroundColor = "#5865F2",
+                titleText = "سيرفر الديسكورد",
+                descText = "نقاشات المجتمع، الدعم الفني والاقتراحات",
+                targetUrl = "https://discord.gg/zfaXdKpbDH"
+            )
+        )
+
+        root.addView(
+            createPlatformCard(
+                svgPath = githubSvg,
+                iconTintColor = "#CAD3F5",
+                badgeBackgroundColor = "#313244",
+                titleText = "مشروع GitHub",
+                descText = "المستودع المفتوح، الإبلاغ عن مشاكل والمساهمة",
+                targetUrl = "https://github.com/Abodabodd/re-3arabi"
+            )
+        )
+
+        return root
+    }
+}
 class AnimeWitcherProvider : MainAPI() {
     override var mainUrl = "https://animewitcher.com"
     override var name = "AnimeWitcher"
@@ -21,7 +281,7 @@ class AnimeWitcherProvider : MainAPI() {
     override var lang = "ar"
     override val hasMainPage = true
     @Volatile
-    private var algoliaAppId = "D8LH9I7ZL7"
+    private var algoliaAppId = "TVNESH8OZY"
     @Volatile
     private var algoliaApiKey = "b56c01ef52540ef334bcdbaa00ded9e4"
     @Volatile
@@ -38,16 +298,27 @@ class AnimeWitcherProvider : MainAPI() {
     }
 
     private val FIREBASE_PROJECT_ID = "animewitcher-1c66d"
-    private val serverWordsCache = HashMap<String, ServerWords>()
-
+    private val serverWordsCache = java.util.concurrent.ConcurrentHashMap<String, ServerWords>()
     data class EpisodeInfo(
         val id: String,
         val name: String?,
         val number: Int,
         val imageUrl: String? = null
     )
-    data class ServerModel(val name: String?, val link: String?, val quality: String?, val originalLink: String?, val openBrowser: Boolean)
-    data class ServerWords(val name: String, val word1: String?, val word2: String?, val word3: String?, val word4: String?)
+    data class ServerModel(
+        val name: String?,
+        val link: String?,
+        val quality: String?,
+        val originalLink: String?,
+        val openBrowser: Boolean
+    )
+    data class ServerWords(
+        val name: String,
+        val word1: String?,
+        val word2: String?,
+        val word3: String?,
+        val word4: String?
+    )
 
     private fun logd(msg: String) {
         println("[AnimeWitcherLog] $msg")
@@ -58,6 +329,7 @@ class AnimeWitcherProvider : MainAPI() {
     private fun getQualityAsInt(quality: String?): Int {
         return quality?.filter { it.isDigit() }?.toIntOrNull() ?: 0
     }
+
     private suspend fun postAlgoliaQuery(index: String, body: okhttp3.RequestBody): String {
         val startTime = System.currentTimeMillis()
         return try {
@@ -78,6 +350,7 @@ class AnimeWitcherProvider : MainAPI() {
             response.text
         }
     }
+
     private suspend fun getAlgoliaObjectByPost(index: String, objectId: String): JSONObject? {
         val startTime = System.currentTimeMillis()
         logd("⏱️ [Algolia Object] Starting POST query for ObjectID: '$objectId'")
@@ -103,6 +376,7 @@ class AnimeWitcherProvider : MainAPI() {
             null
         }
     }
+
     private suspend fun refreshAlgoliaKeys() {
         try {
             val url = firestoreDocUrl("Settings/constants")
@@ -145,6 +419,7 @@ class AnimeWitcherProvider : MainAPI() {
             logd("❌ [Firestore Keys] Failed to refresh keys. Error: ${e.message}")
         }
     }
+
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse = withContext(Dispatchers.IO) {
         val indexName = "recent"
         val pageParam = (page - 1).coerceAtLeast(0)
@@ -159,7 +434,6 @@ class AnimeWitcherProvider : MainAPI() {
         val body = payload.toString().toRequestBody("application/json; charset=UTF-8".toMediaType())
 
         val res = postAlgoliaQuery(indexName, body)
-
         val json = try { JSONObject(res) } catch (e: Exception) { JSONObject() }
         val hits = json.optJSONArray("hits") ?: JSONArray()
 
@@ -189,7 +463,6 @@ class AnimeWitcherProvider : MainAPI() {
         val body = payload.toString().toRequestBody("application/json; charset=UTF-8".toMediaType())
 
         val res = postAlgoliaQuery(indexName, body)
-
         val json = try { JSONObject(res) } catch (e: Exception) { JSONObject() }
         val hits = json.optJSONArray("hits") ?: JSONArray()
 
@@ -264,6 +537,7 @@ class AnimeWitcherProvider : MainAPI() {
             this.tags = tags
         }
     }
+
     private suspend fun fetchEpisodes(animeId: String): List<EpisodeInfo> = withContext(Dispatchers.IO) {
         val startTime = System.currentTimeMillis()
         val encodedAnimeId = URLEncoder.encode(animeId, "utf-8").replace("+", "%20")
@@ -316,6 +590,7 @@ class AnimeWitcherProvider : MainAPI() {
 
     private fun firestoreDocUrl(path: String): String =
         "https://firestore.googleapis.com/v1/projects/$FIREBASE_PROJECT_ID/databases/(default)/documents/$path?key=$firebaseApiKey"
+
     private suspend fun fetchServersForEpisode(animeId: String, episodeId: String): List<ServerModel> = withContext(Dispatchers.IO) {
         val encodedAnimeId = URLEncoder.encode(animeId, "utf-8").replace("+", "%20")
         val encodedEpisodeId = URLEncoder.encode(episodeId, "utf-8").replace("+", "%20")
@@ -409,7 +684,6 @@ class AnimeWitcherProvider : MainAPI() {
             null
         }
     }
-
     private suspend fun resolveServerModel(server: ServerModel): String? = withContext(Dispatchers.IO) {
         val name = server.name ?: return@withContext null
         val link = server.link ?: return@withContext null
@@ -417,13 +691,13 @@ class AnimeWitcherProvider : MainAPI() {
 
         try {
             when (name.uppercase(Locale.getDefault())) {
-                "MF", "ST", "MG" -> {
+                "MF", "MF2", "ST", "MG", "SF" -> {
                     return@withContext link
                 }
                 "KF" -> {
-                    if (words?.word1 == null || words.word2 == null) return@withContext null
+                    if (words?.word1 == null || words.word2 == null) return@withContext link
                     val res = try { app.get(link).text } catch (e: Exception) { "" }
-                    if (res.isBlank()) return@withContext null
+                    if (res.isBlank()) return@withContext link
                     return@withContext "https://${res.substringAfter(words.word1!!).substringBefore(words.word2!!).replace("amp;", "")}"
                 }
                 "PD" -> {
@@ -447,7 +721,7 @@ class AnimeWitcherProvider : MainAPI() {
                     return@withContext link
                 }
                 "VT" -> {
-                    if (words?.word1 == null || words.word2 == null || words.word3 == null || words.word4 == null) return@withContext null
+                    if (words?.word1 == null || words.word2 == null || words.word3 == null || words.word4 == null) return@withContext link
                     val res1 = try { app.get(link).text } catch (e: Exception) { "" }
                     val part1 = res1.substringAfter(words.word1!!).substringBefore(words.word2!!).replace("\">", "").trim()
                     val newLink = "https://vidtube.one$part1"
@@ -455,10 +729,10 @@ class AnimeWitcherProvider : MainAPI() {
                     return@withContext "https://${res2.substringAfter(words.word3!!).substringBefore(words.word4!!)}"
                 }
                 "AR" -> {
-                    return@withContext getFinalRedirectUrl(link)
+                    return@withContext getFinalRedirectUrl(link) ?: link
                 }
                 "WC" -> {
-                    return@withContext getFinalDownloadUrl(link)
+                    return@withContext getFinalDownloadUrl(link) ?: link
                 }
                 "BU" -> {
                     return@withContext link
@@ -467,15 +741,18 @@ class AnimeWitcherProvider : MainAPI() {
                     return@withContext server.originalLink ?: link
                 }
                 else -> {
-                    if (words?.word1 == null || words.word2 == null) return@withContext null
-                    val res = try { app.get(link).text } catch (e: Exception) { "" }
-                    if (res.isBlank()) return@withContext null
-                    return@withContext res.substringAfter(words.word1!!).substringBefore(words.word2!!).replace("amp;", "")
+                    if (words?.word1 != null && words.word2 != null) {
+                        val res = try { app.get(link).text } catch (e: Exception) { "" }
+                        if (res.isNotBlank()) {
+                            return@withContext res.substringAfter(words.word1!!).substringBefore(words.word2!!).replace("amp;", "")
+                        }
+                    }
+                    return@withContext link
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return@withContext null
+            return@withContext link
         }
     }
 
@@ -485,7 +762,7 @@ class AnimeWitcherProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean = withContext(Dispatchers.IO) {
-        logd("====== LOADLINKS START ======")
+        logd("====== LOADLINKS START (PARALLEL) ======")
         try {
             val parts = data.split('|')
             if (parts.size < 2) return@withContext false
@@ -503,64 +780,74 @@ class AnimeWitcherProvider : MainAPI() {
 
             val animeId = rawAnimeId
             val servers = fetchServersForEpisode(animeId, episodeId)
+            if (servers.isEmpty()) return@withContext false
 
-            val sortedServers = servers.sortedWith(compareByDescending<ServerModel> { getQualityAsInt(it.quality) }
-                .thenBy {
-                    when(it.name?.uppercase(Locale.getDefault())) {
-                        "PD" -> 0
-                        "PD EU TEST" -> 1
-                        else -> 2
+            val sortedServers = servers.sortedWith(
+                compareByDescending<ServerModel> { getQualityAsInt(it.quality) }
+                    .thenBy {
+                        when (it.name?.uppercase(Locale.getDefault())) {
+                            "PD" -> 0
+                            "PD EU TEST" -> 1
+                            else -> 2
+                        }
                     }
-                }
             )
 
-            logd("Sorted ${sortedServers.size} servers for resolution.")
+            logd("⚡ Processing ${sortedServers.size} servers in parallel with coroutineScope...")
+            coroutineScope {
+                sortedServers.map { server ->
+                    async {
+                        try {
+                            val finalUrl = resolveServerModel(server)
+                            if (!finalUrl.isNullOrBlank() && !finalUrl.trim().startsWith("<")) {
+                                val serverName = server.name ?: "Server"
 
-            val resolvedList = mutableListOf<Pair<ServerModel, String>>()
-            for (server in sortedServers) {
-                try {
-                    val resolvedUrl = resolveServerModel(server)
-                    if (!resolvedUrl.isNullOrBlank()) {
-                        resolvedList.add(Pair(server, resolvedUrl))
-                    }
-                } catch (e: Exception) {
-                    logd("Exception resolving ${server.name}: ${e.message}")
-                }
-            }
-
-            for ((server, finalUrl) in resolvedList) {
-                if (finalUrl.trim().startsWith("<")) continue
-
-                val serverName = server.name ?: "Server"
-
-                if (serverName.equals("PD", ignoreCase = true)) {
-
-                    try {
-                        loadExtractor(finalUrl, mainUrl, subtitleCallback, callback)
-                    } catch (e: Exception) {
-                        logd("Error invoking loadExtractor for PD: ${e.message}")
-                    }
-                    continue
-                }
-
-                if (serverName.uppercase(Locale.getDefault()) == "KF") {
-                    callback(
-                        newExtractorLink(
-                            source = name,
-                            name = serverName,
-                            url = finalUrl,
-                        ) {
-                            referer = "https://krakenfiles.com/"
-                            quality = getQualityFromName(server.quality)
+                                when {
+                                    serverName.equals("PD", ignoreCase = true) -> {
+                                        try {
+                                            loadExtractor(finalUrl, mainUrl, subtitleCallback, callback)
+                                        } catch (e: Exception) {
+                                            logd("Error invoking loadExtractor for PD: ${e.message}")
+                                        }
+                                    }
+                                    serverName.uppercase(Locale.getDefault()) == "KF" -> {
+                                        callback(
+                                            newExtractorLink(
+                                                source = name,
+                                                name = serverName,
+                                                url = finalUrl,
+                                            ) {
+                                                referer = "https://krakenfiles.com/"
+                                                quality = getQualityFromName(server.quality)
+                                            }
+                                        )
+                                    }
+                                    else -> {
+                                        try {
+                                            val handled = loadExtractor(finalUrl, mainUrl, subtitleCallback, callback)
+                                            if (!handled) {
+                                                callback(
+                                                    newExtractorLink(
+                                                        source = name,
+                                                        name = "$serverName ${server.quality ?: ""}".trim(),
+                                                        url = finalUrl,
+                                                    ) {
+                                                        this.referer = mainUrl
+                                                        this.quality = getQualityFromName(server.quality)
+                                                    }
+                                                )
+                                            }
+                                        } catch (e: Exception) {
+                                            logd("Error resolving $serverName: ${e.message}")
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            logd("Exception on server ${server.name}: ${e.message}")
                         }
-                    )
-                } else {
-                    try {
-                        loadExtractor(finalUrl, mainUrl, subtitleCallback, callback)
-                    } catch (e: Exception) {
-                        logd("Error invoking loadExtractor for $serverName: ${e.message}")
                     }
-                }
+                }.awaitAll()
             }
 
             logd("====== LOADLINKS END ======")
