@@ -1,10 +1,22 @@
 package com.asia2tv
 
+import android.util.Log
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.newExtractorLink
+import com.lagradost.cloudstream3.utils.loadExtractor
+import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.M3u8Helper
+import com.lagradost.cloudstream3.utils.getQualityFromName
 import org.jsoup.nodes.Element
-import com.lagradost.cloudstream3.utils.AppUtils.parseJson
-import com.lagradost.cloudstream3.utils.AppUtils.toJson
+import org.json.JSONObject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import java.net.URL
+import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 
 class Asia2tvProvider : MainAPI() {
     override var mainUrl = "https://ww1.asia2tv.pw"
@@ -12,6 +24,7 @@ class Asia2tvProvider : MainAPI() {
     override val hasMainPage = true
     override var lang = "ar"
     override val supportedTypes = setOf(TvType.AsianDrama, TvType.TvSeries, TvType.Movie)
+
     private fun getPosterFromElement(element: Element?): String? {
         return element?.selectFirst("div.image img")?.let {
             it.attr("src").ifBlank { it.attr("data-src") }
@@ -89,15 +102,123 @@ class Asia2tvProvider : MainAPI() {
             newEpisode(href) {
                 this.name = episodeName
                 this.episode = episodeNumber
-                this.posterUrl = poster // إضافة بوستر المسلسل لكل حلقة
+                this.posterUrl = poster
             }
-        }.reversed() // عكس الترتيب لأن المواقع غالبًا ما تعرض الحلقات من الأحدث للأقدم
+        }.reversed()
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             this.posterUrl = poster
             this.plot = plot
             this.tags = tags
             this.year = year
+        }
+    }
+
+    private fun deobfuscatePacker(packed: String): String {
+        try {
+            val packerRegex = """eval\(function\(p,a,c,k,e,[rd]\)\{.*?\}\((['"])(.*?)\1\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(['"])(.*?)\5\.split\(['"]\|['"]\)""".toRegex()
+            val match = packerRegex.find(packed) ?: return ""
+            val (_, p, aStr, cStr, _, kStr) = match.destructured
+            val a = aStr.toIntOrNull() ?: return ""
+            val c = cStr.toIntOrNull() ?: return ""
+            val k = kStr.split('|')
+
+            fun getBaseNString(num: Int, base: Int): String {
+                val chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                if (base <= 36) return num.toString(base)
+                var n = num
+                var res = ""
+                while (n > 0) {
+                    res = chars[n % base] + res
+                    n /= base
+                }
+                return if (res.isEmpty()) "0" else res
+            }
+
+            val dict = mutableMapOf<String, String>()
+            for (i in 0 until c) {
+                val key = getBaseNString(i, a)
+                val value = if (i < k.size && k[i].isNotEmpty()) k[i] else key
+                dict[key] = value
+            }
+
+            val wordRegex = """\b\w+\b""".toRegex()
+            return wordRegex.replace(p) { matchResult ->
+                val word = matchResult.value
+                dict[word] ?: word
+            }
+        } catch (e: Exception) {
+            return ""
+        }
+    }
+
+    private fun extractLogic(htmlText: String): String {
+        try {
+            val startMarker = "eval(function(p,a,c,k,e,d)"
+            val startIdx = htmlText.indexOf(startMarker)
+            if (startIdx != -1) {
+                val endMarker = ".split('|')))"
+                val endIdx = htmlText.indexOf(endMarker, startIdx)
+                if (endIdx != -1) {
+                    val packedJs = htmlText.substring(startIdx, endIdx + endMarker.length)
+                    val unpacked = deobfuscatePacker(packedJs)
+                    if (unpacked.isNotEmpty()) {
+                        return unpacked
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(name, "Error in extractLogic: ${e.message}")
+        }
+        return htmlText
+    }
+
+    private fun findVideoLinks(text: String): List<String> {
+        val found = LinkedHashSet<String>()
+        Regex("""var\s+links\s*=\s*(\{[^;]+\})""").find(text)?.groupValues?.get(1)?.let { rawJson ->
+            runCatching {
+                val obj = JSONObject(rawJson)
+                for (k in listOf("hls4", "hls2", "hls3", "hls", "file")) {
+                    val l = obj.optString(k).trim().replace("\\/", "/")
+                    if (l.startsWith("http")) found.add(l)
+                }
+            }
+        }
+        Regex("""getElementById\(['"][^'"]+['"]\)\.innerHTML\s*=\s*['"]([^'"]+)['"]\s*\+\s*\(?['"]([^'"]+)['"]\)?""").find(text)?.let { m ->
+            var direct = m.groupValues[1] + m.groupValues[2]
+            if (direct.startsWith("//")) direct = "https:$direct"
+            if (!direct.contains("&stream=")) direct += "&stream=1"
+            found.add(direct)
+        }
+        val fileRegex = """(?:file|sources)\s*[:=]\s*\[?["']([^"']+)["']\]?""".toRegex()
+        fileRegex.findAll(text).forEach { m ->
+            val l = m.groupValues[1].trim().replace("\\/", "/")
+            if (l.startsWith("http")) found.add(l)
+        }
+        val m3u8Regex = """(https?://[^\s"\'<>]+?\.m3u8[^\s"\'<>?]*(?:\?[^\s"\'<>]*)?)""".toRegex()
+        m3u8Regex.findAll(text).forEach { m ->
+            found.add(m.groupValues[1].trim().replace("\\/", "/"))
+        }
+
+        return found.toList()
+    }
+
+    /**
+     * استنتاج الجودة من مسار الرابط
+     */
+    private fun parseQualityFromUrl(url: String): Pair<Int, String> {
+        val lower = url.lowercase()
+        return when {
+            lower.contains("2160") || lower.contains("4k") -> Pair(Qualities.P2160.value, "4K")
+            lower.contains("1440") || lower.contains("2k") -> Pair(Qualities.P1440.value, "2K")
+            lower.contains("1080") || lower.contains("fhd") -> Pair(Qualities.P1080.value, "1080p")
+            lower.contains("720") || lower.contains("hd") -> Pair(Qualities.P720.value, "720p")
+            lower.contains("480") || lower.contains("sd") -> Pair(Qualities.P480.value, "480p")
+            lower.contains("360") -> Pair(Qualities.P360.value, "360p")
+            else -> {
+                val q = getQualityFromName(lower)
+                if (q > 0) Pair(q, "${q}p") else Pair(Qualities.P720.value, "720p")
+            }
         }
     }
 
@@ -108,22 +229,129 @@ class Asia2tvProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val serverPageUrl = if (data.contains("/watching/")) {
-            data // هذا بالفعل رابط المشاهدة
+            data
         } else {
             val doc = app.get(data).document
-            doc.selectFirst("div.loop-episode a.current")?.attr("href") // للمسلسلات
-                ?: doc.selectFirst("a.watch_player")?.attr("href") // للأفلام
+            doc.selectFirst("div.loop-episode a.current")?.attr("href")
+                ?: doc.selectFirst("a.watch_player")?.attr("href")
                 ?: return false
         }
 
-        val serversPage = app.get(serverPageUrl).document
-        val serverUrls = serversPage.select("ul.server-list-menu li").mapNotNull {
-            it.attr("data-server")
+        val resolvedServerPageUrl = fixUrl(serverPageUrl)
+        val serversPage = app.get(resolvedServerPageUrl).document
+        val servers = serversPage.select("ul.server-list-menu li")
+        val emittedUrls = Collections.newSetFromMap(ConcurrentHashMap<String, Boolean>())
+
+        val deduplicatedCallback: (ExtractorLink) -> Unit = { link ->
+            val cleanUrl = link.url.trim()
+            if (emittedUrls.add(cleanUrl)) {
+                callback(link)
+            }
         }
 
-        serverUrls.amap { url ->
-            loadExtractor(url, mainUrl, subtitleCallback, callback)
+        coroutineScope {
+            servers.map { server ->
+                async {
+                    val embedSource = server.attr("data-server") ?: return@async
+                    if (embedSource.isBlank()) return@async
+
+                    val serverUrl = fixUrl(embedSource)
+                    try {
+                        loadExtractor(serverUrl, resolvedServerPageUrl, subtitleCallback, deduplicatedCallback)
+                    } catch (e: Exception) {
+                        Log.w(name, "loadExtractor failed for $serverUrl: ${e.message}")
+                    }
+                    try {
+                        val uri = URL(serverUrl)
+                        val domain = "${uri.protocol}://${uri.host}/"
+                        val serverName = uri.host.replace("www.", "").substringBefore(".")
+
+                        val serverResponse = app.get(
+                            serverUrl,
+                            headers = mapOf(
+                                "Referer" to resolvedServerPageUrl,
+                                "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                            )
+                        )
+
+                        if (serverResponse.code == 200) {
+                            val content = extractLogic(serverResponse.text)
+                            val videoLinks = findVideoLinks(content)
+
+                            for (videoLink in videoLinks) {
+                                val finalVideoUrl = fixUrl(videoLink)
+                                if (emittedUrls.contains(finalVideoUrl.trim())) continue
+
+                                val isHls = finalVideoUrl.contains(".m3u8") || finalVideoUrl.contains(".txt")
+                                val verifyHeaders = mapOf(
+                                    "Referer" to domain,
+                                    "Origin" to domain.removeSuffix("/"),
+                                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                                )
+
+                                val check = app.get(
+                                    url = finalVideoUrl,
+                                    headers = verifyHeaders,
+                                    timeout = 10
+                                )
+
+                                if (check.code == 200) {
+                                    if (isHls) {
+                                        val m3u8Links = runCatching {
+                                            M3u8Helper.generateM3u8(
+                                                source = name,
+                                                streamUrl = finalVideoUrl,
+                                                referer = domain,
+                                                headers = verifyHeaders,
+                                                name = serverName
+                                            )
+                                        }.getOrNull()
+
+                                        if (!m3u8Links.isNullOrEmpty()) {
+                                            m3u8Links.forEach { hlsLink ->
+                                                deduplicatedCallback(hlsLink)
+                                            }
+                                        } else {
+                                            val (qualityVal, qualityName) = parseQualityFromUrl(finalVideoUrl)
+                                            deduplicatedCallback(
+                                                newExtractorLink(
+                                                    source = name,
+                                                    name = "$serverName $qualityName".trim(),
+                                                    url = finalVideoUrl,
+                                                    type = ExtractorLinkType.M3U8
+                                                ) {
+                                                    this.referer = domain
+                                                    this.quality = qualityVal
+                                                    this.headers = verifyHeaders
+                                                }
+                                            )
+                                        }
+                                    } else {
+                                        val (qualityVal, qualityName) = parseQualityFromUrl(finalVideoUrl)
+                                        deduplicatedCallback(
+                                            newExtractorLink(
+                                                source = name,
+                                                name = "$serverName [$qualityName]",
+                                                url = finalVideoUrl,
+                                                type = ExtractorLinkType.VIDEO
+                                            ) {
+                                                this.referer = domain
+                                                this.quality = qualityVal
+                                                this.headers = verifyHeaders
+                                            }
+                                        )
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(name, "Manual fetch failed for $serverUrl: ${e.message}")
+                    }
+                }
+            }.awaitAll()
         }
+
         return true
     }
 }
