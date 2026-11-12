@@ -8,6 +8,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import java.net.URI
+
 class Anime4up : MainAPI() {
     override var mainUrl = "https://w1.anime4up.rest"
     override var name = "Anime4Up"
@@ -41,6 +44,7 @@ class Anime4up : MainAPI() {
         customHeaders?.let { headers.putAll(it) }
         return headers
     }
+
     private suspend fun safeGet(
         url: String,
         referer: String? = null,
@@ -285,7 +289,105 @@ class Anime4up : MainAPI() {
         return extractedIframes
     }
 
+    /**
+     * دالة مخصصة لاستخراج السيرفرات الداخلية (VnxPlayer / Anime4up-S1 / m3u8) والترجمة
+     */
+    private suspend fun processVnxPlayer(
+        serverUrl: String,
+        referer: String,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit
+    ): Boolean {
+        return try {
+            val res = safeGet(serverUrl, referer = referer)
+            val html = res.text
 
+            // 1. استخراج ملفات الترجمة (.vtt)
+            val subRegex = Regex("""["']file["']\s*:\s*["']([^"']+\.vtt[^"']*)["']""")
+            subRegex.findAll(html).forEach { match ->
+                val subUrl = match.groupValues[1]
+                subtitleCallback.invoke(
+                    SubtitleFile(
+                        lang = "Arabic",
+                        url = subUrl
+                    )
+                )
+            }
+
+            // 2. استخراج رابط البث الرئيسي streamUrl
+            val streamRegex = Regex("""let\s+streamUrl\s*=\s*["']([^"']+)["']""")
+            val streamUrl = streamRegex.find(html)?.groupValues?.get(1) ?: return false
+
+            // 3. قراءة ملف m3u8 واستخراج الجودات
+            try {
+                val m3u8Res = app.get(streamUrl, headers = mapOf("Referer" to mainUrl), timeout = 15).text
+                if (m3u8Res.contains("#EXTM3U")) {
+                    val lines = m3u8Res.lines().map { it.trim() }.filter { it.isNotEmpty() }
+                    var foundQualities = false
+
+                    for (i in lines.indices) {
+                        val line = lines[i]
+                        if (line.startsWith("#EXT-X-STREAM-INF")) {
+                            val resMatch = Regex("""RESOLUTION=\d+x(\d+)""").find(line)
+                            val nameMatch = Regex("""NAME="([^"]+)"""").find(line)
+                            val qualityLabel = nameMatch?.groupValues?.get(1)
+                                ?: resMatch?.groupValues?.get(1)?.let { "${it}p" }
+                                ?: "Auto"
+
+                            if (i + 1 < lines.size && !lines[i + 1].startsWith("#")) {
+                                var qualityUrl = lines[i + 1]
+                                if (!qualityUrl.startsWith("http")) {
+                                    qualityUrl = URI(streamUrl).resolve(qualityUrl).toString()
+                                }
+
+                                foundQualities = true
+                                callback.invoke(
+                                    newExtractorLink(
+                                        name = "Anime4Up",
+                                        source = "Anime4Up ($qualityLabel)",
+                                        url = qualityUrl,
+                                        type = ExtractorLinkType.M3U8
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    if (!foundQualities) {
+                        callback.invoke(
+                            newExtractorLink(
+                                name = "Anime4Up",
+                                source = "Anime4Up (Auto)",
+                                url = streamUrl,
+                                type = ExtractorLinkType.M3U8
+                            )
+                        )
+                    }
+                } else {
+                    callback.invoke(
+                        newExtractorLink(
+                            name = "Anime4Up",
+                            source = "Anime4Up",
+                            url = streamUrl,
+                            type = ExtractorLinkType.M3U8
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                callback.invoke(
+                    newExtractorLink(
+                        name = "Anime4Up",
+                        source = "Anime4Up",
+                        url = streamUrl,
+                        type = ExtractorLinkType.M3U8
+                    )
+                )
+            }
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     override suspend fun loadLinks(
         data: String,
@@ -296,6 +398,7 @@ class Anime4up : MainAPI() {
         val doc = safeGet(data).document
         val seenLinks = java.util.Collections.synchronizedSet(mutableSetOf<String>())
         val semaphore = Semaphore(6)
+
         supervisorScope {
             val watchTasks = doc.select("ul#episode-servers li[data-watch]").map { li ->
                 async(Dispatchers.IO) {
@@ -310,7 +413,12 @@ class Anime4up : MainAPI() {
 
                             linksToProcess.forEach { link ->
                                 if (link.isNotBlank() && seenLinks.add(link)) {
-                                    loadExtractor(link, data, subtitleCallback, callback)
+                                    // 1. محاولة الاستخراج بالـ Extractors الافتراضية
+                                    val loaded = loadExtractor(link, data, subtitleCallback, callback)
+                                    // 2. إذا فشل الاستخراج، نمرر الرابط لدالة VnxPlayer
+                                    if (!loaded) {
+                                        processVnxPlayer(link, data, subtitleCallback, callback)
+                                    }
                                 }
                             }
                         } catch (e: Exception) {
@@ -318,6 +426,7 @@ class Anime4up : MainAPI() {
                     }
                 }
             }
+
             val downloadTasks = doc.select("div.download-list table.table tbody tr").map { tr ->
                 async(Dispatchers.IO) {
                     semaphore.withPermit {
@@ -325,13 +434,17 @@ class Anime4up : MainAPI() {
                             val downloadLink = tr.selectFirst("td.td-link a")?.attr("href")
 
                             if (!downloadLink.isNullOrBlank() && seenLinks.add(downloadLink)) {
-                                loadExtractor(downloadLink, data, subtitleCallback, callback)
+                                val loaded = loadExtractor(downloadLink, data, subtitleCallback, callback)
+                                if (!loaded) {
+                                    processVnxPlayer(downloadLink, data, subtitleCallback, callback)
+                                }
                             }
                         } catch (e: Exception) {
                         }
                     }
                 }
             }
+
             (watchTasks + downloadTasks).awaitAll()
         }
 
