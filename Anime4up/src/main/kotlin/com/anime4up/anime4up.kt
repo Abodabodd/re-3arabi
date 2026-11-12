@@ -301,8 +301,6 @@ class Anime4up : MainAPI() {
         return try {
             val res = safeGet(serverUrl, referer = referer)
             val html = res.text
-
-            // 1. استخراج ملفات الترجمة (.vtt)
             val subRegex = Regex("""["']file["']\s*:\s*["']([^"']+\.vtt[^"']*)["']""")
             subRegex.findAll(html).forEach { match ->
                 val subUrl = match.groupValues[1]
@@ -313,12 +311,8 @@ class Anime4up : MainAPI() {
                     )
                 )
             }
-
-            // 2. استخراج رابط البث الرئيسي streamUrl
             val streamRegex = Regex("""let\s+streamUrl\s*=\s*["']([^"']+)["']""")
             val streamUrl = streamRegex.find(html)?.groupValues?.get(1) ?: return false
-
-            // 3. قراءة ملف m3u8 واستخراج الجودات
             try {
                 val m3u8Res = app.get(streamUrl, headers = mapOf("Referer" to mainUrl), timeout = 15).text
                 if (m3u8Res.contains("#EXTM3U")) {
@@ -413,9 +407,7 @@ class Anime4up : MainAPI() {
 
                             linksToProcess.forEach { link ->
                                 if (link.isNotBlank() && seenLinks.add(link)) {
-                                    // 1. محاولة الاستخراج بالـ Extractors الافتراضية
                                     val loaded = loadExtractor(link, data, subtitleCallback, callback)
-                                    // 2. إذا فشل الاستخراج، نمرر الرابط لدالة VnxPlayer
                                     if (!loaded) {
                                         processVnxPlayer(link, data, subtitleCallback, callback)
                                     }
