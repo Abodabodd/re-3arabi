@@ -1,11 +1,11 @@
-version = 2
+version = 1
 
 cloudstream {
     description = ""
     authors = listOf("Abodabodd")
     language = "ar"
 
-    status = 1
+    status = 0
 
     tvTypes = listOf(
         "TvSeries",
