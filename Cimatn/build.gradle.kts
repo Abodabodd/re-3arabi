@@ -5,7 +5,7 @@ cloudstream {
     authors = listOf("Abodabodd")
     language = "ar"
 
-    status = 1
+    status = 0
 
     tvTypes = listOf(
         "TvSeries",
