@@ -14,8 +14,8 @@ class FamelackProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Live)
     override var lang = "en"
     override val hasMainPage = true
-    private val allChannelsUrl = "https://raw.githubusercontent.com/famelack/famelack-data/refs/heads/main/tv/raw/categories/all.json"
-    private val countriesMetadataUrl = "https://raw.githubusercontent.com/famelack/famelack-data/refs/heads/main/tv/raw/countries_metadata.json"
+    private val allChannelsUrl = "https://raw.githubusercontent.com/famelack/famelack-data/refs/heads/main/tv/categories/all.json"
+    private val countriesMetadataUrl = "https://raw.githubusercontent.com/famelack/famelack-data/refs/heads/main/tv/countries_metadata.json"
     private val defaultPoster = "https://famelack.com/assets/favicons/favicon-512.png"
     private var cachedChannels: List<RawChannel>? = null
     private var cachedCountries: Map<String, CountryMeta>? = null
