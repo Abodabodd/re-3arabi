@@ -1,4 +1,4 @@
-version = 3
+version = 0
 
 cloudstream {
     description = "تاكد من انك تفتحه في العراق 🇮🇶 وعلى شبكة مدعومة"
@@ -12,5 +12,5 @@ cloudstream {
         "Movie"
     )
 
-    iconUrl = "https://3esk.onl/wp-content/uploads/2021/01/3isk-logo.png"
+    iconUrl = "https://raw.githubusercontent.com/Abodabodd/re-3arabi/refs/heads/main/Vodu/icon.png"
 }
