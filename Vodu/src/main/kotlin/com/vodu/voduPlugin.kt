@@ -7,7 +7,6 @@ import android.content.Context
 @CloudstreamPlugin
 class VoduPlugin: Plugin() {
     override fun load(context: Context) {
-        // تسجيل الـ Provider في التطبيق
         registerMainAPI(VoduProvider())
     }
 }
