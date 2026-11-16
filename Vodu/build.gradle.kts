@@ -1,4 +1,4 @@
-version = 0
+version = 1
 
 cloudstream {
     description = "تاكد من انك تفتحه في العراق 🇮🇶 وعلى شبكة مدعومة"
