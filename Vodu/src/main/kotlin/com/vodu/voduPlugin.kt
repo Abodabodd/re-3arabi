@@ -1,0 +1,13 @@
+package com.vodu
+
+import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
+import com.lagradost.cloudstream3.plugins.Plugin
+import android.content.Context
+
+@CloudstreamPlugin
+class VoduPlugin: Plugin() {
+    override fun load(context: Context) {
+        // تسجيل الـ Provider في التطبيق
+        registerMainAPI(VoduProvider())
+    }
+}
