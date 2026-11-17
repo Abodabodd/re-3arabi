@@ -409,7 +409,7 @@ val year = pEl.selectFirst("span.year")?.text()?.let {
         val document = httpGet(url)
 
         val isSeries = url.contains("/series/") ||
-            document.selectFirst("div.Seasons--Episodes, div.SeasonsList, singlesection.Series--Section") != null
+    document.selectFirst("div.Seasons--Episodes, div.SeasonsList, div.EpisodesList a, singlesection.Series--Section a") != null
 
         if (isSeries) {
             val seriesUrl = document.selectFirst("singlesection.Series--Section > a")?.attr("href")
