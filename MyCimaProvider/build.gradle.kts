@@ -1,4 +1,4 @@
-version = 4
+version = 2
 
 cloudstream {
     description = ""
