@@ -7,6 +7,6 @@ import android.content.Context
 class eishkPlugin: Plugin() {
     override fun load(context: Context) {
 
-        registerMainAPI(MyCimaProvider(context))
+        registerMainAPI(MyCimaProvider())
     }
 }
