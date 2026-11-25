@@ -379,19 +379,28 @@ class BrstejProvider : MainAPI() {
         }
 
         fun findVideoInText(text: String): String? {
-            val patterns = listOf(
-                Regex("""(?:file|src)\s*:\s*['"](https?://[^'"]+)['"]"""),
-                Regex("""['"](https?://[^\s'"]+\.(?:m3u8|mp4)[^\s'"]*)['"]"""),
-                Regex("""(https?://[^\s'"]+\.(?:m3u8|mp4)[^\s'"]*)""")
-            )
-            for (p in patterns) {
-                p.find(text)?.groupValues?.get(1)?.let {
-                    return it
-                }
-            }
-            return null
-        }
+    val cleaned = text
+        .replace("&quot;", "\"")
+        .replace("&amp;", "&")
+        .replace("\\u0026", "&")
+        .replace("\\/", "/")
+        .replace("\\u003D", "=")
+        .replace("\\u003F", "?")
+    Regex(""""ondemandHls"\s*:\s*"(https?://[^"]+)"""")
+        .find(cleaned)?.groupValues?.get(1)?.let { return it }
 
+    Regex(""""name"\s*:\s*"([^"]+)"\s*,\s*"url"\s*:\s*"(https?://[^"]+)"""")
+        .find(cleaned)?.groupValues?.get(2)?.let { return it }
+    val patterns = listOf(
+        Regex("""(?:file|src)\s*:\s*['"](https?://[^'"]+)['"]"""),
+        Regex("""['"](https?://[^\s'"]+\.(?:m3u8|mp4)[^\s'"]*)['"]"""),
+        Regex("""(https?://[^\s'"]+\.(?:m3u8|mp4)[^\s'"]*)""")
+    )
+    for (p in patterns) {
+        p.find(cleaned)?.groupValues?.get(1)?.let { return it }
+    }
+    return null
+}
         suspend fun extractFromEmbed(
             embedUrl: String,
             referer: String,
@@ -457,10 +466,10 @@ class BrstejProvider : MainAPI() {
                     }
                 }
 
-                val packedJsMatch =
-                    Regex("""eval\((function\s*\(.*)\)\)""", RegexOption.DOT_MATCHES_ALL).find(
-                        embedText
-                    )
+                val packedJsMatch = Regex(
+    """eval\((function\s*\(p,a,c,k,e,d\).*?\.split\(['"]\|['"]\)\s*\))\)""",
+    RegexOption.DOT_MATCHES_ALL
+).find(embedText)
                 if (packedJsMatch != null) {
                     val fullEval = "eval(${packedJsMatch.groupValues[1]})"
                     val videoUrl = unpackAndExtractInternal(fullEval, embedUrl)
