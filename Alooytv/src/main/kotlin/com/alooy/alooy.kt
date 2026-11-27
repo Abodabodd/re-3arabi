@@ -24,25 +24,28 @@ class AlooyTvProvider : MainAPI() {
         "/genre/farisi.html" to "مسلسلات فارسية"
     )
     private suspend fun getActualDomain(): String {
-        actualDomain?.let { return it }
+    actualDomain?.let { return it }
 
-        return try {
-            val doc = app.get(mainUrl).document
-            val link = doc.select("a[href*='alooytv']").map { it.attr("href") }
-                .firstOrNull { it.startsWith("http") && !it.contains("t.me") && !it.contains("instagram") }
+    return try {
+        val doc = app.get(mainUrl).document
 
-            if (link != null) {
-                val uri = java.net.URI(link)
-                val domain = "${uri.scheme}://${uri.host}"
-                actualDomain = domain
-                domain
-            } else {
-                "https://h.alooytv16.com"
-            }
-        } catch (e: Exception) {
-            "https://h.alooytv16.com"
+        // نبحث عن الرابط الموجود داخل زر "أحدث الحلقات" مباشرة فهو الرابط الشغال دائماً
+        val targetLink = doc.select("a").firstOrNull { 
+            it.text().contains("أحدث الحلقات") || it.attr("href").contains("alooy")
+        }?.attr("abs:href")
+
+        if (!targetLink.isNullOrBlank()) {
+            val uri = java.net.URI(targetLink)
+            val domain = "${uri.scheme}://${uri.host}"
+            actualDomain = domain
+            domain
+        } else {
+            "https://bh.alooy-tv.xyz" // تم تحديث الرابط الاحتياطي أيضاً
         }
+    } catch (e: Exception) {
+        "https://bh.alooy-tv.xyz"
     }
+}
 
     private fun Element.toSearchResult(domain: String): SearchResponse? {
         val a = this.selectFirst(".movie-title h3 a") ?: return null
