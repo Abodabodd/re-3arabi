@@ -11,7 +11,7 @@ import java.net.URLEncoder
 
 
 class Anime3rb(val context: Context) : MainAPI() {
-    override var mainUrl = "https://anime3rb.com"
+    override var mainUrl = "https://anime3rb.com/"
     override var name = "Anime3rb"
     override val hasMainPage = true
     override var lang = "ar"
