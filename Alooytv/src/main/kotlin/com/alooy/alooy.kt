@@ -28,8 +28,6 @@ class AlooyTvProvider : MainAPI() {
 
     return try {
         val doc = app.get(mainUrl).document
-
-        // نبحث عن الرابط الموجود داخل زر "أحدث الحلقات" مباشرة فهو الرابط الشغال دائماً
         val targetLink = doc.select("a").firstOrNull { 
             it.text().contains("أحدث الحلقات") || it.attr("href").contains("alooy")
         }?.attr("abs:href")
